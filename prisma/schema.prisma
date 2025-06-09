@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../../../generated/prisma"
@@ -12,4 +6,97 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+enum Role {
+  UNIDAD_EJECUTORA
+  PRESUPUESTOS
+}
+
+enum EstadoRegistro {
+  PENDIENTE
+  VALIDADO
+  RECHAZADO
+  HISTORICO
+  ELIMINADO
+  ACTIVO
+  INACTIVO
+}
+
+enum U_estado {
+  ACTIVO
+  INACTIVO
+}
+
+model User {
+  id          String            @id @default(cuid())
+  ci          String            @unique
+  name        String
+  email       String            @unique
+  rol         Role
+  estado      U_estado          @default(ACTIVO)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  permisos    U_permisos[]      @relation("PermisosUsuarios")
+  unidades    UnidadEjecutora[] @relation("Responsables")
+  historiales HistorialCambio[]
+  Presupuesto Presupuesto[]     @relation("CreadoPor")
+}
+
+model U_permisos {
+  id          String   @id @default(cuid())
+  nombre      String
+  descripcion String?
+  estado      U_estado @default(ACTIVO)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  usuarios    User[]   @relation("PermisosUsuarios")
+}
+
+model UnidadEjecutora {
+  id          String   @id @default(cuid())
+  codigo      String   @unique
+  sigla       String
+  nombre      String
+  descripcion String?
+  estado      U_estado @default(ACTIVO)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  responsables User[]            @relation("Responsables")
+  presupuestos Presupuesto[]
+  historiales  HistorialCambio[]
+}
+
+model Presupuesto {
+  id                  String         @id @default(cuid())
+  mes                 DateTime
+  codigoObjetoGasto   String
+  objetoGasto         String
+  presupuestoVigente  Decimal
+  devengado           Decimal
+  porcentajeEjecucion Decimal
+  estado              EstadoRegistro @default(ACTIVO)
+  motivoRechazo       String?
+
+  unidadEjecutora UnidadEjecutora   @relation(fields: [unidadId], references: [id])
+  unidadId        String
+  creadoPor       User              @relation(fields: [creadoPorId], references: [id], name: "CreadoPor")
+  creadoPorId     String
+  historiales     HistorialCambio[]
+
+  @@unique([unidadId, codigoObjetoGasto, mes])
+}
+
+model HistorialCambio {
+  id            String           @id @default(cuid())
+  accion        String // "CREACION", "MODIFICACION", "VALIDACION", "RECHAZO"
+  detalle       String?
+  fecha         DateTime         @default(now())
+  usuario       User             @relation(fields: [usuarioId], references: [id])
+  usuarioId     String
+  presupuesto   Presupuesto?     @relation(fields: [presupuestoId], references: [id])
+  presupuestoId String?
+  unidad        UnidadEjecutora? @relation(fields: [unidadId], references: [id])
+  unidadId      String?
 }

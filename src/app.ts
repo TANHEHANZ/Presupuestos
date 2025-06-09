@@ -6,5 +6,5 @@ import config from "./infraestructure/config/config";
 const server = createServer();
 
 server.listen(config.port, () => {
-  console.log(`SERVICE-APPROVET Run in :  ${config.port}`);
+  console.log(`PRESUPUESTOS BACKEND Run in :  http://localhost:${config.port}`);
 });
