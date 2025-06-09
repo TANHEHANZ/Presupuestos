@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "rootDir": "../../",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": "../../",
+    "paths": {
+      "@shared/*": ["shared/*"],
+      "@/*": ["microservices/authentication-service/src/*"]
+    },
+    "moduleResolution": "node",
+    "resolveJsonModule": true
+  },
+  "include": ["./src/**/*", "../../shared/**/*", "prisma/seeder"],
+  "exclude": ["node_modules", "dist"]
+}
