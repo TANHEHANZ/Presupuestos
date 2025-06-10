@@ -70,7 +70,7 @@ export class LoginComponent implements OnInit {
     const tl = gsap.timeline({
       onComplete: () => {
         setTimeout(() => {
-          this.router.navigate(['/dashboard/unidad_ejecutora']);
+          this.router.navigate(['/dashboard/presupuestos']);
         }, 500);
       },
     });
@@ -78,7 +78,6 @@ export class LoginComponent implements OnInit {
     tl.to(this.bloque.nativeElement, {
       skewX: 0,
       rotation: 90,
-      right: 0,
       height: '3000px',
       width: '100vw',
       duration: 1,

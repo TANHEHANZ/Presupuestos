@@ -30,12 +30,12 @@ interface NavGroup {
             [routerLink]="item.path"
             routerLinkActive="bg-primary/5 border-l-4 border-primary "
             [routerLinkActiveOptions]="{ exact: true }"
-            class="w-full flex flex-col justify-center items-center gap-2 min-h-24 cursor-pointer transition-all hover:bg-primary/10 "
+            class="w-full flex flex-col justify-center  text-center items-center gap-2 min-h-24 cursor-pointer transition-all hover:bg-primary/10 "
           >
             <app-icon
               [name]="item.icon"
               class="text-2xl"
-              routerLinkActive="text-primary "
+              routerLinkActive="text-primary  "
             ></app-icon>
             <p>{{ item.label }}</p>
           </a>
@@ -47,19 +47,46 @@ interface NavGroup {
   imports: [IconComponent, RouterModule, CommonModule],
 })
 export class NavComponent {
+  // @Input() navGroups: NavGroup[] = [
+  //   {
+  //     title: 'MODULOS',
+  //     items: [
+  //       {
+  //         label: 'Inicio',
+  //         icon: 'home',
+  //         path: '/dashboard/unidad_ejecutora/dashboard',
+  //       },
+  //       {
+  //         label: 'Proyectos',
+  //         icon: 'proyect',
+  //         path: '/dashboard/unidad_ejecutora/registros',
+  //       },
+  //     ],
+  //   },
+  // ];
   @Input() navGroups: NavGroup[] = [
     {
       title: 'MODULOS',
       items: [
         {
-          label: 'Inicio',
-          icon: 'home',
-          path: '/dashboard/unidad_ejecutora/dashboard',
+          label: 'Dashboard',
+          icon: 'chart',
+          path: '/dashboard/presupuestos',
         },
         {
-          label: 'Proyectos',
+          label: 'Unidades ejecutoras',
+          icon: 'unidades',
+          path: '/dashboard/presupuestos/unidades',
+        },
+        {
+          label: 'Consultas',
           icon: 'proyect',
-          path: '/dashboard/unidad_ejecutora/registros',
+          path: '/dashboard/presupuestos/consultas',
+        },
+        {
+          label: 'Usuarios',
+          icon: 'users',
+          path: '/dashboard/presupuestos/user',
         },
       ],
     },

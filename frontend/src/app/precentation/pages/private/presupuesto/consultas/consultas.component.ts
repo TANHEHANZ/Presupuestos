@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-consultas',
-  template: ``,
-  standalone: false,
+  template: ` consultas works! `,
 })
 export class ConsultasComponent {}
