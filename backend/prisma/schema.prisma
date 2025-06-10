@@ -44,13 +44,25 @@ model User {
 }
 
 model U_permisos {
-  id          String   @id @default(cuid())
+  id          String         @id @default(cuid())
   nombre      String
   descripcion String?
-  estado      U_estado @default(ACTIVO)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  usuarios    User[]   @relation("PermisosUsuarios")
+  estado      U_estado       @default(ACTIVO)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  usuarios    User[]         @relation("PermisosUsuarios")
+  navigation  U_navigation[] @relation("PermisosNavigation")
+}
+
+model U_navigation {
+  id        String       @id @default(cuid())
+  nombre    String
+  path      String?
+  icon      String?
+  estado    U_estado     @default(ACTIVO)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  permisos  U_permisos[] @relation("PermisosNavigation")
 }
 
 model UnidadEjecutora {

@@ -19,7 +19,7 @@ interface NavGroup {
   template: `
     <aside class="border-r w-full h-full flex flex-col  items-center">
       <div class="my-4">
-        <img src="/logo2.png" alt="Logo" class="w-[70%] mx-auto" />
+        <img src="/logo2.png" alt="Logo" class="h-20 mx-auto aspect-square" />
       </div>
       <ng-container *ngFor="let group of navGroups">
         <span class="text-xs text-gray-500 mt-4 self-start ml-2">{{
