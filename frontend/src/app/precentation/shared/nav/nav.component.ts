@@ -1,10 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  Input,
-  QueryList,
-  ViewChildren,
-} from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { IconComponent, IconName } from '../icons/icon.component';
 import { CommonModule } from '@angular/common';
@@ -28,12 +22,13 @@ interface NavGroup {
         <img src="/logo2.png" alt="Logo" class="h-20 mx-auto aspect-square" />
       </div>
       <ng-container *ngFor="let group of navGroups">
-        <span class="text-xs text-gray-500 mt-4 self-start ml-2">{{
-          group.title
-        }}</span>
+        <span
+          class="nav-anim-item text-xs  text-white mt-4 self-start  bg-primary px-2 py-0.5 rounded-t-lg"
+          >{{ group.title }}</span
+        >
         <ng-container *ngFor="let item of group.items">
           <a
-            class="nav-anim-item w-full flex flex-col justify-center text-center items-center opacity-0 translate-y-[90px] gap-2 min-h-24 cursor-pointer transition-all hover:bg-primary/10"
+            class="nav-anim-item w-full  flex-col hidden justify-center text-center items-center gap-2 min-h-24 cursor-pointer transition-all hover:bg-primary/10"
             [routerLink]="item.path"
             routerLinkActive="bg-primary/5 border-l-4 border-primary "
             [routerLinkActiveOptions]="{ exact: true }"
@@ -98,13 +93,19 @@ export class NavComponent {
     },
   ];
   ngAfterViewInit() {
-    gsap.from('.nav-anim-item', {
-      opacity: 1,
-      y: 0,
-      stagger: 0.1,
-      duration: 0.5,
-      delay: 3,
-      ease: 'back.out',
-    });
+    gsap.fromTo(
+      '.nav-anim-item',
+      {
+        opacity: 0,
+        translateY: 200,
+      },
+      {
+        opacity: 1,
+        translateY: 0,
+        stagger: 0.25,
+        display: 'flex',
+        ease: 'power1.out',
+      }
+    );
   }
 }
