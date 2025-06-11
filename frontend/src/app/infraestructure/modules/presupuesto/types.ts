@@ -1,8 +1,16 @@
 import z from 'zod';
 
-const C_Permisos = z.object({
-  id: z.string(),
-  nombre: z.string(),
+export const PermitionSchema = z.object({
+  name: z.string(),
+  key: z.string(),
+  icon: z.any(),
+});
+
+export const PermitionGroupSchema = z.object({
+  group: z.string(),
+  color: z.string(),
+  icon: z.any(),
+  permissions: z.array(PermitionSchema),
 });
 
 export const R_User = z.object({
@@ -12,7 +20,7 @@ export const R_User = z.object({
   rol: z.string(),
   estado: z.string(),
   createdAt: z.string(),
-  permisos: z.array(C_Permisos),
+  permisos: z.array(PermitionGroupSchema),
 });
 
 export type R_UserDTO = z.infer<typeof R_User>;
