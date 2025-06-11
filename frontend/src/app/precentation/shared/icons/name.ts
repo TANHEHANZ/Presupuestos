@@ -6,6 +6,9 @@ import {
   faChartSimple,
   faBuildingColumns,
   faUsers,
+  faGlassCheers,
+  faMagnifyingGlass,
+  faAdd,
 } from '@fortawesome/free-solid-svg-icons';
 
 export const ICONS = {
@@ -16,4 +19,6 @@ export const ICONS = {
   proyect: faProjectDiagram,
   chart: faChartSimple,
   unidades: faBuildingColumns,
+  search: faMagnifyingGlass,
+  add: faAdd,
 } as const;

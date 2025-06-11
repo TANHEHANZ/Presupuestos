@@ -18,7 +18,7 @@ import {
         [type]="type"
         [placeholder]="placeholder"
         [autocomplete]="autocomplete"
-        class="border border-primary rounded-xl px-3 py-4 focus:outline-none focus:ring-2 focus:ring-primary transition"
+        class="border border-primary rounded-xl px-3 py-4 focus:outline-none focus:ring-2 focus:ring-primary transition w-full"
         [ngClass]="{ 'border-red-500': isInvalid }"
         [value]="value"
         (input)="onInput($event)"
