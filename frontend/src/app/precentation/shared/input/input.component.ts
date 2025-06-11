@@ -9,13 +9,14 @@ import {
 @Component({
   selector: 'app-custom-input',
   template: `
-    <div class="flex flex-col w-full p-1">
+    <div class="flex flex-col w-full p-1 text-sm">
       <label
         [for]="id"
-        class="ml-2 mb-1 font-semibold text-primary"
+        class="ml-2 mb-1 font-semibold text-sm"
         [ngClass]="{
           'text-red-500': isInvalid,
-          ' text-olther/50  opacity-65 ': disabled
+          ' text-olther/50  opacity-65 ': disabled,
+          ' text-primary ': !disabled
         }"
         >{{ label }}</label
       >
@@ -24,10 +25,12 @@ import {
         [type]="type"
         [placeholder]="placeholder"
         [autocomplete]="autocomplete"
-        class="border border-primary  rounded-xl px-3 py-4 focus:outline-none focus:ring-2 focus:ring-primary transition w-full"
+        class="border   rounded-xl px-3 py-4 focus:outline-none focus:ring-2 focus:ring-primary transition w-full"
         [ngClass]="{
           'border-red-500': isInvalid,
-          'bg-white border-olther/50  opacity-80 cursor-not-allowed': disabled
+          'bg-white border-olther/50  border-dashed opacity-80 cursor-not-allowed':
+            disabled,
+          'border-primary': !disabled
         }"
         [value]="value"
         (input)="onInput($event)"

@@ -37,7 +37,10 @@ export interface TableColumn<T> {
             (click)="toggleExpand(i)"
             class="cursor-pointer hover:bg-gray-100"
           >
-            <td *ngFor="let col of columns" class="px-6 py-4 whitespace-nowrap">
+            <td
+              *ngFor="let col of columns"
+              class="px-6 py-4 whitespace-nowrap text-sm"
+            >
               <ng-container *ngIf="!col.cellTemplate; else customCell">
                 {{ row[col.accessor] }}
               </ng-container>

@@ -38,7 +38,7 @@ interface NavGroup {
               class="text-2xl"
               routerLinkActive="text-primary  "
             ></app-icon>
-            <p>{{ item.label }}</p>
+            <p class=" text-sm">{{ item.label }}</p>
           </a>
         </ng-container>
       </ng-container>

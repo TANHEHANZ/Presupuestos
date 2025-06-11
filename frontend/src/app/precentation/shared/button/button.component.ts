@@ -11,7 +11,7 @@ type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'outline' | 'olther';
       [type]="type"
       [disabled]="disabled"
       [ngClass]="buttonClass"
-      class="font-semibold transition flex items-center gap-2"
+      class="font-semibold transition flex items-center gap-2 text-sm"
     >
       <app-icon *ngIf="icon" [name]="icon"></app-icon>
       <ng-content></ng-content>

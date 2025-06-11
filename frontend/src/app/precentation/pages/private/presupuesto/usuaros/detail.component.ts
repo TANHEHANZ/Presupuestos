@@ -1,10 +1,9 @@
-import { Component, input, OnInit } from '@angular/core';
+import { Component, inject, input, OnInit } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { R_UserDTO } from '../../../../../infraestructure/modules/presupuesto/types';
 import { CustomInputComponent } from '../../../../shared/input/input.component';
 import { CustomButtonComponent } from '../../../../shared/button/button.component';
 import { CommonModule } from '@angular/common';
-
 @Component({
   selector: 'app-usuer-detail',
   template: `

@@ -24,7 +24,7 @@ gsap.registerPlugin(TextPlugin);
     >
       <div
         #bloque
-        class="bloque w-[40dvw] h-screen bg-primary  -skew-x-[12deg] flex  justify-center items-center absolute left-[10dvw] "
+        class="bloque w-[30dvw] h-screen bg-primary  -skew-x-[12deg] flex  justify-center items-center absolute left-[20dvw] "
       >
         <div
           class="logo text-white  skew-x-[12deg] w-full h-full relative flex justify-center items-center flex-col gap-4"
