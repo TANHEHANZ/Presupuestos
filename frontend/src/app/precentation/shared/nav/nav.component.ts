@@ -67,13 +67,18 @@ export class NavComponent {
   // ];
   @Input() navGroups: NavGroup[] = [
     {
-      title: 'MODULOS',
+      title: 'graficas',
       items: [
         {
           label: 'Dashboard',
           icon: 'chart',
           path: '/dashboard/presupuestos',
         },
+      ],
+    },
+    {
+      title: 'Modulos',
+      items: [
         {
           label: 'Unidades ejecutoras',
           icon: 'unidades',
