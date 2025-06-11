@@ -9,8 +9,14 @@ export const D_User: R_UserDTO[] = [
     estado: 'activo',
     createdAt: '2024-06-11T12:00:00Z',
     permisos: [
-      { id: 'perm-1', nombre: 'GESTION_USUARIOS' },
-      { id: 'perm-2', nombre: 'EJECUCION_PRESUPUESTO' },
+      {
+        group: 'Usuarios',
+        color: '#2563eb',
+        icon: 'users',
+        permissions: [
+          { key: 'user_create', name: 'Crear usuario', icon: 'user-plus' },
+        ],
+      },
     ],
   },
   {
@@ -20,6 +26,15 @@ export const D_User: R_UserDTO[] = [
     rol: 'user',
     estado: 'activo',
     createdAt: '2024-06-10T09:30:00Z',
-    permisos: [{ id: 'perm-3', nombre: 'CONSULTA_PRESUPUESTO' }],
+    permisos: [
+      {
+        group: 'Usuarios',
+        color: '#2563eb',
+        icon: 'users',
+        permissions: [
+          { key: 'user_create', name: 'Crear usuario', icon: 'user-plus' },
+        ],
+      },
+    ],
   },
 ];

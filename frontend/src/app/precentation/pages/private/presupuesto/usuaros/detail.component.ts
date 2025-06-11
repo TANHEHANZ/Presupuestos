@@ -4,6 +4,7 @@ import { R_UserDTO } from '../../../../../infraestructure/modules/presupuesto/ty
 import { CustomInputComponent } from '../../../../shared/input/input.component';
 import { CustomButtonComponent } from '../../../../shared/button/button.component';
 import { CommonModule } from '@angular/common';
+import { PermitionViewerComponent } from '../../../../../infraestructure/modules/permition/render.permition';
 @Component({
   selector: 'app-usuer-detail',
   template: `
@@ -20,17 +21,14 @@ import { CommonModule } from '@angular/common';
           [disabled]="true"
         />
         <div
-          class="col-span-2 border-2 p-4 border-dashed border-primary rounded-lg"
+          class="col-span-2 border-2 p-4 border-dashed border-gray-500 rounded-lg"
         >
           <p class="font-medium">Permisos:</p>
-          <ul class="grid grid-cols-2 md:grid-cols-5 gap-2 mt-2">
-            <li
-              *ngFor="let permiso of D_user()?.permisos"
-              class="text-xs px-2 py-1 bg-slate-400/30 rounded-lg flex justify-center items-center"
-            >
-              {{ permiso.nombre }}
-            </li>
-          </ul>
+
+          <app-permition-viewer
+            [permitions]="userForm.value.permisos || []"
+            [readonly]="true"
+          ></app-permition-viewer>
         </div>
         <section class="flex gap-4 flex-wrap ">
           <p class="font-medium block w-full">Acciones:</p>
@@ -52,6 +50,7 @@ import { CommonModule } from '@angular/common';
     ReactiveFormsModule,
     CustomInputComponent,
     CustomButtonComponent,
+    PermitionViewerComponent,
   ],
   standalone: true,
 })

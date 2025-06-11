@@ -17,8 +17,8 @@ import { ConfigUserComponent } from './config.user.component';
 @Component({
   selector: 'app-user',
   template: `
-    <app-drawer title="Configuración">
-      <app-config-user-component />
+    <app-drawer title="Configuración de cuenta de usuario ">
+      <app-config-user-component [D_user]="data[0]" />
     </app-drawer>
     <section class="flex flex-col gap-4 h-full min-h-[82vh]">
       <h1 class="text-3xl font-medium">Usuarios</h1>

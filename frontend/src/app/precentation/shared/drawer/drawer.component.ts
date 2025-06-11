@@ -1,11 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PanelService } from '../../../infraestructure/services/components/panel.service';
+import { IconComponent } from '../icons/icon.component';
 
 @Component({
   selector: 'app-drawer',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, IconComponent],
   template: `
     <div
       class="fixed inset-0 z-50 bg-black/40 flex justify-end transition-opacity duration-300"
@@ -17,7 +18,7 @@ import { PanelService } from '../../../infraestructure/services/components/panel
       (click)="closeDrawer()"
     >
       <aside
-        class="bg-white h-full w-[400px] max-w-full shadow-xl transition-transform duration-300 ease-in-out transform"
+        class="bg-white h-full w-[30dvw] max-w-full shadow-xl transition-transform duration-300 ease-in-out transform"
         [ngClass]="
           (panelService.drawerState$ | async)
             ? 'translate-x-0'
@@ -26,16 +27,16 @@ import { PanelService } from '../../../infraestructure/services/components/panel
         (click)="$event.stopPropagation()"
       >
         <header class="flex items-center justify-between p-4 border-b">
-          <h2 class="text-lg font-semibold">{{ title }}</h2>
+          <h2 class="text-lg font-medium my-4">{{ title }}</h2>
           <button
-            class="text-2xl"
+            class="text-2xl bg-secondary/30 text-primary w-8 h-8 rounded-lg flex justify-center items-center"
             (click)="closeDrawer()"
             aria-label="Cerrar drawer"
           >
-            ×
+            <app-icon name="close"></app-icon>
           </button>
         </header>
-        <section class="p-4">
+        <section class="p-8">
           <ng-content></ng-content>
         </section>
       </aside>
