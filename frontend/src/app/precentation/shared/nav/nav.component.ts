@@ -23,7 +23,7 @@ interface NavGroup {
       </div>
       <ng-container *ngFor="let group of navGroups">
         <span
-          class="nav-anim-item text-xs  text-white mt-4 self-start  bg-primary px-2 py-0.5 rounded-t-lg"
+          class="nav-anim-item text-xs  text-primary mt-4 ml-2 uppercase font-medium self-start"
           >{{ group.title }}</span
         >
         <ng-container *ngFor="let item of group.items">

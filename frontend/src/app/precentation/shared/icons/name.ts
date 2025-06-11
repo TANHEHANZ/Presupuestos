@@ -9,6 +9,9 @@ import {
   faGlassCheers,
   faMagnifyingGlass,
   faAdd,
+  faDeleteLeft,
+  faTrash,
+  faEdit,
 } from '@fortawesome/free-solid-svg-icons';
 
 export const ICONS = {
@@ -21,4 +24,6 @@ export const ICONS = {
   unidades: faBuildingColumns,
   search: faMagnifyingGlass,
   add: faAdd,
+  delete: faTrash,
+  edit: faEdit,
 } as const;

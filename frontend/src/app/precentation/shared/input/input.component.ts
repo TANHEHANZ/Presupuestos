@@ -9,20 +9,30 @@ import {
 @Component({
   selector: 'app-custom-input',
   template: `
-    <div class="flex flex-col w-full">
-      <label [for]="id" class="ml-2 mb-1 font-semibold text-primary">{{
-        label
-      }}</label>
+    <div class="flex flex-col w-full p-1">
+      <label
+        [for]="id"
+        class="ml-2 mb-1 font-semibold text-primary"
+        [ngClass]="{
+          'text-red-500': isInvalid,
+          ' text-olther/50  opacity-65 ': disabled
+        }"
+        >{{ label }}</label
+      >
       <input
         [id]="id"
         [type]="type"
         [placeholder]="placeholder"
         [autocomplete]="autocomplete"
-        class="border border-primary rounded-xl px-3 py-4 focus:outline-none focus:ring-2 focus:ring-primary transition w-full"
-        [ngClass]="{ 'border-red-500': isInvalid }"
+        class="border border-primary  rounded-xl px-3 py-4 focus:outline-none focus:ring-2 focus:ring-primary transition w-full"
+        [ngClass]="{
+          'border-red-500': isInvalid,
+          'bg-white border-olther/50  opacity-80 cursor-not-allowed': disabled
+        }"
         [value]="value"
         (input)="onInput($event)"
         (blur)="onTouched()"
+        [disabled]="disabled"
       />
       <ng-content></ng-content>
     </div>
@@ -43,8 +53,9 @@ export class CustomInputComponent implements ControlValueAccessor {
   @Input() placeholder = '';
   @Input() id = '';
   @Input() autocomplete = 'off';
+  @Input() value: string = '';
+  @Input() disabled: boolean = false;
 
-  value = '';
   isInvalid = false;
 
   onChange = (value: any) => {};
@@ -59,8 +70,9 @@ export class CustomInputComponent implements ControlValueAccessor {
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
-  setDisabledState?(isDisabled: boolean): void {}
-
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
   onInput(event: Event) {
     const value = (event.target as HTMLInputElement).value;
     this.value = value;
