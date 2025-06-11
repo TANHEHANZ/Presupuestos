@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavComponent } from '../../../shared/nav/nav.component';
 import { RouterOutlet } from '@angular/router';
+import { ModalComponent } from '../../../shared/modal/modal.component';
 
 @Component({
   selector: 'app-presupuesto-layout',
@@ -17,6 +18,6 @@ import { RouterOutlet } from '@angular/router';
       </div>
     </main>
   `,
-  imports: [NavComponent, RouterOutlet],
+  imports: [NavComponent, RouterOutlet, ModalComponent],
 })
 export class PresupuestoLayoutComponent {}
