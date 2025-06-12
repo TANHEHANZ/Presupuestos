@@ -1,17 +1,17 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PanelService } from '../../../infraestructure/services/components/panel.service';
 import { IconComponent } from '../icons/icon.component';
-
 @Component({
   selector: 'app-drawer',
   standalone: true,
   imports: [CommonModule, IconComponent],
   template: `
     <div
+      *ngIf="initialized"
       class="fixed inset-0 z-50 bg-black/40 flex justify-end transition-opacity duration-300"
-      [class.opacity-0]="!(panelService.drawerState$ | async)"
-      [class.pointer-events-none]="!(panelService.drawerState$ | async)"
+      [class.opacity-0]="!isOpen"
+      [class.pointer-events-none]="!isOpen"
       tabindex="-1"
       aria-modal="true"
       role="dialog"
@@ -19,11 +19,7 @@ import { IconComponent } from '../icons/icon.component';
     >
       <aside
         class="bg-white h-full w-[30dvw] max-w-full shadow-xl transition-transform duration-300 ease-in-out transform"
-        [ngClass]="
-          (panelService.drawerState$ | async)
-            ? 'translate-x-0'
-            : 'translate-x-full'
-        "
+        [ngClass]="isOpen ? 'translate-x-0' : 'translate-x-full'"
         (click)="$event.stopPropagation()"
       >
         <header class="flex items-center justify-between p-4 border-b">
@@ -45,7 +41,16 @@ import { IconComponent } from '../icons/icon.component';
 })
 export class DrawerComponent {
   @Input() title = '';
-  constructor(public panelService: PanelService) {}
+  panelService = inject(PanelService);
+  isOpen = false;
+  initialized = false;
+
+  constructor() {
+    this.panelService.drawerState$.subscribe((state) => {
+      this.isOpen = state;
+      this.initialized = true;
+    });
+  }
 
   closeDrawer() {
     this.panelService.closeDrawer();
