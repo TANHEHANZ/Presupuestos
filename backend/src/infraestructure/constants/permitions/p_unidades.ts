@@ -1,0 +1,7 @@
+export enum P_unit {
+  GET = "GET_UNIDAD",
+  CREATE = "CREATE_UNIDAD",
+  LIST = "LIST_UNIDAD",
+  UPDATE = "UPDATE_UNIDAD",
+  DELETE = "DELETE_UNIDAD",
+}

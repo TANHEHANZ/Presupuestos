@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../../../generated/prisma"
 }
 
 datasource db {
@@ -9,7 +8,8 @@ datasource db {
 }
 
 enum Role {
-  UNIDAD_EJECUTORA
+  OPERADOR
+  ADMIN
   PRESUPUESTOS
 }
 
@@ -29,18 +29,20 @@ enum U_estado {
 }
 
 model User {
-  id          String            @id @default(cuid())
-  ci          String            @unique
-  name        String
-  email       String            @unique
-  rol         Role
-  estado      U_estado          @default(ACTIVO)
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-  permisos    U_permisos[]      @relation("PermisosUsuarios")
-  unidades    UnidadEjecutora[] @relation("Responsables")
-  historiales HistorialCambio[]
-  Presupuesto Presupuesto[]     @relation("CreadoPor")
+  id        String       @id @default(cuid())
+  ci        String       @unique
+  name      String
+  email     String       @unique
+  rol       Role
+  estado    U_estado     @default(ACTIVO)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  permisos  U_permisos[] @relation("PermisosUsuarios")
+
+  unidadEjecutora UnidadEjecutora   @relation(fields: [unidadId], references: [id])
+  unidadId        String
+  historiales     HistorialCambio[]
+  Presupuesto     Presupuesto[]     @relation("CreadoPor")
 }
 
 model U_permisos {
@@ -75,9 +77,9 @@ model UnidadEjecutora {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  responsables User[]            @relation("Responsables")
   presupuestos Presupuesto[]
   historiales  HistorialCambio[]
+  User         User[]
 }
 
 model Presupuesto {
