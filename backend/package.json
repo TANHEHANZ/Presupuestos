@@ -1,12 +1,12 @@
 {
-  "name": "Presupuestos-Backend",
+  "name": "presupuestos",
   "version": "1.0.0",
   "main": "app.js.js",
   "prisma": {
     "seed": "ts-node prisma/seeder/index.ts"
   },
   "scripts": {
-    "dev": "ts-node-dev --respawn src/app.ts",
+    "dev": "ts-node-dev -r tsconfig-paths/register --respawn src/app.ts",
     "build": "tsc",
     "start": "node dist/app.js",
     "db:seed": "npx prisma db seed",
@@ -36,7 +36,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
     "@types/dotenv": "^6.1.1",
-    "@types/express": "^5.0.1",
+    "@types/express": "^5.0.3",
     "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^22.13.11",
