@@ -1,5 +1,4 @@
 import {
-  AfterViewChecked,
   Component,
   ElementRef,
   Input,
@@ -20,16 +19,9 @@ export interface TableColumn<T> {
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [
-    CommonModule,
-    NgTemplateOutlet,
-    CustomInputComponent,
-    CustomButtonComponent,
-  ],
+  imports: [CommonModule, NgTemplateOutlet],
   template: `
-    <section
-      class="max-h-[40dvh] overflow-y-auto relative rounded-md overflow-hidden"
-    >
+    <section class="h-full overflow-y-auto relative rounded-md overflow-hidden">
       <section></section>
       <table class="min-w-full divide-y divide-gray-200 ">
         <thead class="bg-slate-100 sticky top-0">

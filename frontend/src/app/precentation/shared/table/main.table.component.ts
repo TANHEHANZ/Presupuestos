@@ -10,12 +10,12 @@ import { TableComponent, TableColumn } from './table.component';
 import { CommonModule } from '@angular/common';
 import { IconName } from '../../../infraestructure/modules/presupuesto/types';
 import { ExportButtonComponent, TypeExport } from '../button/export.component';
+import { ContainerComponent } from '../container/container.component';
 
 @Component({
   selector: 'app-main-table',
   template: `
-    <section class="p-8 rounded-lg bg-white flex flex-col min-h-[60dvh] ">
-      <p>{{ title }}</p>
+    <app-container [title]="title">
       <article class=" grid grid-cols-2 my-4">
         @if(searchConfig && searchConfig){
         <app-search
@@ -40,13 +40,14 @@ import { ExportButtonComponent, TypeExport } from '../button/export.component';
         [data]="data"
         [rowExpandTemplate]="rowExpandTemplate"
       ></app-table>
-    </section>
+    </app-container>
   `,
   imports: [
     SearchComponent,
     TableComponent,
     CommonModule,
     ExportButtonComponent,
+    ContainerComponent,
   ],
   standalone: true,
 })
