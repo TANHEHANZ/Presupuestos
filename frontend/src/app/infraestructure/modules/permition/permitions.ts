@@ -8,7 +8,7 @@ export interface Permition {
 
 export interface PermitionGroup {
   group: string;
-  color: string; // HEX o rgb
+  color: string;
   icon: IconName;
   permissions: Permition[];
 }
