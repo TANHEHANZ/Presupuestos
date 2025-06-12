@@ -7,13 +7,10 @@ import { D_User } from '../../../../../infraestructure/modules/presupuesto/usuar
 import { R_UserDTO } from '../../../../../infraestructure/modules/presupuesto/types';
 import { CommonModule } from '@angular/common';
 import { DetailUserComponent } from './detail.component';
-import { CustomInputComponent } from '../../../../shared/input/input.component';
-import { CustomButtonComponent } from '../../../../shared/button/button.component';
-import { ModalComponent } from '../../../../shared/modal/modal.component';
-import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
 import { DrawerComponent } from '../../../../shared/drawer/drawer.component';
 import { ConfigUserComponent } from './config.user.component';
 import { MainTableComponent } from '../../../../shared/table/main.table.component';
+import { AddUserComponent } from './add.user.component';
 
 @Component({
   selector: 'app-user',
@@ -23,28 +20,7 @@ import { MainTableComponent } from '../../../../shared/table/main.table.componen
     </app-drawer>
     <section class="flex flex-col gap-4 h-full min-h-[82vh] ">
       <h1 class="text-3xl font-medium">Usuarios</h1>
-
-      <section
-        class="bg-white rounded-lg p-8 flex justify-between items-center"
-      >
-        <div class="flex gap-2 justify-start items-end w-[40%]">
-          <app-custom-input
-            label="Buscar CI"
-            inputId="buscar-ci"
-            placeholder="Buscar por ci a usuario para agregarlo"
-            [type]="'text'"
-            class="w-[60%]"
-          ></app-custom-input>
-          <app-custom-button
-            type="button"
-            icon="add"
-            (click)="newUser()"
-            aria-label="Agregar nuevo usuario"
-          >
-            Nuevo usuario
-          </app-custom-button>
-        </div>
-      </section>
+      <app-user-add />
       <app-main-table
         [columns]="columns"
         [data]="data"
@@ -70,15 +46,13 @@ import { MainTableComponent } from '../../../../shared/table/main.table.componen
   imports: [
     CommonModule,
     DetailUserComponent,
-    CustomInputComponent,
-    CustomButtonComponent,
     DrawerComponent,
     ConfigUserComponent,
     MainTableComponent,
+    AddUserComponent,
   ],
 })
 export class UserComponent {
-  panelS = inject(PanelService);
   data = D_User;
   columns: TableColumn<R_UserDTO>[] = [
     { header: 'CI', accessor: 'ci' },
@@ -90,8 +64,5 @@ export class UserComponent {
   ];
   searchChange(value: string) {
     console.log('capturados', value);
-  }
-  newUser() {
-    this.panelS.openDrawer();
   }
 }
