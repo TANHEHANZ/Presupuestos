@@ -32,7 +32,6 @@ model User {
   id        String       @id @default(cuid())
   ci        String       @unique
   name      String
-  email     String       @unique
   rol       Role
   estado    U_estado     @default(ACTIVO)
   createdAt DateTime     @default(now())
@@ -46,14 +45,13 @@ model User {
 }
 
 model U_permisos {
-  id          String         @id @default(cuid())
-  nombre      String
-  descripcion String?
-  estado      U_estado       @default(ACTIVO)
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-  usuarios    User[]         @relation("PermisosUsuarios")
-  navigation  U_navigation[] @relation("PermisosNavigation")
+  id         String         @id @default(cuid())
+  nombre     String
+  estado     U_estado       @default(ACTIVO)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  usuarios   User[]         @relation("PermisosUsuarios")
+  navigation U_navigation[] @relation("PermisosNavigation")
 }
 
 model U_navigation {
