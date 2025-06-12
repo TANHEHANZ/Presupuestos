@@ -13,6 +13,7 @@ import { ModalComponent } from '../../../../shared/modal/modal.component';
 import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
 import { DrawerComponent } from '../../../../shared/drawer/drawer.component';
 import { ConfigUserComponent } from './config.user.component';
+import { MainTableComponent } from '../../../../shared/table/main.table.component';
 
 @Component({
   selector: 'app-user',
@@ -20,7 +21,7 @@ import { ConfigUserComponent } from './config.user.component';
     <app-drawer title="Configuración de cuenta de usuario ">
       <app-config-user-component [D_user]="data[0]" />
     </app-drawer>
-    <section class="flex flex-col gap-4 h-full min-h-[82vh]">
+    <section class="flex flex-col gap-4 h-full min-h-[82vh] ">
       <h1 class="text-3xl font-medium">Usuarios</h1>
 
       <section
@@ -43,40 +44,37 @@ import { ConfigUserComponent } from './config.user.component';
             Nuevo usuario
           </app-custom-button>
         </div>
-        <div class="flex gap-4  justify-center items-end min-w-[32rem]">
-          <app-custom-input
-            label="Filtrar"
-            [type]="'text'"
-            placeholder="Filtrar por CI"
-            class="w-full"
-          ></app-custom-input>
-          <app-custom-button type="submit" icon="search"
-            >Buscar</app-custom-button
-          >
-        </div>
       </section>
-      <section class="p-8 rounded-lg bg-white flex-1 h-0 flex flex-col">
-        <p class="font-medium my-4">Registros de usuarios</p>
-        <app-table
-          [columns]="columns"
-          [data]="data"
-          [rowExpandTemplate]="expandTemplate"
-          class="flex-1"
-        ></app-table>
-        <ng-template #expandTemplate let-row>
-          <app-usuer-detail [D_user]="row" />
-        </ng-template>
-      </section>
+      <app-main-table
+        [columns]="columns"
+        [data]="data"
+        [rowExpandTemplate]="expandTemplate"
+        title="Registros de usuarios"
+        [searchConfig]="{
+          label : 'Filtrar',
+          placeholder: 'Filtrar por nombre ,ci',
+          buttonLabel: 'filtrar',
+          icon: 'filter',
+        }"
+        [export]="{
+          types: ['csv', 'pdf'],
+          data: []
+        }"
+        (searchChange)="searchChange($event)"
+      ></app-main-table>
+      <ng-template #expandTemplate let-row>
+        <app-usuer-detail [D_user]="row" />
+      </ng-template>
     </section>
   `,
   imports: [
-    TableComponent,
     CommonModule,
     DetailUserComponent,
     CustomInputComponent,
     CustomButtonComponent,
     DrawerComponent,
     ConfigUserComponent,
+    MainTableComponent,
   ],
 })
 export class UserComponent {
@@ -90,6 +88,9 @@ export class UserComponent {
     { header: 'Estado', accessor: 'estado' },
     { header: 'Fecha Creación', accessor: 'createdAt' },
   ];
+  searchChange(value: string) {
+    console.log('capturados', value);
+  }
   newUser() {
     this.panelS.openDrawer();
   }

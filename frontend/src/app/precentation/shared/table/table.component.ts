@@ -9,6 +9,8 @@ import {
 } from '@angular/core';
 import { CommonModule, NgTemplateOutlet } from '@angular/common';
 import gsap from 'gsap';
+import { CustomInputComponent } from '../input/input.component';
+import { CustomButtonComponent } from '../button/button.component';
 export interface TableColumn<T> {
   header: string;
   accessor: keyof T;
@@ -18,57 +20,70 @@ export interface TableColumn<T> {
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [CommonModule, NgTemplateOutlet],
+  imports: [
+    CommonModule,
+    NgTemplateOutlet,
+    CustomInputComponent,
+    CustomButtonComponent,
+  ],
   template: `
-    <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-50">
-        <tr>
-          <th
-            *ngFor="let col of columns"
-            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >
-            {{ col.header }}
-          </th>
-        </tr>
-      </thead>
-      <tbody class="bg-white divide-y divide-gray-200">
-        <ng-container *ngFor="let row of data; let i = index">
-          <tr
-            (click)="toggleExpand(i)"
-            class="cursor-pointer hover:bg-gray-100"
-          >
-            <td
+    <section
+      class="max-h-[40dvh] overflow-y-auto relative rounded-md overflow-hidden"
+    >
+      <section></section>
+      <table class="min-w-full divide-y divide-gray-200 ">
+        <thead class="bg-slate-100 sticky top-0">
+          <tr>
+            <th
               *ngFor="let col of columns"
-              class="px-6 py-4 whitespace-nowrap text-sm"
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
-              <ng-container *ngIf="!col.cellTemplate; else customCell">
-                {{ row[col.accessor] }}
-              </ng-container>
-              <ng-template #customCell>
-                <ng-container
-                  *ngTemplateOutlet="
-                    col.cellTemplate ?? null;
-                    context: { $implicit: row }
-                  "
-                ></ng-container>
-              </ng-template>
-            </td>
+              {{ col.header }}
+            </th>
           </tr>
-          <tr *ngIf="expandedRowIndex === i">
-            <td [attr.colspan]="columns.length" class="bg-gray-50 px-6 py-4">
-              <div #expandRow style="overflow: hidden; height: 0; opacity: 0;">
-                <ng-container
-                  *ngTemplateOutlet="
-                    rowExpandTemplate ?? null;
-                    context: { $implicit: row }
-                  "
-                ></ng-container>
-              </div>
-            </td>
-          </tr>
-        </ng-container>
-      </tbody>
-    </table>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <ng-container *ngFor="let row of data; let i = index">
+            <tr
+              (click)="toggleExpand(i)"
+              class="cursor-pointer hover:bg-slate-50"
+            >
+              <td
+                *ngFor="let col of columns"
+                class="px-6 py-4 whitespace-nowrap text-sm"
+              >
+                <ng-container *ngIf="!col.cellTemplate; else customCell">
+                  {{ row[col.accessor] }}
+                </ng-container>
+                <ng-template #customCell>
+                  <ng-container
+                    *ngTemplateOutlet="
+                      col.cellTemplate ?? null;
+                      context: { $implicit: row }
+                    "
+                  ></ng-container>
+                </ng-template>
+              </td>
+            </tr>
+            <tr *ngIf="expandedRowIndex === i">
+              <td [attr.colspan]="columns.length" class="bg-gray-50 px-6 py-4">
+                <div
+                  #expandRow
+                  style="overflow: hidden; height: 0; opacity: 0;"
+                >
+                  <ng-container
+                    *ngTemplateOutlet="
+                      rowExpandTemplate ?? null;
+                      context: { $implicit: row }
+                    "
+                  ></ng-container>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </section>
   `,
 })
 export class TableComponent<T extends object> {

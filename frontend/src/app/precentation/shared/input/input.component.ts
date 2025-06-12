@@ -9,7 +9,7 @@ import {
 @Component({
   selector: 'app-custom-input',
   template: `
-    <div class="flex flex-col w-full p-1 text-sm">
+    <div class="flex flex-col w-full px-1 text-sm">
       <label
         [for]="id"
         class="ml-2 mb-1 font-semibold text-sm"
@@ -52,7 +52,7 @@ import {
 })
 export class CustomInputComponent implements ControlValueAccessor {
   @Input() label = '';
-  @Input() type: 'text' | 'password' | 'email' = 'text';
+  @Input() type: 'text' | 'password' | 'email' | 'search' = 'text';
   @Input() placeholder = '';
   @Input() id = '';
   @Input() autocomplete = 'off';

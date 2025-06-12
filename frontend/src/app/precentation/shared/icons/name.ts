@@ -21,6 +21,9 @@ import {
   faSearch,
   faSave,
   faClose,
+  faFilter,
+  faFileCsv,
+  faFilePdf,
 } from '@fortawesome/free-solid-svg-icons';
 
 export const ICONS = {
@@ -45,4 +48,7 @@ export const ICONS = {
   building: faBuilding,
   save: faSave,
   close: faClose,
+  filter: faFilter,
+  csv: faFileCsv,
+  pdf: faFilePdf,
 } as const;

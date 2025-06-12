@@ -10,6 +10,8 @@ import { PermitionViewerComponent } from '../../../../../infraestructure/modules
   template: `
     <div class="w-full grid grid-cols-2 md:grid-cols-3 gap-4" *ngIf="userForm">
       <form [formGroup]="userForm" class="contents">
+        <p class="font-medium col-span-full">Informacion del usuario:</p>
+
         <app-custom-input label="CI" formControlName="ci" [disabled]="true" />
         <app-custom-input label="Nombre" formControlName="name" />
         <app-custom-input label="Email" formControlName="email" />
@@ -20,23 +22,21 @@ import { PermitionViewerComponent } from '../../../../../infraestructure/modules
           [value]="(userForm.value.createdAt | date : 'short') ?? ''"
           [disabled]="true"
         />
-        <div
-          class="col-span-2 border-2 p-4 border-dashed border-gray-500 rounded-lg"
-        >
+        <div class="col-span-2  rounded-lg">
           <p class="font-medium">Permisos:</p>
 
           <app-permition-viewer
-            [permitions]="userForm.value.permisos || []"
+            [permitions]="D_user()?.permisos || []"
             [readonly]="true"
           ></app-permition-viewer>
         </div>
-        <section class="flex gap-4 flex-wrap ">
-          <p class="font-medium block w-full">Acciones:</p>
+        <section class="grid grid-cols-3 gap-4">
+          <p class="font-medium col-span-full">Acciones:</p>
           <app-custom-button [icon]="'edit'" (click)="toggleEdit($event)">
             {{ editMode ? 'Guardar' : 'Editar' }}
           </app-custom-button>
           <app-custom-button [variant]="'secondary'" [icon]="'settings'">
-            Configurar permisos
+            Permisos
           </app-custom-button>
           <app-custom-button [variant]="'danger'" [icon]="'delete'">
             Eliminar
