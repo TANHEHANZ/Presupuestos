@@ -1,13 +1,19 @@
 import { Component } from '@angular/core';
+import { WrapperComponent } from '../../../../shared/container/wrapper.component';
 
 @Component({
   selector: 'app-unidades',
   template: `
-    <div class="flex flex-col gap-4">
-      <h1 class="text-2xl font-bold">Unidades</h1>
-      <p>Esta es la página de unidades.</p>
-    </div>
+    <app-wrapper
+      title="Unidades"
+      [path]="{
+        initial: 'Modulos',
+        finally: 'Unidades'
+      }"
+    >
+    </app-wrapper>
   `,
+  imports: [WrapperComponent],
 })
 export class UnidadesComponent {
   // Aquí puedes agregar la lógica necesaria para el componente

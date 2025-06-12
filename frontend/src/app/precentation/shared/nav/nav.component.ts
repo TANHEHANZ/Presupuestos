@@ -109,7 +109,8 @@ export class NavComponent {
         translateY: 0,
         stagger: 0.25,
         display: 'flex',
-        ease: 'power1.out',
+        ease: 'slow(0.7,0.7,false)',
+        y: -500,
       }
     );
   }

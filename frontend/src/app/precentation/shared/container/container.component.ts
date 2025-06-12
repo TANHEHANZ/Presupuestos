@@ -1,11 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
-
+import { AfterViewInit, Component, Input } from '@angular/core';
 @Component({
   selector: 'app-container',
   template: `
     <section
-      class="bg-white rounded-lg p-8 flex flex-col gap-2 overflow-hidden"
+      class=".container bg-white rounded-lg p-8 flex flex-col gap-2 overflow-hidden"
       [ngStyle]="{ height: h, width: w }"
     >
       <p
