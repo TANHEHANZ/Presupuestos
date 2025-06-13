@@ -25,6 +25,7 @@ export const Uservice = {
 
       if (!response.ok) {
         const errorData = await response.text();
+        console.log(errorData);
         throw new ValidationError(`Servicio caido contactate con soporte`);
       }
 
@@ -48,7 +49,38 @@ export const Uservice = {
       throw new Error("No se pudo validar el usuario. Intenta nuevamente.");
     }
   },
+  create: async (data: DTO_uCreate): Promise<any> => {
+    try {
+      const { permisos, ...userData } = data;
+      const existingUser = await prismaC.user.findUnique({
+        where: { ci: userData.ci },
+      });
 
-  create: async (data: DTO_uCreate): Promise<void> => {},
+      if (existingUser) {
+        throw new NotFoundError("El usuario ya se registró.");
+      }
+      const result = await prismaC.$transaction(async (prisma) => {
+        const newUser = await prisma.user.create({
+          data: {
+            ...userData,
+            password: userData.ci,
+            permisos: permisos,
+          },
+          include: {
+            unidadEjecutora: true,
+          },
+        });
+
+        return newUser;
+      });
+      return result;
+    } catch (error) {
+      console.error("Error al crear usuario:", error);
+      return {
+        success: false,
+        error: "Error interno al crear el usuario",
+      };
+    }
+  },
   update: async (data: DTO_uCreate): Promise<void> => {},
 };

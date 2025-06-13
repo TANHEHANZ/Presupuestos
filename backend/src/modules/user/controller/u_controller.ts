@@ -27,10 +27,27 @@ export const Ucontroller = {
     }
   },
 
+  create: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const createData = await Uservice.create(req.body);
+      API.success(res, "Usuario creado", createData);
+    } catch (error: any) {
+      if (error instanceof ValidationError) {
+        API.badRequest(res, error.message);
+        return;
+      }
+
+      if (error instanceof NotFoundError) {
+        API.notFound(res, error.message);
+        return;
+      }
+      API.serverError(res, "No se pudo crear usuario.", error);
+      return;
+    }
+  },
   get: async (req: Request, res: Response): Promise<void> => {
     console.log("idUusario", req.user!.id);
     res.json("user");
     return;
   },
-  create: async (req: Request, res: Response): Promise<void> => {},
 };
