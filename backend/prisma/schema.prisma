@@ -29,15 +29,14 @@ enum U_estado {
 }
 
 model User {
-  id        String       @id @default(cuid())
-  ci        String       @unique
-  name      String
-  rol       Role
-  estado    U_estado     @default(ACTIVO)
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-  permisos  U_permisos[] @relation("PermisosUsuarios")
-
+  id              String            @id @default(cuid())
+  ci              String            @unique
+  name            String
+  rol             Role
+  estado          U_estado          @default(ACTIVO)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  permisos        U_permisos[]      @relation("PermisosUsuarios")
   unidadEjecutora UnidadEjecutora   @relation(fields: [unidadId], references: [id])
   unidadId        String
   historiales     HistorialCambio[]
@@ -45,24 +44,22 @@ model User {
 }
 
 model U_permisos {
-  id         String         @id @default(cuid())
-  nombre     String
-  estado     U_estado       @default(ACTIVO)
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
-  usuarios   User[]         @relation("PermisosUsuarios")
-  navigation U_navigation[] @relation("PermisosNavigation")
+  id        String   @id @default(cuid())
+  nombre    String
+  estado    U_estado @default(ACTIVO)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  usuarios  User[]   @relation("PermisosUsuarios")
 }
 
 model U_navigation {
-  id        String       @id @default(cuid())
+  id        String   @id @default(cuid())
   nombre    String
   path      String?
   icon      String?
-  estado    U_estado     @default(ACTIVO)
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
-  permisos  U_permisos[] @relation("PermisosNavigation")
+  estado    U_estado @default(ACTIVO)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model UnidadEjecutora {
