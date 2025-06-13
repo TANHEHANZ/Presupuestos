@@ -33,23 +33,15 @@ model User {
   ci              String            @unique
   name            String
   rol             Role
+  password        String
   estado          U_estado          @default(ACTIVO)
   createdAt       DateTime          @default(now())
   updatedAt       DateTime          @updatedAt
-  permisos        U_permisos[]      @relation("PermisosUsuarios")
+  permisos        String[]
   unidadEjecutora UnidadEjecutora   @relation(fields: [unidadId], references: [id])
   unidadId        String
   historiales     HistorialCambio[]
   Presupuesto     Presupuesto[]     @relation("CreadoPor")
-}
-
-model U_permisos {
-  id        String   @id @default(cuid())
-  nombre    String
-  estado    U_estado @default(ACTIVO)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  usuarios  User[]   @relation("PermisosUsuarios")
 }
 
 model U_navigation {
