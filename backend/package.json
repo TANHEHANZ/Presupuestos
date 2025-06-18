@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "app.js.js",
   "prisma": {
-    "seed": "ts-node prisma/seeder/index.ts"
+    "seed": "ts-node prisma/seeders/index.ts"
   },
   "scripts": {
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn src/app.ts",
@@ -29,8 +29,10 @@
     "jsdoc": "^4.0.4",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.1",
+    "path": "^0.12.7",
     "socket.io": "^4.8.1",
     "uuid": "^11.1.0",
+    "xlsx": "^0.18.5",
     "zod": "^3.24.2",
     "zod-validation-error": "^3.4.0"
   },

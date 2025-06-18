@@ -55,15 +55,13 @@ model U_navigation {
 }
 
 model UnidadEjecutora {
-  id          String   @id @default(cuid())
-  codigo      String   @unique
-  sigla       String
-  nombre      String
-  descripcion String?
-  estado      U_estado @default(ACTIVO)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
+  id           String            @id @default(cuid())
+  ue           String            @unique
+  secretaria   String
+  descripcion  String?
+  estado       U_estado          @default(ACTIVO)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
   presupuestos Presupuesto[]
   historiales  HistorialCambio[]
   User         User[]
