@@ -5,7 +5,8 @@ import { CustomButtonComponent } from '../../../../shared/button/button.componen
 @Component({
   selector: 'app-import-Unidades',
   template: `
-    <app-container>
+    <app-container [title]="'importaciones'">
+      <p></p>
       <app-custom-button> Exportart </app-custom-button>
     </app-container>
   `,

@@ -10,7 +10,7 @@ import { ImportUnidadesComponent } from './import.component';
   selector: 'app-unidades',
   template: `
     <app-wrapper
-      title="Unidades Ejecutoras"
+      title="Presupuestos"
       [path]="{
         initial: 'Modulos',
         finally: 'Unidades Ejecutoras'
