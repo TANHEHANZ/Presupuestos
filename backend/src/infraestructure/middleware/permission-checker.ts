@@ -3,44 +3,38 @@ import { prismaC } from "../config/prisma.client";
 import { API } from "../config/response";
 
 export const checkPermission = (requiredPermission: string) => {
-  return (req: Request, res: Response, next: NextFunction) => {
+  return async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     const userId = req.user?.id;
 
     if (!userId) {
-      API.unauthorized(res, "No esta autorizado");
+      API.unauthorized(res, "No estás autorizado");
       return;
     }
 
-    prismaC.user
-      .findUnique({
+    try {
+      const user = await prismaC.user.findUnique({
         where: { id: userId },
-        select: {
-          permisos: {
-            where: {
-              estado: "ACTIVO",
-            },
-            select: {
-              nombre: true,
-            },
-          },
-        },
-      })
-      .then((userWithPerms) => {
-        const userPermissions =
-          userWithPerms?.permisos.map((p) => p.nombre) ?? [];
-
-        if (!userPermissions.includes(requiredPermission)) {
-          return API.unauthorized(res, "No tienes permiso para esta acción");
-        }
-
-        next();
-      })
-      .catch((error) => {
-        API.serverError(
-          res,
-          "Error contactate con hancito el te ayudara ;)",
-          error
-        );
+        select: { permisos: true },
       });
+
+      const userPermissions = user?.permisos ?? [];
+
+      if (!userPermissions.includes(requiredPermission)) {
+        API.unauthorized(res, "No tienes permiso para esta acción");
+        return;
+      }
+
+      next();
+    } catch (error) {
+      API.serverError(
+        res,
+        "Error. Contacta con Hancito, él te ayudará ;)",
+        error
+      );
+    }
   };
 };

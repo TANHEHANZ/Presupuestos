@@ -11,6 +11,11 @@ import { UserApiResponse } from "../types/t_Uvalid";
 export const Uservice = {
   uValidate: async ({ ci }: DTO_uValidate): Promise<any> => {
     try {
+      const existingUser = await prismaC.user.findFirst({ where: { ci } });
+
+      if (existingUser) {
+        throw new NotFoundError("El usuario ya se registró.");
+      }
       const formData = new URLSearchParams();
       formData.append("tipo", "D");
       formData.append("dato", ci);
@@ -26,7 +31,7 @@ export const Uservice = {
       if (!response.ok) {
         const errorData = await response.text();
         console.log(errorData);
-        throw new ValidationError(`Servicio caido contactate con soporte`);
+        throw new ValidationError(`Servicio caído, contacta con soporte`);
       }
 
       const data: UserApiResponse = await response.json();
@@ -35,11 +40,6 @@ export const Uservice = {
         throw new ValidationError(data.data as string);
       }
 
-      const existingUser = await prismaC.user.findFirst({ where: { ci } });
-
-      if (existingUser) {
-        throw new NotFoundError("El usuario ya se registró.");
-      }
       return data.data;
     } catch (error: any) {
       console.error("Error en uValidate:", error.message || error);
@@ -49,6 +49,7 @@ export const Uservice = {
       throw new Error("No se pudo validar el usuario. Intenta nuevamente.");
     }
   },
+
   create: async (data: DTO_uCreate): Promise<any> => {
     try {
       const { permisos, ...userData } = data;
