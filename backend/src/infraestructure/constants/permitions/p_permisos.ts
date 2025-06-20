@@ -1,0 +1,5 @@
+export enum P_config {
+  ALL_PERMITION = "LIST_ALL",
+  KEY_PERMITION = "LIST_KEY",
+  ALL_NAV_ITEMS = "LIST_ALL_NAV_ITEMS",
+}
