@@ -7,6 +7,7 @@ import { validate } from "@/infraestructure/helpers/validate";
 
 const u_Router = Router();
 
-u_Router.get("/", checkPermission(P_user.GET), Ucontroller.get);
+u_Router.route("/").get(Ucontroller.get).post(Ucontroller.create);
+
 u_Router.post("/valid", validate(Uvalidate, "body"), Ucontroller.validate);
 export default u_Router;

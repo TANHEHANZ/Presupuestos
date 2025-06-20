@@ -16,4 +16,5 @@ export const PERMITION_KEYS = {
     { name: "Ver unidades", key: P_unit.LIST, icon: "building" },
   ],
   reportes: [{ name: "Descargar", key: P_report.DOWNLOAD, icon: "download" }],
+  all: [{ key: "ALL" }],
 };
