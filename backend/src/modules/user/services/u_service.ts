@@ -8,7 +8,7 @@ import {
 } from "@/infraestructure/helpers/error";
 import { UserApiResponse } from "../types/t_Uvalid";
 import { User } from "@prisma/client";
-
+import bcrypt from "bcryptjs";
 export const Uservice = {
   uValidate: async ({ ci }: DTO_uValidate): Promise<any> => {
     try {
@@ -60,6 +60,7 @@ export const Uservice = {
       }
       throw new Error("No se pudo validar el usuario.");
     }
+    const hashedPassword = await bcrypt.hash(userData.ci, Number(config.SALT));
 
     try {
       const result: User = await prismaC.$transaction(
@@ -67,7 +68,7 @@ export const Uservice = {
           const newUser = await prisma.user.create({
             data: {
               ...userData,
-              password: userData.ci,
+              password: hashedPassword,
               permisos,
             },
             include: {

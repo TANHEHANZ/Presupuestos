@@ -33,6 +33,7 @@ export const Ucontroller = {
 
       API.success(res, "Usuario creado", createData);
     } catch (error: any) {
+      console.log(error);
       if (error instanceof NotFoundError) {
         API.notFound(res, error.message);
         return;

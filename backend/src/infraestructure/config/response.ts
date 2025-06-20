@@ -39,7 +39,13 @@ export const API = {
     };
 
     if (data) response.data = data;
-    if (errors) response.errors = errors;
+    if (errors) {
+      response.errors = {
+        message: errors.message || "Error desconocido",
+        name: errors.name,
+        ...(process.env.NODE_ENV === "development" && { stack: errors.stack }),
+      };
+    }
 
     return res.status(status).json(response);
   },
@@ -86,7 +92,7 @@ export const API = {
     return API.createResponse(
       res,
       HTTP_STATUS.INTERNAL_SERVER,
-      errors,
+      message,
       undefined,
       process.env.NODE_ENV === "development" ? errors : undefined
     );
