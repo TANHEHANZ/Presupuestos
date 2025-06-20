@@ -2,10 +2,14 @@ import { prismaC } from "@/infraestructure/config/prisma.client";
 import { DTO_uniCreate } from "../validations/v_create";
 import { UnidadEjecutora } from "@prisma/client";
 export const Uni_service = {
-  all: async (): Promise<UnidadEjecutora[]> => {
+  all: async (): Promise<Partial<UnidadEjecutora>[]> => {
     try {
       const uni_all = await prismaC.unidadEjecutora.findMany({
         where: { estado: "ACTIVO" },
+        omit: {
+          createdAt: true,
+          updatedAt: true,
+        },
       });
       return uni_all;
     } catch (error) {
