@@ -15,7 +15,9 @@ export const Ln_service = {
       where: { ci },
     });
     if (!user) {
-      throw new Error("Usuario no encontrado.");
+      throw new Error(
+        "Credenciales inválidas. Por favor, verifica tu cédula o contraseña."
+      );
     }
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
