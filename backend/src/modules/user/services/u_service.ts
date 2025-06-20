@@ -7,6 +7,7 @@ import {
   ValidationError,
 } from "@/infraestructure/helpers/error";
 import { UserApiResponse } from "../types/t_Uvalid";
+import { User } from "@prisma/client";
 
 export const Uservice = {
   uValidate: async ({ ci }: DTO_uValidate): Promise<any> => {
@@ -49,39 +50,40 @@ export const Uservice = {
       throw new Error("No se pudo validar el usuario. Intenta nuevamente.");
     }
   },
-
-  create: async (data: DTO_uCreate): Promise<any> => {
+  create: async (data: DTO_uCreate): Promise<User> => {
+    const { permisos, ...userData } = data;
     try {
-      const { permisos, ...userData } = data;
-      const existingUser = await prismaC.user.findUnique({
-        where: { ci: userData.ci },
-      });
-
-      if (existingUser) {
-        throw new NotFoundError("El usuario ya se registró.");
+      await Uservice.uValidate({ ci: userData.ci });
+    } catch (error) {
+      if (error instanceof NotFoundError || error instanceof ValidationError) {
+        throw error;
       }
-      const result = await prismaC.$transaction(async (prisma) => {
-        const newUser = await prisma.user.create({
-          data: {
-            ...userData,
-            password: userData.ci,
-            permisos: permisos,
-          },
-          include: {
-            unidadEjecutora: true,
-          },
-        });
+      throw new Error("No se pudo validar el usuario.");
+    }
 
-        return newUser;
-      });
+    try {
+      const result: User = await prismaC.$transaction(
+        async (prisma): Promise<User> => {
+          const newUser = await prisma.user.create({
+            data: {
+              ...userData,
+              password: userData.ci,
+              permisos,
+            },
+            include: {
+              unidadEjecutora: true,
+            },
+          });
+
+          return newUser;
+        }
+      );
       return result;
     } catch (error) {
-      console.error("Error al crear usuario:", error);
-      return {
-        success: false,
-        error: "Error interno al crear el usuario",
-      };
+      console.error("Error interno:", error);
+      throw new Error("Error interno al crear el usuario");
     }
   },
+
   update: async (data: DTO_uCreate): Promise<void> => {},
 };
