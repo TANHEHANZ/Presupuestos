@@ -9,7 +9,7 @@ export const checkPermission = (requiredPermission: string) => {
     next: NextFunction
   ): Promise<void> => {
     const userId = req.user?.id;
-
+    console.log(userId);
     if (!userId) {
       API.unauthorized(res, "No estás autorizado");
       return;
@@ -20,10 +20,13 @@ export const checkPermission = (requiredPermission: string) => {
         where: { id: userId },
         select: { permisos: true },
       });
-
+      console.log("permiso user", user);
       const userPermissions = user?.permisos ?? [];
 
-      if (!userPermissions.includes(requiredPermission)) {
+      if (
+        !userPermissions.includes("all") &&
+        !userPermissions.includes(requiredPermission)
+      ) {
         API.unauthorized(res, "No tienes permiso para esta acción");
         return;
       }

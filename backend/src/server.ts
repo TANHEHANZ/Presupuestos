@@ -2,10 +2,10 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import routes from "./modules/routes";
 import path from "path";
-
+import cookieParser from "cookie-parser";
 export const createServer = () => {
   const app = express();
-
+  app.use(cookieParser());
   app
     .disable("x-powered-by")
     .use(express.urlencoded({ extended: true }))
