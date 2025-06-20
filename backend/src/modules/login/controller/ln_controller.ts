@@ -25,4 +25,28 @@ export const lnController = {
       API.badRequest(res, "Error al iniciar sesión", err);
     }
   },
+
+  refresh: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const refreshToken = req.cookies.refreshToken;
+      console.log(refreshToken);
+      if (!refreshToken) {
+        API.unauthorized(res, "No se proporcionó el token de actualización");
+        return;
+      }
+
+      const newAccessToken = await Ln_service.refresh(refreshToken);
+
+      res.cookie("accessToken", newAccessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        maxAge: 15 * 60 * 1000,
+      });
+
+      API.success(res, "Nuevo token generado correctamente");
+    } catch (err) {
+      API.unauthorized(res, (err as Error).message);
+    }
+  },
 };

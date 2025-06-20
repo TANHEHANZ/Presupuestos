@@ -53,4 +53,21 @@ export const Ucontroller = {
     res.json("user");
     return;
   },
+
+  changePassword: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        API.unauthorized(res, "No tienes acceso");
+        return;
+      }
+      const change = await Uservice.changePassword({
+        change: req.body,
+        idUser: userId,
+      });
+      API.success(res, "Contraseña cambiada con exito", change);
+    } catch (error) {
+      API.badRequest(res, "Error al iniciar sesión", error);
+    }
+  },
 };

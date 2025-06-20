@@ -1,7 +1,10 @@
 import bcrypt from "bcryptjs";
 import { prismaC } from "@/infraestructure/config/prisma.client";
 import { DTO_lnCredentials } from "../validations/credentials";
-import { encryptPayload } from "@/infraestructure/middleware/crypto";
+import {
+  decryptPayload,
+  encryptPayload,
+} from "@/infraestructure/middleware/crypto";
 interface R_login {
   accessToken: string;
   refreshToken: string;
@@ -32,5 +35,29 @@ export const Ln_service = {
     const refreshToken = `${ivRefresh}.${encryptedRefresh}`;
 
     return { accessToken, refreshToken };
+  },
+  refresh: async (token: string): Promise<string> => {
+    const parts = token.split(".");
+    if (parts.length !== 3) {
+      throw new Error("Token de refresh inválido o manipulado");
+    }
+    const [iv, encryptedData, authTag] = parts;
+
+    const payload: any = decryptPayload(`${encryptedData}.${authTag}`, iv);
+
+    if (!payload.exp || Date.now() > payload.exp) {
+      throw new Error("Token de refresh expirado");
+    }
+
+    const newPayload = {
+      id: payload.id,
+      exp: Date.now() + 15 * 60 * 1000,
+    };
+
+    const { encryptedData: newEncrypted, iv: newIv } =
+      encryptPayload(newPayload);
+    const newAccessToken = `${newIv}.${newEncrypted}`;
+
+    return newAccessToken;
   },
 };

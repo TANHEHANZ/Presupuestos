@@ -6,9 +6,10 @@ import {
   NotFoundError,
   ValidationError,
 } from "@/infraestructure/helpers/error";
-import { UserApiResponse } from "../types/t_Uvalid";
+import { PropChangePassword, UserApiResponse } from "../types/t_Uvalid";
 import { User } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { DTO_uChangePassword } from "../validations/v_changePass";
 export const Uservice = {
   uValidate: async ({ ci }: DTO_uValidate): Promise<any> => {
     try {
@@ -87,4 +88,38 @@ export const Uservice = {
   },
 
   update: async (data: DTO_uCreate): Promise<void> => {},
+  changePassword: async ({
+    change,
+    idUser,
+  }: PropChangePassword): Promise<any> => {
+    if (!change.confirmChange) {
+      throw new Error("No confirmaste el cambio de contraseña");
+    }
+
+    const user = await prismaC.user.findUnique({
+      where: { id: idUser },
+    });
+
+    if (!user) {
+      throw new Error("Usuario no encontrado");
+    }
+
+    const isCurrentPasswordValid = await bcrypt.compare(
+      change.password,
+      user.password
+    );
+    if (!isCurrentPasswordValid) {
+      throw new Error("Contraseña actual incorrecta");
+    }
+    const hashedPassword = await bcrypt.hash(
+      change.newPassword,
+      Number(config.SALT)
+    );
+    await prismaC.user.update({
+      where: { id: idUser },
+      data: {
+        password: hashedPassword,
+      },
+    });
+  },
 };
