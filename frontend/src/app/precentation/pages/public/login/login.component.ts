@@ -11,14 +11,18 @@ import { Router } from '@angular/router';
 import {
   FormControl,
   FormGroup,
-  FormsModule,
+  ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { LoginService } from '../../../../infraestructure/services/apis/login.service';
 import { CustomInputComponent } from '../../../shared/input/input.component';
+import { ToastService } from '../../../../infraestructure/lib/toast/toast.service';
+import { ToastComponent } from '../../../../infraestructure/lib/toast/toast.component';
 gsap.registerPlugin(TextPlugin);
 @Component({
   selector: 'app-login',
   template: `
+    <app-toast />
     <div
       class="h-screen flex items-center justify-end gap-4 bg-gray-100 relative overflow-hidden "
     >
@@ -53,6 +57,7 @@ gsap.registerPlugin(TextPlugin);
       </div>
       <section class="w-1/2 flex justify-center items-center">
         <form
+          [formGroup]="form"
           #loginForm
           (submit)="onLogin($event)"
           class="p-6 sm:p-8 rounded w-[60%]  flex flex-col gap-4 z-10  relative "
@@ -63,6 +68,7 @@ gsap.registerPlugin(TextPlugin);
           <app-custom-input
             label="CI"
             formControlName="ci"
+            [type]="'number'"
             placeholder="Ingrese su cédula de identidad"
           />
           <app-custom-input
@@ -81,17 +87,25 @@ gsap.registerPlugin(TextPlugin);
       </section>
     </div>
   `,
-  imports: [CustomInputComponent],
+  imports: [CustomInputComponent, ToastComponent, ReactiveFormsModule],
 })
 export class LoginComponent implements OnInit {
   @ViewChild('bloque') bloque!: ElementRef;
   @ViewChild('loginForm') loginForm!: ElementRef;
   router = inject(Router);
-
+  LoginS = inject(LoginService);
+  toastS = inject(ToastService);
   form = new FormGroup({
-    ci: new FormControl('', Validators.required),
-    password: new FormControl('', Validators.required),
+    ci: new FormControl<string>('', {
+      nonNullable: true,
+      validators: Validators.required,
+    }),
+    password: new FormControl<string>('', {
+      nonNullable: true,
+      validators: Validators.required,
+    }),
   });
+
   ngOnInit(): void {
     gsap.fromTo(
       '.bloque',
@@ -109,112 +123,86 @@ export class LoginComponent implements OnInit {
     );
   }
 
-  //   onLogin(event: Event) {
-  //     event.preventDefault();
-
-  //     const tl = gsap.timeline({
-  //       // onComplete: () => {
-  //       //   setTimeout(() => {
-  //       //     this.router.navigate(['/dashboard/presupuestos']);
-  //       //   }, 500);
-  //       // },
-  //     });
-  //     tl.to('.logo', {
-  //       opacity: 0,
-  //       scale: 0.8,
-  //       duration: 0.5,
-  //       ease: 'power2.inOut',
-  //     });
-
-  //     tl.to(this.bloque.nativeElement, {
-  //       skewX: 0,
-  //       rotation: 90,
-  //       height: '3300px',
-  //       width: '100vw',
-  //       duration: 1,
-  //       ease: 'power2.inOut',
-  //       onComplete: () => {
-  //         gsap.to('.carga', {
-  //           scale: 1,
-  //           opacity: 1,
-  //           duration: 0.5,
-  //           ease: 'power2.inOut',
-  //         });
-  //       },
-  //     })
-
-  //       .to(
-  //         this.loginForm.nativeElement,
-  //         {
-  //           opacity: 0,
-  //           overflow: 'hidden',
-  //           duration: 1,
-  //           ease: 'power2.inOut',
-  //         },
-  //         '<'
-  //       )
-  //       .to(this.bloque.nativeElement, {
-  //         y: -1400,
-  //         duration: 1.5,
-  //         delay: 0.8,
-  //         ease: 'power2.inOut',
-  //       });
-  //   }
-  // }
   onLogin(event: Event) {
+    const formValue = this.form.getRawValue();
     event.preventDefault();
+    if (this.form.invalid) {
+      this.toastS.addToast({
+        id: 'invalid-form',
+        title: 'Error',
+        description: 'Por favor completa todos los campos.',
+        type: 'error',
+      });
+      return;
+    }
 
-    const tl = gsap.timeline({
-      onComplete: () => {
-        setTimeout(() => {
-          this.router.navigate(['/dashboard/presupuestos']);
-        }, 500);
+    this.LoginS.login(formValue).subscribe({
+      next: (response) => {
+        console.log(response);
+        const tl = gsap.timeline({
+          onComplete: () => {
+            setTimeout(() => {
+              this.router.navigate(['/dashboard/presupuestos']);
+            }, 500);
+          },
+        });
+        tl.to(this.loginForm.nativeElement, {
+          opacity: 0,
+          duration: 0.5,
+          ease: 'power2.inOut',
+          display: 'none',
+        });
+        tl.to('.logo', {
+          skewX: 0,
+          duration: 0.5,
+          scale: 1.1,
+          ease: 'power2.inOut',
+        });
+        tl.to(
+          this.bloque.nativeElement,
+          {
+            skewX: 0,
+            left: 0,
+            duration: 0.8,
+            height: '20vw',
+            width: '100vw',
+            ease: 'power2.inOut',
+          },
+          '<'
+        );
+        tl.to(this.bloque.nativeElement, {
+          height: '100vh',
+          duration: 1.5,
+          ease: 'power2.inOut',
+        });
+        tl.to('.carga', {
+          scale: 1,
+          opacity: 1,
+          duration: 0.5,
+          ease: 'power2.inOut',
+          display: 'flex',
+        });
+        tl.to(this.bloque.nativeElement, {
+          translateY: -3000,
+          ease: 'power2.inOut',
+          duration: 0.5,
+          delay: 2,
+          display: 'none',
+        });
       },
-    });
-    tl.to(this.loginForm.nativeElement, {
-      opacity: 0,
-      duration: 0.5,
-      ease: 'power2.inOut',
-      display: 'none',
-    });
-    tl.to('.logo', {
-      skewX: 0,
-      duration: 0.5,
-      scale: 1.1,
-      ease: 'power2.inOut',
-    });
-    tl.to(
-      this.bloque.nativeElement,
-      {
-        skewX: 0,
-        left: 0,
-        duration: 0.8,
-        height: '20vw',
-        width: '100vw',
-        ease: 'power2.inOut',
+      error: (err) => {
+        const message =
+          err?.error?.errors?.message ||
+          err?.error?.message ||
+          'Error desconocido';
+
+        this.toastS.addToast({
+          title: 'Error',
+          description: message,
+          id: 'login-error',
+          type: 'error',
+        });
       },
-      '<'
-    );
-
-    tl.to(this.bloque.nativeElement, {
-      height: '100vh',
-      duration: 1.5,
-      ease: 'power2.inOut',
-    });
-
-    tl.to('.carga', {
-      scale: 1,
-      opacity: 1,
-      duration: 0.5,
-      ease: 'power2.inOut',
-      display: 'flex',
-    });
-    tl.to(this.bloque.nativeElement, {
-      translateY: -3000,
-      ease: 'power2.inOut',
-      duration: 0.5,
-      delay: 2,
-      display: 'none',
     });
   }
 }

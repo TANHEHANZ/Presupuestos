@@ -24,6 +24,9 @@ import {
   faFilter,
   faFileCsv,
   faFilePdf,
+  faCheckCircle,
+  faInfoCircle,
+  faRefresh,
 } from '@fortawesome/free-solid-svg-icons';
 
 export const ICONS = {
@@ -51,4 +54,7 @@ export const ICONS = {
   filter: faFilter,
   csv: faFileCsv,
   pdf: faFilePdf,
+  'check-circle': faCheckCircle,
+  'info-circle': faInfoCircle,
+  refresh: faRefresh,
 } as const;
