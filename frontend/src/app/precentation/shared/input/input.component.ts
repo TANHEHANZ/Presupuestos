@@ -52,7 +52,8 @@ import {
 })
 export class CustomInputComponent implements ControlValueAccessor {
   @Input() label = '';
-  @Input() type: 'text' | 'password' | 'email' | 'search' = 'text';
+  @Input() type: HTMLInputElement['type'] = 'text';
+
   @Input() placeholder = '';
   @Input() id = '';
   @Input() autocomplete = 'off';
