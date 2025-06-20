@@ -41,7 +41,7 @@ export const lnController = {
         httpOnly: true,
         secure: true,
         sameSite: "strict",
-        maxAge: 15 * 60 * 1000,
+        maxAge: 3 * 60 * 60 * 1000,
       });
 
       API.success(res, "Nuevo token generado correctamente");
