@@ -9,6 +9,7 @@ import {
 import { PropChangePassword, UserApiResponse } from "../types/t_Uvalid";
 import { User } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { PERMISSION } from "@/infraestructure/constants";
 export const Uservice = {
   uValidate: async ({ ci }: DTO_uValidate): Promise<any> => {
     try {
@@ -90,7 +91,6 @@ export const Uservice = {
     }
   },
 
-  update: async (data: DTO_uCreate): Promise<void> => {},
   changePassword: async ({
     change,
     idUser,
@@ -125,4 +125,42 @@ export const Uservice = {
       },
     });
   },
+  all: async (): Promise<any[]> => {
+    const users = await prismaC.user.findMany({
+      where: {
+        estado: "ACTIVO",
+      },
+      include: {
+        unidadEjecutora: true,
+      },
+    });
+
+    const mapPermKeysWithGroups = (userKeys: string[]) => {
+      return PERMISSION.map((group) => {
+        const matchingPerms = group.permissions.filter((perm) =>
+          userKeys.includes(perm.key)
+        );
+
+        if (matchingPerms.length === 0) return null;
+
+        return {
+          group: group.group,
+          color: group.color,
+          icon: group.icon,
+          permissions: matchingPerms,
+        };
+      }).filter((g) => g !== null); // eliminar grupos vacíos
+    };
+
+    return users.map((user) => ({
+      id: user.id,
+      ci: user.ci,
+      name: user.name,
+      rol: user.rol,
+      estado: user.estado,
+      unidadEjecutora: user.unidadEjecutora,
+      permisos: mapPermKeysWithGroups(user.permisos),
+    }));
+  },
+  update: async (data: DTO_uCreate): Promise<void> => {},
 };

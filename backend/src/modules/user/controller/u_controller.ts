@@ -49,9 +49,14 @@ export const Ucontroller = {
   },
 
   get: async (req: Request, res: Response): Promise<void> => {
-    console.log("idUusario", req.user!.id);
-    res.json("user");
-    return;
+    try {
+      const users = await Uservice.all();
+      API.success(res, "Usuario traido con exito", users);
+      return;
+    } catch (error) {
+      API.badRequest(res, "Error al iniciar sesión", error);
+      return;
+    }
   },
 
   changePassword: async (req: Request, res: Response): Promise<void> => {
