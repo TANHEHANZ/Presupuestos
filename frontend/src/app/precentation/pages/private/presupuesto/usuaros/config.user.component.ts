@@ -1,17 +1,18 @@
 import { Component, OnInit, inject, input } from '@angular/core';
-import { R_UserDTO } from '../../../../../infraestructure/modules/presupuesto/types';
 import { CustomInputComponent } from '../../../../shared/input/input.component';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CustomButtonComponent } from '../../../../shared/button/button.component';
-import { permitions } from '../../../../../infraestructure/modules/permition/permitions';
-import { IconComponent } from '../../../../shared/icons/icon.component';
 import { PermitionViewerComponent } from '../../../../../infraestructure/modules/permition/render.permition';
 import { DTO_UserValidR } from '../../../../../infraestructure/models/user/m_valid';
 import { CustomSelectComponent } from '../../../../shared/select/select.component';
 import { UnidadesService } from '../../../../../infraestructure/services/apis/unidades.service';
 import { DTO_UnidadesR } from '../../../../../infraestructure/models/unidades/m_unidades';
 import { ToastService } from '../../../../../infraestructure/lib/toast/toast.service';
+import { ConfigService } from '../../../../../infraestructure/services/apis/config.service';
+import { DTO_pPermitionsR } from '../../../../../infraestructure/models/permitions/m_permitions';
+import { UserService } from '../../../../../infraestructure/services/apis/user.service';
+import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
 
 @Component({
   selector: 'app-config-user-component',
@@ -39,7 +40,7 @@ import { ToastService } from '../../../../../infraestructure/lib/toast/toast.ser
             label="Unidades"
             id="unidades-select"
             [items]="valueUnidaes"
-            formControlName="unidad"
+            formControlName="unidadId"
           >
           </app-custom-select>
           <app-custom-select
@@ -87,18 +88,19 @@ import { ToastService } from '../../../../../infraestructure/lib/toast/toast.ser
 export class ConfigUserComponent implements OnInit {
   unidadesS = inject(UnidadesService);
   toastS = inject(ToastService);
-
+  userS = inject(UserService);
+  permitionsS = inject(ConfigService);
+  drawerS = inject(PanelService);
   D_user = input<DTO_UserValidR>();
-  D_permisos = permitions;
+  D_permisos: DTO_pPermitionsR | [] = [];
   userForm = new FormGroup({
     ci: new FormControl({ value: '', disabled: true }),
     name: new FormControl({ value: '', disabled: true }),
-    unidad: new FormControl('', { nonNullable: true }),
+    unidadId: new FormControl('', { nonNullable: true }),
     permisos: new FormControl('', { nonNullable: true }),
     rol: new FormControl('', { nonNullable: true }),
     estado: new FormControl('', { nonNullable: true }),
   });
-
   selectedPermitions: string[] = [];
   valueUnidaes: { label: string; value: string }[] = [];
   ngOnInit() {
@@ -110,6 +112,7 @@ export class ConfigUserComponent implements OnInit {
       });
     }
     this.loadUnidades();
+    this.loadPermisos();
   }
 
   loadUnidades() {
@@ -132,19 +135,18 @@ export class ConfigUserComponent implements OnInit {
     });
   }
   loadPermisos() {
-    this.unidadesS.all().subscribe({
+    this.permitionsS.permitionsAll().subscribe({
       next: (value) => {
-        console.log('Datos de unidades:', value);
-        this.valueUnidaes = this.mapUnidades(value);
+        this.D_permisos = value;
       },
       error: (e) => {
-        console.error('Error al cargar unidades:', e);
+        console.error('Error al cargar permisos:', e);
         const message =
           e?.error?.errors?.message || e?.error?.message || 'Error desconocido';
         this.toastS.addToast({
           title: 'Error',
           description: message,
-          id: 'unidades-error',
+          id: 'permisos-error',
           type: 'error',
         });
       },
@@ -177,6 +179,33 @@ export class ConfigUserComponent implements OnInit {
   }
 
   createUser() {
-    console.log(this.userForm.getRawValue());
+    const formData = this.userForm.getRawValue();
+    const payload = {
+      ci: formData.ci ?? '',
+      name: formData.name ?? '',
+      unidadId: formData.unidadId,
+      permisos: this.selectedPermitions,
+      rol: formData.rol,
+      estado: formData.estado,
+    };
+    console.log('Datos para guardar:', payload);
+    this.userS.create(payload).subscribe({
+      next: (value) => {
+        console.log(value);
+
+        this.drawerS.closeDrawer();
+      },
+      error: (e) => {
+        console.log(e);
+        const message =
+          e?.error?.errors?.message || e?.error?.message || 'Error desconocido';
+        this.toastS.addToast({
+          title: 'Error',
+          description: message,
+          id: 'unidades-error',
+          type: 'error',
+        });
+      },
+    });
   }
 }

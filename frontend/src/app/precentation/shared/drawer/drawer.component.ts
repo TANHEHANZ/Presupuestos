@@ -9,7 +9,7 @@ import { IconComponent } from '../icons/icon.component';
   template: `
     <div
       *ngIf="initialized"
-      class="fixed inset-0 z-50 bg-black/40 flex justify-end transition-opacity duration-300"
+      class="fixed inset-0 z-20 bg-black/40 flex justify-end transition-opacity duration-300"
       [class.opacity-0]="!isOpen"
       [class.pointer-events-none]="!isOpen"
       tabindex="-1"
@@ -18,7 +18,7 @@ import { IconComponent } from '../icons/icon.component';
       (click)="closeDrawer()"
     >
       <aside
-        class="bg-white h-full w-auto max-w-1/2 shadow-xl transition-transform duration-300 ease-in-out transform"
+        class="bg-white z-10 h-full w-auto max-w-1/2 shadow-xl transition-transform duration-300 ease-in-out transform"
         [ngClass]="isOpen ? 'translate-x-0' : 'translate-x-full'"
         (click)="$event.stopPropagation()"
       >

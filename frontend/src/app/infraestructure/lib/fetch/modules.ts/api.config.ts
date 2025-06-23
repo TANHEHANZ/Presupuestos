@@ -1,12 +1,10 @@
-
-import { LoginChema } from '../../../models/login/m_login';
+import { PermitionsR } from '../../../models/permitions/m_permitions';
 import { RouteDefinition } from '../config.api';
 
 export const API_Configuration = {
-  start: {
-    path: 'POST v1/api/configuration/permition',
-    response: ,
-    query: LoginChema,
+  all: {
+    path: 'GET v1/api/configuration/permition',
+    response: PermitionsR,
     isPaginated: false,
   },
 } satisfies Record<string, RouteDefinition<any, any>>;

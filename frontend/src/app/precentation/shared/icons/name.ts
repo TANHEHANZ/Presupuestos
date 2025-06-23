@@ -58,3 +58,35 @@ export const ICONS = {
   'info-circle': faInfoCircle,
   refresh: faRefresh,
 } as const;
+
+import { z } from 'zod';
+
+export const IconNameSchema = z.enum([
+  'home',
+  'user',
+  'users',
+  'settings',
+  'proyect',
+  'chart',
+  'unidades',
+  'search',
+  'add',
+  'user-plus',
+  'user-edit',
+  'user-x',
+  'delete',
+  'edit',
+  'eye',
+  'list',
+  'download',
+  'file-text',
+  'building',
+  'save',
+  'close',
+  'filter',
+  'csv',
+  'pdf',
+  'check-circle',
+  'info-circle',
+  'refresh',
+]);
