@@ -9,10 +9,16 @@ import { DTO_UserCreate } from '../../models/user/m_create';
 })
 export class UserService {
   private s_http = inject(HttpService);
+  list = () => this.s_http.request(API_User.all);
+
   valid(credentials: DTO_UserValid) {
     return this.s_http.request(API_User.valid, credentials);
   }
+
   create(data: DTO_UserCreate) {
     return this.s_http.request(API_User.create, data);
+  }
+  update(data: DTO_UserCreate) {
+    return this.s_http.request(API_User.edit, data);
   }
 }

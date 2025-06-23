@@ -91,8 +91,10 @@ export class AddUserComponent {
           type: 'success',
         });
         this.response = res;
-
         this.panelS.openDrawer();
+        this.form.setValue({
+          ci: '',
+        });
       },
       error: (e) => {
         const message =

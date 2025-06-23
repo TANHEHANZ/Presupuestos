@@ -1,4 +1,12 @@
-import { Component, OnInit, inject, input } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  inject,
+  input,
+} from '@angular/core';
 import { CustomInputComponent } from '../../../../shared/input/input.component';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -30,7 +38,7 @@ import { PanelService } from '../../../../../infraestructure/services/components
       <form
         [formGroup]="userForm"
         class="grid grid-cols-2 gap-2 "
-        (ngSubmit)="createUser()"
+        (ngSubmit)="saveUser()"
       >
         <div class="p-4 border border-gray-200 rounded-lg flex flex-col gap-4">
           <p class="col-span-full font-medium">Informacion del usuario</p>
@@ -70,12 +78,15 @@ import { PanelService } from '../../../../../infraestructure/services/components
 
           <app-permition-viewer
             [permitions]="D_permisos"
+            [initialSelected]="selectedPermitions"
             (selectedChange)="selectedPermitions = $event"
           ></app-permition-viewer>
         </section>
         <section class="flex gap-4 flex-wrap col-span-2 justify-end mt-4">
-          <app-custom-button [icon]="'save'" [type]="'submit'"
-            >guardar</app-custom-button
+          <app-custom-button
+            [icon]="edit ? 'edit' : 'save'"
+            [type]="'submit'"
+            >{{ edit ? 'editar' : 'Guardar' }}</app-custom-button
           >
           <app-custom-button [variant]="'danger'" [icon]="'close'">
             Cancelar
@@ -86,12 +97,15 @@ import { PanelService } from '../../../../../infraestructure/services/components
   `,
 })
 export class ConfigUserComponent implements OnInit {
+  @Output() userCreated = new EventEmitter<void>();
+  @Input() edit = false;
+
   unidadesS = inject(UnidadesService);
   toastS = inject(ToastService);
   userS = inject(UserService);
   permitionsS = inject(ConfigService);
   drawerS = inject(PanelService);
-  D_user = input<DTO_UserValidR>();
+  D_user = input<any>();
   D_permisos: DTO_pPermitionsR | [] = [];
   userForm = new FormGroup({
     ci: new FormControl({ value: '', disabled: true }),
@@ -104,13 +118,28 @@ export class ConfigUserComponent implements OnInit {
   selectedPermitions: string[] = [];
   valueUnidaes: { label: string; value: string }[] = [];
   ngOnInit() {
-    const user = this.D_user();
+    const user = this.D_user() as any;
     if (user) {
       this.userForm.patchValue({
         ci: user.ci ?? '',
         name: user.name ?? '',
+        unidadId: user.unidadEjecutora?.id ?? '',
+        rol: user.rol ?? '',
+        estado: user.estado ?? '',
       });
+
+      this.selectedPermitions = user.permisos
+        ? user.permisos.flatMap((group: any) =>
+            group.permissions.map((p: any) => p.key)
+          )
+        : [];
     }
+    if (this.edit) {
+      console.log('edicion', user);
+      this.userForm.get('ci')?.disable();
+      this.userForm.get('name')?.disable();
+    }
+
     this.loadUnidades();
     this.loadPermisos();
   }
@@ -178,7 +207,7 @@ export class ConfigUserComponent implements OnInit {
       : 'bg-white text-gray-700';
   }
 
-  createUser() {
+  saveUser() {
     const formData = this.userForm.getRawValue();
     const payload = {
       ci: formData.ci ?? '',
@@ -187,13 +216,18 @@ export class ConfigUserComponent implements OnInit {
       permisos: this.selectedPermitions,
       rol: formData.rol,
       estado: formData.estado,
+      idUser: this.D_user().id,
     };
-    console.log('Datos para guardar:', payload);
-    this.userS.create(payload).subscribe({
+
+    const request$ = this.edit
+      ? this.userS.update(payload)
+      : this.userS.create(payload);
+
+    request$.subscribe({
       next: (value) => {
         console.log(value);
-
-        this.drawerS.closeDrawer();
+        this.userCreated.emit();
+        this.drawerS.closeDrawer(true);
       },
       error: (e) => {
         console.log(e);
@@ -202,7 +236,7 @@ export class ConfigUserComponent implements OnInit {
         this.toastS.addToast({
           title: 'Error',
           description: message,
-          id: 'unidades-error',
+          id: 'user-save-error',
           type: 'error',
         });
       },
