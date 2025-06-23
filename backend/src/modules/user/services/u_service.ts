@@ -127,9 +127,6 @@ export const Uservice = {
   },
   all: async (): Promise<any[]> => {
     const users = await prismaC.user.findMany({
-      where: {
-        estado: "ACTIVO",
-      },
       include: {
         unidadEjecutora: true,
       },
