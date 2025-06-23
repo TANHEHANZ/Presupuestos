@@ -11,7 +11,8 @@ const u_Router = Router();
 u_Router
   .route("/")
   .get(checkPermission(P_user.GET), Ucontroller.get)
-  .post(checkPermission(P_user.CREATE), Ucontroller.create);
+  .post(checkPermission(P_user.CREATE), Ucontroller.create)
+  .put(checkPermission(P_user.UPDATE), Ucontroller.edit);
 u_Router.post(
   "/change-pass",
   validate(changePasswordSchema, "body"),

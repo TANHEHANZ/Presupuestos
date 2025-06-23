@@ -149,7 +149,7 @@ export const Uservice = {
           icon: group.icon,
           permissions: matchingPerms,
         };
-      }).filter((g) => g !== null); // eliminar grupos vacíos
+      }).filter((g) => g !== null);
     };
 
     return users.map((user) => ({
@@ -162,5 +162,37 @@ export const Uservice = {
       permisos: mapPermKeysWithGroups(user.permisos),
     }));
   },
-  update: async (data: DTO_uCreate): Promise<void> => {},
+  update: async (data: DTO_uCreate): Promise<User> => {
+    if (!data.idUser) {
+      throw new Error("El ID del usuario es requerido para actualizar");
+    }
+    const user = await prismaC.user.findUnique({
+      where: { id: data.idUser },
+    });
+
+    if (!user) {
+      throw new NotFoundError("El usuario no existe");
+    }
+
+    try {
+      const updatedUser = await prismaC.user.update({
+        where: { id: data.idUser },
+        data: {
+          name: data.name,
+          rol: data.rol,
+          estado: data.estado,
+          permisos: data.permisos,
+          unidadId: data.unidadId,
+        },
+        include: {
+          unidadEjecutora: true,
+        },
+      });
+
+      return updatedUser;
+    } catch (error) {
+      console.error("Error al actualizar el usuario:", error);
+      throw new Error("Error interno al actualizar el usuario");
+    }
+  },
 };

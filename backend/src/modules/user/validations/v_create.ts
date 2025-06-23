@@ -3,6 +3,7 @@ import { Role, U_estado } from "@prisma/client";
 import { z } from "zod";
 
 export const CreateUserSchema = z.object({
+  idUser: z.string().uuid("Debe ser un UUID válido").optional(),
   ci: z
     .string()
     .min(6, "La CI debe tener al menos 6 dígitos")

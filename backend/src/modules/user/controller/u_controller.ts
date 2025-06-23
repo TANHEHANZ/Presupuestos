@@ -75,4 +75,24 @@ export const Ucontroller = {
       API.badRequest(res, "Error al iniciar sesión", error);
     }
   },
+  edit: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const editUser = await Uservice.update(req.body);
+
+      API.success(res, "Usuario editado", editUser);
+    } catch (error: any) {
+      console.log(error);
+      if (error instanceof NotFoundError) {
+        API.notFound(res, error.message);
+        return;
+      }
+      if (error instanceof ValidationError) {
+        API.badRequest(res, error.message);
+        return;
+      }
+
+      API.serverError(res, "No se pudo editar al  usuario.", error);
+      return;
+    }
+  },
 };
