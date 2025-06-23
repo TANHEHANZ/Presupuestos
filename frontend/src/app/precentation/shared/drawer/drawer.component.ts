@@ -18,7 +18,7 @@ import { IconComponent } from '../icons/icon.component';
       (click)="closeDrawer()"
     >
       <aside
-        class="bg-white h-full w-[30dvw] max-w-full shadow-xl transition-transform duration-300 ease-in-out transform"
+        class="bg-white h-full w-auto max-w-1/2 shadow-xl transition-transform duration-300 ease-in-out transform"
         [ngClass]="isOpen ? 'translate-x-0' : 'translate-x-full'"
         (click)="$event.stopPropagation()"
       >
