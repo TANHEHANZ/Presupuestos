@@ -28,4 +28,10 @@ export const API_User = {
     query: M_uCreate,
     response: AnyResponse,
   },
+  deleted: {
+    path: 'DELETE v1/api/user',
+    isPaginated: false,
+    query: M_uCreate,
+    response: AnyResponse,
+  },
 } satisfies Record<string, RouteDefinition<any, any>>;

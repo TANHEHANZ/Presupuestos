@@ -21,7 +21,9 @@ import { LoginService } from '../../services/apis/login.service';
   providers: [LoginService],
 
   template: `
-    <div class="fixed top-4 right-4 z-[1000px] flex flex-col gap-2">
+    <div
+      class="fixed bottom-[10dvh] left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2"
+    >
       <div
         *ngFor="let toast of toastService.toasts$Observable | async"
         class="opacity-0 min-w-[300px] border p-2 py-4 rounded-xl dark:border-gray-600 bg-white dark:bg-gray-800 flex overflow-hidden relative flex-col justify-start items-start"
@@ -83,7 +85,7 @@ import { LoginService } from '../../services/apis/login.service';
             Cancelar
           </button>
           <button
-            class="flex-1 rounded-lg py-2 text-nowrap border bg-primary-theme_purple text-white hover:bg-opacity-90 transition-colors "
+            class="flex-1 rounded-lg py-2 text-nowrap border bg-olther text-white hover:bg-opacity-90 transition-colors "
             (click)="toast.action.callback()"
           >
             {{ toast.action.label }}
@@ -127,15 +129,15 @@ export class ToastComponent implements AfterViewInit {
   private animateNewToast(element: HTMLElement) {
     gsap.fromTo(
       element,
-      { opacity: 0, x: 50 },
-      { opacity: 1, x: 0, duration: 0.3, ease: 'power2.out' }
+      { opacity: 0, y: 50 },
+      { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }
     );
   }
 
   removeToast(id: string, element: HTMLElement) {
     gsap.to(element, {
       opacity: 0,
-      x: 50,
+      y: 50,
       duration: 0.3,
       ease: 'power2.in',
       onComplete: () => this.toastService.removeToast(id),

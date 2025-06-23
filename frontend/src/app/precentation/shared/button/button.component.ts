@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IconComponent, IconName } from '../icons/icon.component';
 import { CommonModule } from '@angular/common';
 
@@ -11,6 +11,7 @@ type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'outline' | 'olther';
       [type]="type"
       [disabled]="disabled"
       [ngClass]="buttonClass"
+      (click)="handleClick()"
       class="font-semibold transition flex items-center gap-2 text-sm w-full  disabled:cursor-not-allowed rounded-xl px-8 py-4 text-center"
     >
       <app-icon *ngIf="icon" [name]="icon"></app-icon>
@@ -25,7 +26,7 @@ export class CustomButtonComponent {
   @Input() disabled = false;
   @Input() icon?: IconName;
   @Input() variant: ButtonVariant = 'primary';
-
+  @Output() btnClick = new EventEmitter<void>();
   get buttonClass() {
     switch (this.variant) {
       case 'secondary':
@@ -39,6 +40,11 @@ export class CustomButtonComponent {
         return 'border border-primary text-primary bg-transparent hover:bg-primary/10';
       default:
         return 'bg-primary text-white hover:bg-primary/90 disabled:opacity-50 ';
+    }
+  }
+  handleClick() {
+    if (!this.disabled) {
+      this.btnClick.emit();
     }
   }
 }

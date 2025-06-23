@@ -8,6 +8,7 @@ import { PermitionViewerComponent } from '../../../../../infraestructure/modules
 import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
 import { DrawerComponent } from '../../../../shared/drawer/drawer.component';
 import { ConfigUserComponent } from './config.user.component';
+import { ToastService } from '../../../../../infraestructure/lib/toast/toast.service';
 
 @Component({
   selector: 'app-usuer-detail',
@@ -52,9 +53,13 @@ import { ConfigUserComponent } from './config.user.component';
         <app-custom-button [icon]="'edit'" (click)="openEditDrawer()">
           Editar
         </app-custom-button>
-        <app-custom-button [variant]="'secondary'" [icon]="'settings'">
-        </app-custom-button>
-        <app-custom-button [variant]="'danger'" [icon]="'delete'">
+
+        <app-custom-button
+          [variant]="'danger'"
+          [icon]="'delete'"
+          (btnClick)="eliminar()"
+        >
+          Eliminar
         </app-custom-button>
       </section>
     </div>
@@ -71,10 +76,11 @@ import { ConfigUserComponent } from './config.user.component';
   standalone: true,
 })
 export class DetailUserComponent implements OnInit {
+  panelS = inject(PanelService);
+  toastS = inject(ToastService);
   D_user = input<any>();
   userForm!: FormGroup;
   editMode = false;
-  panelS = inject(PanelService);
   ngOnInit() {
     const user = this.D_user();
     console.log(user);
@@ -88,6 +94,25 @@ export class DetailUserComponent implements OnInit {
         value: user?.unidadSecretaria ?? '',
         disabled: true,
       }),
+    });
+  }
+  eliminar() {
+    this.toastS.addToast({
+      title: 'Eliminación de usuario',
+      type: 'warning',
+      description: '¿Estás seguro de eliminar este registro?',
+      id: 'eliminacion-user', // Esto es opcional, el servicio genera uno si no lo pones
+      duration: 0, // Que no desaparezca automáticamente
+      action: {
+        label: 'Sí, eliminar',
+        callback: () => {
+          console.log('Usuario eliminado');
+        },
+      },
+      cancelAction: {
+        label: 'Cancelar',
+        callback: () => console.log('Eliminación cancelada'),
+      },
     });
   }
 
