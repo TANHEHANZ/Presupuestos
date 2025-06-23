@@ -16,9 +16,6 @@ import { WrapperComponent } from '../../../../shared/container/wrapper.component
 @Component({
   selector: 'app-user',
   template: `
-    <app-drawer title="Configuración de cuenta de usuario ">
-      <app-config-user-component [D_user]="data[0]" />
-    </app-drawer>
     <app-wrapper
       title="Usuarios"
       [path]="{

@@ -1,6 +1,6 @@
 import config from "@/infraestructure/config/config";
 import { DTO_uCreate } from "../validations/v_create";
-import { DTO_uValidate } from "../validations/v_uValidate";
+import { DTO_uValidate, DTO_uValidateR } from "../validations/v_uValidate";
 import { prismaC } from "@/infraestructure/config/prisma.client";
 import {
   NotFoundError,
@@ -9,7 +9,6 @@ import {
 import { PropChangePassword, UserApiResponse } from "../types/t_Uvalid";
 import { User } from "@prisma/client";
 import bcrypt from "bcryptjs";
-import { DTO_uChangePassword } from "../validations/v_changePass";
 export const Uservice = {
   uValidate: async ({ ci }: DTO_uValidate): Promise<any> => {
     try {
@@ -42,7 +41,11 @@ export const Uservice = {
         throw new ValidationError(data.data as string);
       }
 
-      return data.data;
+      const responseApi = data.data as DTO_uValidateR[];
+      return {
+        ci: responseApi[0].ci,
+        name: responseApi[0].empleado,
+      };
     } catch (error: any) {
       console.error("Error en uValidate:", error.message || error);
       if (error instanceof ValidationError || error instanceof NotFoundError) {

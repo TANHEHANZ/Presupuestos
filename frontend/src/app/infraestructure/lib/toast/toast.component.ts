@@ -21,7 +21,7 @@ import { LoginService } from '../../services/apis/login.service';
   providers: [LoginService],
 
   template: `
-    <div class="fixed top-4 right-4 z-50 flex flex-col gap-2">
+    <div class="fixed top-4 right-4 z-[1000px] flex flex-col gap-2">
       <div
         *ngFor="let toast of toastService.toasts$Observable | async"
         class="opacity-0 min-w-[300px] border p-2 py-4 rounded-xl dark:border-gray-600 bg-white dark:bg-gray-800 flex overflow-hidden relative flex-col justify-start items-start"
