@@ -130,7 +130,7 @@ export class CustomSelectComponent implements ControlValueAccessor, OnChanges {
     this.value = item.value;
     this.selectedItem = item;
     this.onChange(this.value);
-    this.onTouched(); // ✅ Marca el control como tocado
+    this.onTouched();
     this.isOpen = false;
   }
 
@@ -146,7 +146,7 @@ export class CustomSelectComponent implements ControlValueAccessor, OnChanges {
     const target = event.target as HTMLElement;
     if (!target.closest('.relative')) {
       this.isOpen = false;
-      this.onTouched(); // ✅ Marca como tocado si se hace click fuera
+      this.onTouched();
     }
   }
 }
