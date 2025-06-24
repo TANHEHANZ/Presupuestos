@@ -10,7 +10,7 @@ const u_Router = Router();
 
 u_Router
   .route("/")
-  .get(checkPermission(P_user.GET), Ucontroller.get)
+  .get(checkPermission(P_user.LIST), Ucontroller.get)
   .post(checkPermission(P_user.CREATE), Ucontroller.create)
   .put(checkPermission(P_user.UPDATE), Ucontroller.edit);
 u_Router.post(

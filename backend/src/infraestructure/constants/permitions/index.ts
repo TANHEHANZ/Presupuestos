@@ -1,3 +1,4 @@
+import { P_config } from "./p_permisos";
 import { P_report } from "./p_report";
 import { P_unit } from "./p_unidades";
 import { P_user } from "./p_user";
@@ -16,5 +17,12 @@ export const PERMITION_KEYS = {
     { name: "Ver unidades", key: P_unit.LIST, icon: "building" },
   ],
   reportes: [{ name: "Descargar", key: P_report.DOWNLOAD, icon: "download" }],
+  permisos: [
+    {
+      name: "Asignar permisos ",
+      key: P_config.ALL_PERMITION,
+      icon: "download",
+    },
+  ],
   all: [{ key: "ALL" }],
 };
