@@ -53,7 +53,7 @@ export const Ln_service = {
 
     const newPayload = {
       id: payload.id,
-      exp: Date.now() + 15 * 60 * 1000,
+      exp: Date.now() + 3 * 60 * 60 * 1000,
     };
 
     const { encryptedData: newEncrypted, iv: newIv } =

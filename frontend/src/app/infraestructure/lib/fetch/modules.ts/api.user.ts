@@ -3,6 +3,7 @@ import { M_uValid, M_uValidR } from '../../../models/user/m_valid';
 import { M_uCreate } from '../../../models/user/m_create';
 import { z } from 'zod';
 import { M_uList } from '../../../models/user/m_list';
+import { M_uDeleted } from '../../../models/user/m_delete';
 const AnyResponse = z.any();
 export const API_User = {
   valid: {
@@ -31,7 +32,7 @@ export const API_User = {
   deleted: {
     path: 'DELETE v1/api/user',
     isPaginated: false,
-    query: M_uCreate,
+    query: M_uDeleted,
     response: AnyResponse,
   },
 } satisfies Record<string, RouteDefinition<any, any>>;

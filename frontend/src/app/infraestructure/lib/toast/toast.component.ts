@@ -26,7 +26,7 @@ import { LoginService } from '../../services/apis/login.service';
     >
       <div
         *ngFor="let toast of toastService.toasts$Observable | async"
-        class="opacity-0 min-w-[300px] border p-2 py-4 rounded-xl dark:border-gray-600 bg-white dark:bg-gray-800 flex overflow-hidden relative flex-col justify-start items-start"
+        class="opacity-0 min-w-[300px] border p-2 py-4 rounded-xl dark:border-gray-600 bg-white dark:bg-gray-800 dark:text-white flex overflow-hidden relative flex-col justify-start items-start"
         #toastElement
       >
         <button
