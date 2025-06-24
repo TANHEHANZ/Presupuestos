@@ -1,22 +1,25 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PanelService } from '../../../infraestructure/services/components/panel.service';
-import gsap from 'gsap';
+
 @Component({
   selector: 'app-modal',
   standalone: true,
   imports: [CommonModule],
   template: `
     <div
-      *ngIf="s_panel.modalState$ | async"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+      *ngIf="initialized"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 transition-opacity duration-300"
+      [class.opacity-0]="!isOpen"
+      [class.pointer-events-none]="!isOpen"
       (click)="closeModal()"
     >
       <div
-        class="
-        bg-white rounded-lg shadow-lg p-6 relative min-w-[300px] max-w-xl "
+        class="bg-white rounded-lg shadow-lg p-6 relative min-w-[300px] max-w-xl transform transition-transform duration-300 ease-in-out"
+        [ngClass]="isOpen ? 'scale-100' : 'scale-90'"
         (click)="$event.stopPropagation()"
       >
+        <p>{{ title }}</p>
         <button class="absolute top-4 right-6" (click)="closeModal()">✕</button>
         <ng-content></ng-content>
       </div>
@@ -24,11 +27,17 @@ import gsap from 'gsap';
   `,
 })
 export class ModalComponent {
+  @Input() title = '';
   s_panel = inject(PanelService);
-
-  openModal() {
-    this.s_panel.openModal();
+  isOpen = false;
+  initialized = false;
+  constructor() {
+    this.s_panel.modalState$.subscribe((state) => {
+      this.isOpen = state;
+      this.initialized = true;
+    });
   }
+
   closeModal() {
     this.s_panel.closeModal();
   }
