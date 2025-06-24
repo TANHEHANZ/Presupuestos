@@ -9,4 +9,8 @@ export const API_Login = {
     query: LoginChema,
     isPaginated: false,
   },
+  refresh: {
+    path: 'POST v1/api/login/refresh',
+    response: AnyResponse,
+  },
 } satisfies Record<string, RouteDefinition<any, any>>;
