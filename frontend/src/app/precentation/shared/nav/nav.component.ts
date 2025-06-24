@@ -28,7 +28,7 @@ interface NavGroup {
         >
         <ng-container *ngFor="let item of group.items">
           <a
-            class="nav-anim-item w-full  flex-col hidden justify-center text-center items-center gap-2 min-h-24 cursor-pointer transition-all hover:bg-primary/10"
+            class="nav-anim-item w-full  flex-col hidden justify-center text-balance  text-center items-center gap-2 min-h-24 cursor-pointer transition-all hover:bg-primary/10"
             [routerLink]="item.path"
             routerLinkActive="bg-primary/5 border-l-4 border-primary "
             [routerLinkActiveOptions]="{ exact: true }"
@@ -80,14 +80,19 @@ export class NavComponent {
       title: 'Modulos',
       items: [
         {
-          label: 'Unidades ejecutoras',
-          icon: 'unidades',
-          path: '/dashboard/presupuestos/unidades',
+          label: 'Presupuesto por unidad',
+          icon: 'coins',
+          path: '/dashboard/presupuestos/presupestar',
         },
         {
           label: 'Consultas',
           icon: 'proyect',
           path: '/dashboard/presupuestos/consultas',
+        },
+        {
+          label: 'Unidades ejecutoras',
+          icon: 'unidades',
+          path: '/dashboard/presupuestos/unidades',
         },
         {
           label: 'Usuarios',

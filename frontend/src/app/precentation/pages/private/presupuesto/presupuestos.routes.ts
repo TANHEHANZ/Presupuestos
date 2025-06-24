@@ -19,6 +19,14 @@ export const PRESUPUSTO_ROUTES: Routes = [
           ),
       },
       {
+        path: 'presupestar',
+        loadComponent: () =>
+          import('./presupuestar/presupuestar.component').then(
+            (c) => c.PresupuestarComponent
+          ),
+      },
+
+      {
         path: 'unidades',
         loadComponent: () =>
           import('./unidades/unidades.component').then(

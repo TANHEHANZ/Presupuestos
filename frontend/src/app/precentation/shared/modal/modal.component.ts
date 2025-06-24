@@ -9,17 +9,17 @@ import { PanelService } from '../../../infraestructure/services/components/panel
   template: `
     <div
       *ngIf="initialized"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 transition-opacity duration-300"
+      class="fixed inset-0 z-30 flex items-center justify-center bg-black/40 transition-opacity duration-300"
       [class.opacity-0]="!isOpen"
       [class.pointer-events-none]="!isOpen"
       (click)="closeModal()"
     >
       <div
-        class="bg-white rounded-lg shadow-lg p-6 relative min-w-[300px] max-w-xl transform transition-transform duration-300 ease-in-out"
+        class="bg-white rounded-lg shadow-lg p-6 relative min-w-[300px] max-w-[70dvw] transform transition-transform duration-300 ease-in-out"
         [ngClass]="isOpen ? 'scale-100' : 'scale-90'"
         (click)="$event.stopPropagation()"
       >
-        <p>{{ title }}</p>
+        <p class="text-2xl font-normal mt-2 mb-4">{{ title }}</p>
         <button class="absolute top-4 right-6" (click)="closeModal()">✕</button>
         <ng-content></ng-content>
       </div>

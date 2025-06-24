@@ -27,6 +27,9 @@ import {
   faCheckCircle,
   faInfoCircle,
   faRefresh,
+  faCoins,
+  faCalendar,
+  faCloudArrowDown,
 } from '@fortawesome/free-solid-svg-icons';
 
 export const ICONS = {
@@ -57,6 +60,9 @@ export const ICONS = {
   'check-circle': faCheckCircle,
   'info-circle': faInfoCircle,
   refresh: faRefresh,
+  coins: faCoins,
+  calendar: faCalendar,
+  upload: faCloudArrowDown,
 } as const;
 
 import { z } from 'zod';
