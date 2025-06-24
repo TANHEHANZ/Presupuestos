@@ -2,11 +2,17 @@ import { Component } from '@angular/core';
 import { UploadComponent } from '../../../../shared/upload/upload.component';
 import { CommonModule } from '@angular/common';
 import { CustomButtonComponent } from '../../../../shared/button/button.component';
-
+import * as XLSX from 'xlsx';
+import { ExcelRendererComponent } from '../../../../shared/xlsx/xlsx.component';
 @Component({
   selector: 'app-upload-excel',
   standalone: true,
-  imports: [CommonModule, UploadComponent, CustomButtonComponent],
+  imports: [
+    CommonModule,
+    UploadComponent,
+    CustomButtonComponent,
+    ExcelRendererComponent,
+  ],
   template: `
     <div class="w-full h-[50dvh] flex flex-col gap-4">
       <div class="rounded-lg overflow-hidden">
@@ -28,47 +34,61 @@ import { CustomButtonComponent } from '../../../../shared/button/button.componen
         </table>
       </div>
 
-      <div class="h-[250px] ">
-        <app-upload
-          [accept]="[
-            'application/vnd.ms-excel',
-            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-          ]"
-          [maxFiles]="1"
-          (filesSelected)="handleFiles($event)"
-        ></app-upload>
-      </div>
-      <div
-        *ngIf="selectedFiles.length > 0"
-        class=" border-olther/30 rounded-lg p-4 bg-olther/5 flex items-center  gap-2 justify-between "
-      >
-        <div>
-          <p class="text-sm  text-olther font-bold ">Archivo seleccionado:</p>
-          <ul>
-            <li
-              *ngFor="let file of selectedFiles"
-              class="text-xs text-gray-600"
-            >
-              {{ file.name }} ({{ file.size | number }} bytes)
-            </li>
-          </ul>
+      <ng-container *ngIf="!isReview; else reviewMode">
+        <div class="h-[250px]">
+          <app-upload
+            [accept]="[
+              'application/vnd.ms-excel',
+              'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            ]"
+            [maxFiles]="1"
+            (filesSelected)="handleFiles($event)"
+          ></app-upload>
         </div>
-        <app-custom-button
-          [icon]="'delete'"
-          variant="olther"
-          (btnClick)="clear()"
-        ></app-custom-button>
-      </div>
-      @if(selectedFiles.length > 0){
+
+        <div
+          *ngIf="selectedFiles.length > 0"
+          class="border-olther/30 rounded-lg p-4 bg-olther/5 flex items-center gap-2 justify-between"
+        >
+          <div>
+            <p class="text-sm text-olther font-bold">Archivo seleccionado:</p>
+            <ul>
+              <li
+                *ngFor="let file of selectedFiles"
+                class="text-xs text-gray-600"
+              >
+                {{ file.name }} ({{ file.size | number }} bytes)
+              </li>
+            </ul>
+          </div>
+          <app-custom-button
+            [icon]="'delete'"
+            variant="olther"
+            (btnClick)="clear()"
+          ></app-custom-button>
+        </div>
+      </ng-container>
+
+      <ng-template #reviewMode>
+        <div
+          class="h-[35dvh] overflow-y-auto"
+          *ngIf="excelHeaders.length && excelData.length"
+        >
+          <app-excel-renderer
+            [headers]="excelHeaders"
+            [data]="excelData"
+          ></app-excel-renderer>
+        </div>
+      </ng-template>
 
       <app-custom-button
+        *ngIf="selectedFiles.length > 0"
         [icon]="'check-circle'"
         class="self-end"
         (btnClick)="revisar()"
       >
         Revisar formato
       </app-custom-button>
-      }
     </div>
   `,
 })
@@ -87,12 +107,39 @@ export class UploadExcelComponent {
   ];
 
   selectedFiles: File[] = [];
+  excelHeaders: string[] = [];
+  excelData: any[][] = [];
+  isReview = false;
   clear() {
     this.selectedFiles = [];
   }
+
   handleFiles(files: File[]) {
-    console.log('Archivos válidos recibidos:', files);
     this.selectedFiles = files;
+
+    const file = files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const arrayBuffer = e.target.result;
+      const wb = XLSX.read(arrayBuffer, { type: 'array' });
+      const wsname = wb.SheetNames[0];
+      const ws = wb.Sheets[wsname];
+      const data: any[][] = XLSX.utils.sheet_to_json(ws, { header: 1 });
+
+      if (data.length > 0) {
+        this.excelHeaders = data[0].map((cell) => String(cell));
+      } else {
+        this.excelHeaders = [];
+      }
+      this.excelData = data.slice(1);
+    };
+
+    reader.readAsArrayBuffer(file);
   }
-  revisar() {}
+
+  revisar() {
+    this.isReview = !this.isReview;
+  }
 }
