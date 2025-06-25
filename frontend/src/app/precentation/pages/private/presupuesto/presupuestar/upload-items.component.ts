@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { UploadComponent } from '../../../../shared/upload/upload.component';
 import { CommonModule } from '@angular/common';
 import { CustomButtonComponent } from '../../../../shared/button/button.component';
 import * as XLSX from 'xlsx';
 import { ExcelRendererComponent } from '../../../../shared/xlsx/xlsx.component';
+import { ToastService } from '../../../../../infraestructure/lib/toast/toast.service';
 @Component({
   selector: 'app-upload-excel',
   standalone: true,
@@ -70,29 +71,34 @@ import { ExcelRendererComponent } from '../../../../shared/xlsx/xlsx.component';
       </ng-container>
 
       <ng-template #reviewMode>
-        <div
-          class="h-[35dvh] overflow-y-auto"
-          *ngIf="excelHeaders.length && excelData.length"
-        >
+        <div class="" *ngIf="excelHeaders.length && excelData.length">
           <app-excel-renderer
             [headers]="excelHeaders"
             [data]="excelData"
           ></app-excel-renderer>
         </div>
       </ng-template>
-
-      <app-custom-button
-        *ngIf="selectedFiles.length > 0"
-        [icon]="'check-circle'"
-        class="self-end"
-        (btnClick)="revisar()"
-      >
-        Revisar formato
-      </app-custom-button>
+      <section class="flex gap-4 self-end">
+        <app-custom-button
+          *ngIf="selectedFiles.length > 0"
+          [icon]="isReview ? 'return' : 'check-circle'"
+          (btnClick)="revisar()"
+        >
+          {{ isReview ? 'volver' : 'Revisar formato' }}
+        </app-custom-button>
+        <app-custom-button
+          *ngIf="selectedFiles.length > 0 && isReview"
+          [icon]="'save'"
+          (btnClick)="send()"
+        >
+          Subir al sisitema
+        </app-custom-button>
+      </section>
     </div>
   `,
 })
 export class UploadExcelComponent {
+  toastS = inject(ToastService);
   columns = [
     { header: 'DA', minWidth: 80 },
     { header: 'UE', minWidth: 80 },
@@ -141,5 +147,34 @@ export class UploadExcelComponent {
 
   revisar() {
     this.isReview = !this.isReview;
+  }
+  send() {
+    const fileToUpload = this.selectedFiles[0];
+    if (!fileToUpload) {
+      console.error('No hay archivo para subir');
+      return;
+    }
+    this.toastS.addToast({
+      title: 'Subir al sistema',
+      type: 'warning',
+      description:
+        '¿Estás seguro de subir este documento como presupuesto a la unidad ejecutora de este mes?',
+      action: {
+        label: 'Sí, guardar',
+        callback: () => {
+          console.log(fileToUpload);
+          const formData = new FormData();
+          formData.append('file', fileToUpload);
+          this.selectedFiles = [];
+          this.excelHeaders = [];
+          this.excelData = [];
+          this.isReview = false;
+        },
+      },
+      cancelAction: {
+        label: 'Cancelar',
+        callback: () => console.log('Eliminación cancelada'),
+      },
+    });
   }
 }

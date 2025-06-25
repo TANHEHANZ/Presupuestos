@@ -30,6 +30,7 @@ import {
   faCoins,
   faCalendar,
   faCloudArrowDown,
+  faArrowRotateLeft,
 } from '@fortawesome/free-solid-svg-icons';
 
 export const ICONS = {
@@ -63,6 +64,7 @@ export const ICONS = {
   coins: faCoins,
   calendar: faCalendar,
   upload: faCloudArrowDown,
+  return: faArrowRotateLeft,
 } as const;
 
 import { z } from 'zod';
