@@ -1,13 +1,16 @@
 import { API } from "@/infraestructure/config/response";
 import { Request, Response } from "express";
-import { XlsxBody, readXlsx } from "@/infraestructure/lib/xlsx/xlsx.config";
-import { validateXlsxHeader } from "@/infraestructure/validations/v_PresupuestoUnidad";
-import { validateRows } from "@/infraestructure/lib/xlsx/xlsx.valid.rows";
-import { contentXlsxPreUnidad } from "../validations/v_upload";
+import { readXlsx } from "@/infraestructure/lib/xlsx/xlsx.config";
+import { getdataXlsxService } from "../services/getdataXlsx.service";
+import { savePresupuestoUnidades } from "../services/save.preUnidad.service";
+import { MissingUnidadError } from "@/infraestructure/helpers/error";
+
 export const uploadXlsx = async (
   req: Request,
   res: Response
 ): Promise<void> => {
+  console.log("idUusario", req.user!.id);
+  const userId = req.user!.id;
   if (!req.file) {
     API.notFound(res, "No se subió ningún archivo");
     return;
@@ -15,50 +18,56 @@ export const uploadXlsx = async (
 
   try {
     const data = readXlsx(req.file.buffer);
-    if (data.length === 0) {
-      API.conflict(res, "El archivo está vacío");
-      return;
+    const result = getdataXlsxService(data);
+
+    if (!result.success) {
+      console.log(JSON.stringify(result.data, null, 2));
+
+      switch (result.type) {
+        case "MISSING_COLUMNS":
+          API.conflict(
+            res,
+            "Faltan columnas requeridas en el archivo",
+            result.data
+          );
+          return;
+        case "UNRECOGNIZED_COLUMNS":
+          API.conflict(
+            res,
+            "Archivo válido con columnas adicionales no reconocidas",
+            result.data
+          );
+          return;
+        case "ROW_ERRORS":
+          API.conflict(res, "Errores en algunas filas", result.data);
+          return;
+        default:
+          API.serverError(res, "Error inesperado");
+          return;
+      }
     }
 
-    const rawHeader = data[0];
-    const stringHeader = rawHeader.map((cell) => String(cell ?? "").trim());
+    if (result.success) {
+      const rowsToSave = result.data.valid as [];
 
-    const { mappedFields, missingFields, unrecognizedColumns } =
-      validateXlsxHeader(stringHeader);
-
-    if (missingFields.length > 0) {
-      API.conflict(res, "Faltan columnas requeridas en el archivo", {
-        missingFields,
-        unrecognizedColumns,
+      const saved = await savePresupuestoUnidades({
+        mes: new Date(),
+        userId,
+        valueXlsx: rowsToSave,
       });
 
+      API.success(res, "Archivo procesado y guardado correctamente", {
+        savedCount: saved.length,
+      });
       return;
     }
 
-    if (unrecognizedColumns.length > 0) {
-      API.conflict(
-        res,
-        "Archivo válido con columnas adicionales no reconocidas",
-        {
-          mappedFields,
-          unrecognizedColumns,
-        }
-      );
-      return;
-    }
-
-    const rowsObjects = XlsxBody(data, mappedFields);
-    const { valid, errors } = validateRows(rowsObjects, contentXlsxPreUnidad);
-
-    if (errors.length > 0) {
-      API.conflict(res, "Errores en algunas filas", { errors });
-      return;
-    }
-    console.log(valid);
-    API.success(res, "Header válido", {
-      mappedFields,
-    });
+    API.success(res, "Archivo procesado correctamente", result.data);
   } catch (error) {
+    if (error instanceof MissingUnidadError) {
+      API.conflict(res, error.message);
+    }
+    console.log(error);
     API.serverError(
       res,
       "Error al procesar el archivo",

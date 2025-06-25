@@ -67,25 +67,25 @@ model UnidadEjecutora {
 }
 
 model Presupuesto {
-  id                  String         @id @default(cuid())
-  mes                 DateTime
-  da                  Int
-  ue                  Int
-  catPrg              Int
-  fte                 Int
-  org                 Int
-  objetoGasto         String // codigo
-  codigoObjetoGasto   String // unimos DA UE car prg FTE Org objeto
-  presupuestoVigente  Decimal //monto
-  devengado           Decimal // monto
-  porcentajeEjecucion Decimal // monto
-  estado              EstadoRegistro @default(ACTIVO)
-
-  unidadEjecutora UnidadEjecutora   @relation(fields: [unidadId], references: [id])
-  unidadId        String
-  creadoPor       User              @relation(fields: [creadoPorId], references: [id], name: "CreadoPor")
-  creadoPorId     String
-  historiales     HistorialCambio[]
+  id                    String            @id @default(cuid())
+  mes                   DateTime
+  da                    Int
+  ue                    Int // este es el ue de unidadEjecutora debemos usarlo para la relacion con uniad ejecutora  
+  catPrg                String
+  fte                   Int
+  org                   Int
+  objetoGasto           String // codigo
+  codigoObjetoGasto     String // unimos DA UE car prg FTE Org objeto
+  presupuestoVigente    Float //monto
+  devengado             Float // monto
+  porcentajeEjecucion   Float // monto
+  estado                EstadoRegistro    @default(ACTIVO)
+  descrpcionObjetoGasto String
+  unidadEjecutora       UnidadEjecutora   @relation(fields: [unidadId], references: [id])
+  unidadId              String
+  creadoPor             User              @relation(fields: [creadoPorId], references: [id], name: "CreadoPor")
+  creadoPorId           String
+  historiales           HistorialCambio[]
 
   @@unique([unidadId, codigoObjetoGasto, mes])
 }

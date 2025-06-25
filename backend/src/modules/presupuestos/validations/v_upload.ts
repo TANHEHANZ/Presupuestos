@@ -26,7 +26,7 @@ export const contentXlsxPreUnidad = z.object({
   UE: z.string(),
   CatPrg: z.string(),
   FTE: z.string(),
-  Org: z.string(),
+  Org: z.any(),
   Objeto: z.string(),
   Descripcion: z.string(),
   PresupVig: z.number(),

@@ -11,3 +11,12 @@ export class NotFoundError extends Error {
     this.name = "NotFoundError";
   }
 }
+
+export class MissingUnidadError extends Error {
+  public readonly ueCode: string;
+  constructor(ueCode: string) {
+    super(`UnidadEjecutora con código UE="${ueCode}" no existe.`);
+    this.name = "MissingUnidadError";
+    this.ueCode = ueCode;
+  }
+}
