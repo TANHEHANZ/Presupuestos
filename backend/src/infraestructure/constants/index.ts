@@ -14,6 +14,12 @@ export const PERMISSION: Permition[] = [
     icon: "building",
     permissions: PERMITION_KEYS.unidades,
   },
+  {
+    group: "Presupuesto Unidad ejecutora",
+    color: "#10dbd1",
+    icon: "coins",
+    permissions: PERMITION_KEYS.unidades,
+  },
 
   {
     group: "Reportes",

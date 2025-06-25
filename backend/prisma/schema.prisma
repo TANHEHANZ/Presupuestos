@@ -14,13 +14,11 @@ enum Role {
 }
 
 enum EstadoRegistro {
-  PENDIENTE
-  VALIDADO
-  RECHAZADO
   HISTORICO
   ELIMINADO
   ACTIVO
   INACTIVO
+  RECUPERADO
 }
 
 enum U_estado {
@@ -71,13 +69,17 @@ model UnidadEjecutora {
 model Presupuesto {
   id                  String         @id @default(cuid())
   mes                 DateTime
-  codigoObjetoGasto   String
-  objetoGasto         String
-  presupuestoVigente  Decimal
-  devengado           Decimal
-  porcentajeEjecucion Decimal
+  da                  Int
+  ue                  Int
+  catPrg              Int
+  fte                 Int
+  org                 Int
+  objetoGasto         String // codigo
+  codigoObjetoGasto   String // unimos DA UE car prg FTE Org objeto
+  presupuestoVigente  Decimal //monto
+  devengado           Decimal // monto
+  porcentajeEjecucion Decimal // monto
   estado              EstadoRegistro @default(ACTIVO)
-  motivoRechazo       String?
 
   unidadEjecutora UnidadEjecutora   @relation(fields: [unidadId], references: [id])
   unidadId        String

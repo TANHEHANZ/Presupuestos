@@ -2,22 +2,21 @@ import { Request, Response, NextFunction } from "express";
 import { ZodError, ZodSchema } from "zod";
 import { fromError } from "zod-validation-error";
 import { API } from "../config/response";
-
 export const validate =
   (schema: ZodSchema<any>, type: "body" | "query" | "file" = "body") =>
   (req: Request, res: Response, next: NextFunction): void => {
     try {
       let dataToValidate;
+
       switch (type) {
         case "query":
           dataToValidate = req.query;
           break;
         case "file":
-          dataToValidate = {
-            ...req.body,
-            ...(req.file && { file: req.file }),
-            ...(req.files && { files: req.files }),
-          };
+          if (!req.file) {
+            throw new Error("No se encontró el archivo");
+          }
+          dataToValidate = req.file;
           break;
         default:
           dataToValidate = req.body;

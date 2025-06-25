@@ -30,3 +30,23 @@ export function mapXlsxHeader(
     unrecognizedColumns: stringHeader.filter((_, i) => mapped[i] === null),
   };
 }
+export function XlsxBody(
+  data: XlsxData,
+  mappedFields: string[]
+): Record<string, any>[] {
+  const rows = data.slice(1);
+
+  return rows
+    .map((row) => {
+      const obj: Record<string, any> = {};
+      mappedFields.forEach((field, index) => {
+        obj[field] = row[index];
+      });
+      return obj;
+    })
+    .filter((obj) =>
+      Object.values(obj).some(
+        (value) => value !== null && value !== undefined && value !== ""
+      )
+    );
+}

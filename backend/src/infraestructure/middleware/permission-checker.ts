@@ -24,7 +24,7 @@ export const checkPermission = (requiredPermission: string) => {
       const userPermissions = user?.permisos ?? [];
 
       if (
-        !userPermissions.includes("all") &&
+        !userPermissions.includes("ALL") &&
         !userPermissions.includes(requiredPermission)
       ) {
         API.unauthorized(res, "No tienes permiso para esta acción");
