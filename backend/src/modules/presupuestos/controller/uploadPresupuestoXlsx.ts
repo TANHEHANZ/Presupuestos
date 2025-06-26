@@ -66,12 +66,13 @@ export const uploadXlsx = async (
   } catch (error) {
     if (error instanceof MissingUnidadError) {
       API.conflict(res, error.message);
+      return;
     }
-    console.log(error);
     API.serverError(
       res,
       "Error al procesar el archivo",
       error instanceof Error ? error.message : "Error desconocido"
     );
+    return;
   }
 };
