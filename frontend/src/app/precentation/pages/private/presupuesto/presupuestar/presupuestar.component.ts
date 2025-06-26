@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { WrapperComponent } from '../../../../shared/container/wrapper.component';
 import { MainTableComponent } from '../../../../shared/table/main.table.component';
 import { PresupuestarDetailComponent } from './p_detail.component';
@@ -8,6 +8,9 @@ import { ModalComponent } from '../../../../shared/modal/modal.component';
 import { ContainerComponent } from '../../../../shared/container/container.component';
 import { CustomButtonComponent } from '../../../../shared/button/button.component';
 import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
+import { PresupuestoService } from '../../../../../infraestructure/services/apis/presupuesto.service';
+import { DTO_presupuestoUnidadesR } from '../../../../../infraestructure/models/presupuestos/unidad/m_presupuestoUnidad';
+import { ToastService } from '../../../../../infraestructure/lib/toast/toast.service';
 
 @Component({
   selector: 'presupuestos-component',
@@ -30,13 +33,13 @@ import { PanelService } from '../../../../../infraestructure/services/components
         </div>
       </app-container>
       <app-main-table
+        title="Registros presupuestos por unidad ejecutora"
         [columns]="columns"
-        [data]="data"
+        [data]="dataPresupuesto"
         [rowExpandTemplate]="expandTemplate"
-        title="Registros de usuarios"
         [searchConfig]="{
           label : 'Filtrar',
-          placeholder: 'Filtrar por nombre ,ci',
+          placeholder: 'Filtrar por ue ,unidad ejecutora',
           buttonLabel: 'filtrar',
           icon: 'filter',
         }"
@@ -60,16 +63,55 @@ import { PanelService } from '../../../../../infraestructure/services/components
     UploadExcelComponent,
   ],
 })
-export class PresupuestarComponent {
+export class PresupuestarComponent implements OnInit {
   drawerS = inject(PanelService);
+  toastS = inject(ToastService);
+  presupuestoUniS = inject(PresupuestoService);
+  dataPresupuesto: DTO_presupuestoUnidadesR = [];
   openDrawe() {
     this.drawerS.openModal();
   }
+  ngOnInit(): void {
+    this.loadPresupuestos();
+    this.drawerS.refresh$.subscribe(() => {
+      this.loadPresupuestos();
+    });
+  }
+  loadPresupuestos() {
+    try {
+      this.presupuestoUniS.list().subscribe({
+        next: (value) => {
+          this.dataPresupuesto = value;
+          console.log(this.dataPresupuesto);
+        },
+
+        error: (e) => {
+          console.log(e);
+          const message =
+            e?.error?.errors?.message ||
+            e?.error?.message ||
+            'Error desconocido';
+          this.toastS.addToast({
+            title: 'Error',
+            description: message,
+            id: 'unidades-error',
+            type: 'error',
+          });
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   data = [];
-  columns = [
-    { header: 'UE', accessor: 'ci' },
-    { header: 'Unidad Ejecutora', accessor: 'name' },
-    { header: 'Monto Vijente', accessor: 'rol' },
-    { header: 'Monto Presupuestado', accessor: 'estado' },
+  columns: {
+    header: string;
+    accessor: keyof DTO_presupuestoUnidadesR[number] | string;
+  }[] = [
+    { header: 'UE', accessor: 'ue' },
+    { header: 'Unidad Ejecutora', accessor: 'descripcion' },
+    { header: 'Monto Vijente', accessor: 'montoVigente' },
+    { header: 'Monto Presupuestado', accessor: 'montoDevengado' },
   ];
 }

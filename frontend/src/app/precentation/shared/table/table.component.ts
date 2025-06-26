@@ -8,8 +8,6 @@ import {
 } from '@angular/core';
 import { CommonModule, NgTemplateOutlet } from '@angular/common';
 import gsap from 'gsap';
-import { CustomInputComponent } from '../input/input.component';
-import { CustomButtonComponent } from '../button/button.component';
 export interface TableColumn<T> {
   header: string;
   accessor: keyof T;
@@ -21,7 +19,9 @@ export interface TableColumn<T> {
   standalone: true,
   imports: [CommonModule, NgTemplateOutlet],
   template: `
-    <section class="h-full overflow-y-auto relative rounded-md overflow-hidden">
+    <section
+      class="h-full  overflow-y-auto relative rounded-md overflow-hidden"
+    >
       <section></section>
       <table class="min-w-full divide-y divide-gray-200 ">
         <thead class="bg-slate-100 sticky top-0">

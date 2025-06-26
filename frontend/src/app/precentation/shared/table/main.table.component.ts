@@ -16,7 +16,7 @@ import { ContainerComponent } from '../container/container.component';
   selector: 'app-main-table',
   template: `
     <app-container [title]="title">
-      <article class=" grid grid-cols-2 my-4">
+      <article class=" grid grid-cols-2 my-4  ">
         @if(searchConfig && searchConfig){
         <app-search
           class="w-[70%]"
