@@ -5,6 +5,7 @@ import { checkPermission } from "@/infraestructure/middleware/permission-checker
 import { P_preUnidad } from "@/infraestructure/constants/permitions/p_preUnidad";
 import { validate } from "@/infraestructure/helpers/validate";
 import { filePreUnidad } from "./validations/v_upload";
+import { PreUnidadController } from "./controller/pre_UnidadController";
 
 const pre_Routes = Router();
 // presupuestos por unidad
@@ -14,5 +15,15 @@ pre_Routes.post(
   upload.single("file"),
   validate(filePreUnidad, "file"),
   uploadXlsx
+);
+pre_Routes.get(
+  "/unidad",
+  checkPermission(P_preUnidad.LIST),
+  PreUnidadController.get
+);
+pre_Routes.get(
+  "/unidad/listgrup",
+  checkPermission(P_preUnidad.LIST),
+  PreUnidadController.listUEgrup
 );
 export default pre_Routes;
