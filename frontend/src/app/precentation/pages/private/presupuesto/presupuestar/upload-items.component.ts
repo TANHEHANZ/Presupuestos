@@ -5,6 +5,8 @@ import { CustomButtonComponent } from '../../../../shared/button/button.componen
 import * as XLSX from 'xlsx';
 import { ExcelRendererComponent } from '../../../../shared/xlsx/xlsx.component';
 import { ToastService } from '../../../../../infraestructure/lib/toast/toast.service';
+import { PresupuestoService } from '../../../../../infraestructure/services/apis/presupuesto.service';
+import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
 @Component({
   selector: 'app-upload-excel',
   standalone: true,
@@ -15,28 +17,30 @@ import { ToastService } from '../../../../../infraestructure/lib/toast/toast.ser
     ExcelRendererComponent,
   ],
   template: `
-    <div class="w-full h-[50dvh] flex flex-col gap-4">
-      <div class="rounded-lg overflow-hidden">
-        <p class="text-sm text-gray-500">
+    <div class="w-full h-auto flex flex-col gap-4">
+      <div class="rounded-xl overflow-hidden text-primary  px-4 py-2">
+        <p class="text-sm  mb-1 ">
           Recuerda que el archivo que subes debe estar con el siguiente
           encabezado:
         </p>
-        <table class="w-full border-collapse">
-          <thead class="bg-slate-100">
-            <tr>
-              <th
-                *ngFor="let col of columns"
-                class="px-4 py-3 text-left text-xs font-medium text-gray-500 tracking-wider border-l"
-              >
-                {{ col.header }}
-              </th>
-            </tr>
-          </thead>
-        </table>
+        <div class="bg-white rounded-2xl  overflow-hidden border ">
+          <table class="w-full border-collapse  border-white">
+            <thead class="">
+              <tr>
+                <th
+                  *ngFor="let col of columns"
+                  class="px-4 py-3 text-left text-xs font-medium text-gray-500 tracking-widest border-l"
+                >
+                  {{ col.header }}
+                </th>
+              </tr>
+            </thead>
+          </table>
+        </div>
       </div>
 
       <ng-container *ngIf="!isReview; else reviewMode">
-        <div class="h-[250px]">
+        <div class=" transition-all duration-300">
           <app-upload
             [accept]="[
               'application/vnd.ms-excel',
@@ -49,23 +53,29 @@ import { ToastService } from '../../../../../infraestructure/lib/toast/toast.ser
 
         <div
           *ngIf="selectedFiles.length > 0"
-          class="border-olther/30 rounded-lg p-4 bg-olther/5 flex items-center gap-2 justify-between"
+          class=" rounded-xl p-4 flex items-center gap-2 justify-between flex-wrap w-auto border border-gray-300 mx-auto gap-4 "
         >
-          <div>
-            <p class="text-sm text-olther font-bold">Archivo seleccionado:</p>
-            <ul>
-              <li
-                *ngFor="let file of selectedFiles"
-                class="text-xs text-gray-600"
-              >
-                {{ file.name }} ({{ file.size | number }} bytes)
-              </li>
-            </ul>
+          <img
+            src="./hojaExcel.png"
+            alt="icono de hoja excel"
+            class=" w-12 h-12 "
+          />
+          <div *ngFor="let file of selectedFiles" class="">
+            <p class="text-primary">
+              {{ file.name }}
+            </p>
+            <p class="text-xs text-gray-600">
+              ({{ file.size | number }} bytes)
+            </p>
           </div>
           <app-custom-button
             [icon]="'delete'"
             variant="olther"
             (btnClick)="clear()"
+          ></app-custom-button>
+          <app-custom-button
+            [icon]="'eye'"
+            (btnClick)="revisar()"
           ></app-custom-button>
         </div>
       </ng-container>
@@ -80,11 +90,12 @@ import { ToastService } from '../../../../../infraestructure/lib/toast/toast.ser
       </ng-template>
       <section class="flex gap-4 self-end">
         <app-custom-button
-          *ngIf="selectedFiles.length > 0"
-          [icon]="isReview ? 'return' : 'check-circle'"
+          *ngIf="selectedFiles.length > 0 && isReview"
+          [icon]="'return'"
+          variant="secondary"
           (btnClick)="revisar()"
         >
-          {{ isReview ? 'volver' : 'Revisar formato' }}
+          Volver
         </app-custom-button>
         <app-custom-button
           *ngIf="selectedFiles.length > 0 && isReview"
@@ -99,6 +110,8 @@ import { ToastService } from '../../../../../infraestructure/lib/toast/toast.ser
 })
 export class UploadExcelComponent {
   toastS = inject(ToastService);
+  modalS = inject(PanelService);
+  uploadS = inject(PresupuestoService);
   columns = [
     { header: 'DA', minWidth: 80 },
     { header: 'UE', minWidth: 80 },
@@ -154,27 +167,37 @@ export class UploadExcelComponent {
       console.error('No hay archivo para subir');
       return;
     }
-    this.toastS.addToast({
-      title: 'Subir al sistema',
-      type: 'warning',
-      description:
-        '¿Estás seguro de subir este documento como presupuesto a la unidad ejecutora de este mes?',
-      action: {
-        label: 'Sí, guardar',
-        callback: () => {
-          console.log(fileToUpload);
-          const formData = new FormData();
-          formData.append('file', fileToUpload);
-          this.selectedFiles = [];
-          this.excelHeaders = [];
-          this.excelData = [];
-          this.isReview = false;
-        },
+    const formData = new FormData();
+    formData.append('file', fileToUpload);
+    const send = this.sendForm(formData);
+  }
+
+  sendForm = async (formData: any) => {
+    this.uploadS.upload(formData).subscribe({
+      next: (result) => {
+        console.log('Subida exitosa:', result);
+        this.toastS.addToast({
+          title: 'Éxito',
+          type: 'success',
+          description: 'Archivo subido correctamente',
+        });
+
+        this.modalS.closeModal(true);
+        this.selectedFiles = [];
+        this.excelHeaders = [];
+        this.excelData = [];
+
+        this.isReview = false;
       },
-      cancelAction: {
-        label: 'Cancelar',
-        callback: () => console.log('Eliminación cancelada'),
+      error: (e) => {
+        const message =
+          e?.error?.errors?.message || e?.error?.message || 'Error desconocido';
+        this.toastS.addToast({
+          title: 'Error',
+          type: 'error',
+          description: message,
+        });
       },
     });
-  }
+  };
 }

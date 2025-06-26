@@ -85,7 +85,7 @@ import { LoginService } from '../../services/apis/login.service';
             Cancelar
           </button>
           <button
-            class="flex-1 rounded-lg py-2 text-nowrap border bg-olther text-white hover:bg-opacity-90 transition-colors "
+            class="flex-1 rounded-lg py-2 text-nowrap border bg-primary text-white hover:bg-opacity-90 transition-colors "
             (click)="toast.action.callback()"
           >
             {{ toast.action.label }}

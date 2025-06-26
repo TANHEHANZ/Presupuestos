@@ -9,17 +9,23 @@ import { ToastService } from '../../../infraestructure/lib/toast/toast.service';
   imports: [CommonModule, IconComponent],
   template: `
     <section
-      class="border-2 border-dashed flex-1 h-full w-full flex justify-center items-center flex-col rounded-md p-4 transition-all duration-75 ease-out"
+      class="border-2 border-dashed flex-1 h-full w-full  min-h-[50dvh] cursor-pointer flex justify-center items-center flex-col rounded-xl p-4 transition-all duration-75 ease-out"
       (click)="fileInput.click()"
       (dragover)="onDragOver($event)"
       (dragleave)="onDragLeave($event)"
       (drop)="onDrop($event)"
       [class.bg-blue-300]="dragging"
+      [class.bg-opacity-10]="dragging"
       [class.border-red-500]="hasError"
       [class.border-blue-500]="!hasError && dragging"
     >
-      <app-icon [name]="'upload'" [size]="'5x'" />
-      <p class="text-gray-600">Haz clic o arrastra archivos aquí</p>
+      <img src="/hojaExcel1.png" alt="" class="w-40" />
+      <p class="text-xl font-bold mt-4 text-primary ">Subir archivo</p>
+      <p class="text-gray-600">
+        Arrastra y suelta tus archivos aquí, o
+        <strong> haz clic para seleccionarlos</strong>.
+      </p>
+      <p class="text-sm  text-gray-400">Formatos admitidos: xslx, xls, csv</p>
       <input
         type="file"
         #fileInput
