@@ -2,10 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpService } from './http.service';
 import { API_PresupuestoUni } from '../../lib/fetch/modules.ts/api.presupuestoUni';
 import { DTO_FilterPresupuestoUnidad } from '../../models/presupuestos/unidad/m_filters';
-import {
-  DTO_presupuestoUniUpload,
-  DTO_presupuestoUniUploadR,
-} from '../../models/presupuestos/unidad/m_upload';
+import { DTO_presupuestoUniUpload } from '../../models/presupuestos/unidad/m_upload';
 @Injectable({
   providedIn: 'root',
 })

@@ -20,9 +20,8 @@ export interface TableColumn<T> {
   imports: [CommonModule, NgTemplateOutlet],
   template: `
     <section
-      class="h-full  overflow-y-auto relative rounded-md overflow-hidden"
+      class="h-full  overflow-y-auto relative rounded-md overflow-hidden w-full"
     >
-      <section></section>
       <table class="min-w-full divide-y divide-gray-200 ">
         <thead class="bg-slate-100 sticky top-0">
           <tr>
@@ -42,7 +41,7 @@ export interface TableColumn<T> {
             >
               <td
                 *ngFor="let col of columns"
-                class="px-6 py-4 whitespace-nowrap text-sm"
+                class="px-6 py-4 whitespace-nowrap text-sm max-w-[200px] overflow-hidden  text-ellipsis "
               >
                 <ng-container *ngIf="!col.cellTemplate; else customCell">
                   {{ row[col.accessor] }}
@@ -58,7 +57,7 @@ export interface TableColumn<T> {
               </td>
             </tr>
             <tr *ngIf="expandedRowIndex === i">
-              <td [attr.colspan]="columns.length" class="bg-gray-50 px-6 py-4">
+              <td [attr.colspan]="columns.length" class="bg-gray-50 px-6 py-4 ">
                 <div
                   #expandRow
                   style="overflow: hidden; height: 0; opacity: 0;"

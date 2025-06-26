@@ -99,6 +99,11 @@ export class NavComponent {
           icon: 'users',
           path: '/dashboard/presupuestos/user',
         },
+        {
+          label: 'Programación finanicera',
+          icon: 'calendar',
+          path: '/dashboard/presupuestos/programacion',
+        },
       ],
     },
   ];
