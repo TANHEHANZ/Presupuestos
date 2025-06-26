@@ -19,9 +19,14 @@ export const PERMITION_KEYS = {
   ],
   presupuestoUni: [
     {
-      name: "subir presupuesto por unidad",
+      name: "subir xlsx presupuesto",
       key: P_preUnidad.UPLODAD,
       icon: "save",
+    },
+    {
+      name: "Ejecucioón presupuestaria",
+      key: P_preUnidad.UPLODAD,
+      icon: "calendar",
     },
   ],
   reportes: [{ name: "Descargar", key: P_report.DOWNLOAD, icon: "download" }],

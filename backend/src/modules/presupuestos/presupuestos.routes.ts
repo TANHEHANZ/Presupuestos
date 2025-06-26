@@ -6,6 +6,8 @@ import { P_preUnidad } from "@/infraestructure/constants/permitions/p_preUnidad"
 import { validate } from "@/infraestructure/helpers/validate";
 import { filePreUnidad } from "./validations/v_upload";
 import { PreUnidadController } from "./controller/pre_UnidadController";
+import { P_proyect } from "@/infraestructure/constants/permitions/p_proyectos";
+import { ProyectController } from "./controller/proyectoController";
 
 const pre_Routes = Router();
 // presupuestos por unidad
@@ -25,5 +27,10 @@ pre_Routes.get(
   "/unidad/listgrup",
   checkPermission(P_preUnidad.LIST),
   PreUnidadController.listUEgrup
+);
+pre_Routes.get(
+  "/proyecto",
+  checkPermission(P_proyect.LIST),
+  ProyectController.list
 );
 export default pre_Routes;
