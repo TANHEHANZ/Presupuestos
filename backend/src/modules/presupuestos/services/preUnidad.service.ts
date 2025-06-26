@@ -30,14 +30,16 @@ export const PreUnidadService = {
         ue."ue" AS "ue",
         ue."descripcion" AS "descripcion",
         COALESCE(SUM(p."presupuestoVigente"), 0) AS "montoVigente",
-        COALESCE(SUM(p."devengado"), 0) AS "montoDevengado"
+        COALESCE(SUM(CAST(pr."Programado" AS NUMERIC)), 0) AS "montoProgramado"
       FROM "UnidadEjecutora" ue
       LEFT JOIN "Presupuesto" p
         ON ue."id" = p."unidadId" AND p."estado" = 'ACTIVO'
+      LEFT JOIN "Programacion" pr
+        ON p."id" = pr."presupuestoId" AND pr."estado" = 'ACTIVO'
       ${whereSQL}
       GROUP BY ue."ue", ue."descripcion"
       ORDER BY ue."ue"
-    `,
+      `,
       ...params
     );
 
@@ -45,6 +47,8 @@ export const PreUnidadService = {
   },
 
   listUEgrup: async ({ ue, descripcionUe }: FiltersProps): Promise<any> => {
+    // debemos manejar el monto total del presupuesto vigente , hacer una sumatoria de de lo que programen
+
     const unidades = await prismaC.unidadEjecutora.findMany({
       where: {
         ...(ue && { ue }),

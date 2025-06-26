@@ -41,6 +41,7 @@ model User {
   unidadId        String
   historiales     HistorialCambio[]
   Presupuesto     Presupuesto[]     @relation("CreadoPor")
+  Programacion    Programacion[]
 }
 
 model U_navigation {
@@ -86,8 +87,22 @@ model Presupuesto {
   creadoPor             User              @relation(fields: [creadoPorId], references: [id], name: "CreadoPor")
   creadoPorId           String
   historiales           HistorialCambio[]
+  Programacion          Programacion[]
 
   @@unique([unidadId, codigoObjetoGasto, mes])
+}
+
+model Programacion {
+  id            String      @id @default(uuid())
+  mes           String
+  Programado    String
+  estado        U_estado    @default(ACTIVO)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  presupuesto   Presupuesto @relation(fields: [presupuestoId], references: [id])
+  presupuestoId String
+  usuario       User        @relation(fields: [usuarioId], references: [id])
+  usuarioId     String
 }
 
 model HistorialCambio {

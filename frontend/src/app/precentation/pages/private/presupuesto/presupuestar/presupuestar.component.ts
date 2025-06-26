@@ -112,6 +112,6 @@ export class PresupuestarComponent implements OnInit {
     { header: 'UE', accessor: 'ue' },
     { header: 'Unidad Ejecutora', accessor: 'descripcion' },
     { header: 'Monto Vijente', accessor: 'montoVigente' },
-    { header: 'Monto Presupuestado', accessor: 'montoDevengado' },
+    { header: 'Monto Presupuestado', accessor: 'montoProgramado' },
   ];
 }
