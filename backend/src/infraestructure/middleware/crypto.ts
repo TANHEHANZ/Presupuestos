@@ -1,7 +1,7 @@
 import { randomBytes, createCipheriv, createDecipheriv } from "crypto";
 import config from "../config/config";
 
-const KEY = Buffer.from(config.token_secret_key, "utf-8");
+const KEY = Buffer.from(config.token_secret_key, "hex");
 
 function generateIV() {
   return randomBytes(16);
