@@ -70,7 +70,6 @@ export const uploadXlsx = async (
     }
     API.serverError(
       res,
-      "Error al procesar el archivo",
       error instanceof Error ? error.message : "Error desconocido"
     );
     return;

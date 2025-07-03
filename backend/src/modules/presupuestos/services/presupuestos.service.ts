@@ -21,9 +21,7 @@ export const ProyectService = {
     limit,
   }: FiltersProps) => {
     const where = {
-      estado: {
-        in: ["ACTIVO", "RECUPERADO"],
-      },
+      estado: "ACTIVO",
       ...(org && {
         org: Number(org),
       }),
@@ -63,15 +61,14 @@ export const ProyectService = {
 
     const data = result.data.map((p) => ({
       id: p.id,
+      catPrg: p.catPrg,
+      descripcion: p.unidadEjecutora?.descripcion,
+      fte: p.fte,
       mes: p.mes,
-      ue: p.ue,
       org: p.org,
-      objetoGasto: p.objetoGasto,
-      descripcionGasto: p.descrpcionObjetoGasto,
-      presupuestoVigente: p.presupuestoVigente,
-      devengado: p.devengado,
-      porcentajeEjecucion: p.porcentajeEjecucion,
-      unidad: p.unidadEjecutora?.descripcion,
+      objetoGasto: p.objetoGasto, //objeto
+      descripcionGasto: p.descrpcionObjetoGasto, //descripcion Objeto
+      presupuestoVigente: p.presupuestoVigente, ////
     }));
 
     return {
