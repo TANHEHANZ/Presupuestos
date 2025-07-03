@@ -86,14 +86,6 @@ export class ProgramacionComponent implements OnInit {
     });
   }
 
-  // ue
-
-  // objetoGasto
-  // descripcionGasto
-  // presupuestoVigente
-  // devengado
-  // porcentajeEjecucion
-  // unidad
   columns: {
     header: string;
     accessor: keyof DTO_proyectosRItems[number] | string;

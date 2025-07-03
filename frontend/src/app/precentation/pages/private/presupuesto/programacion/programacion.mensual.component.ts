@@ -1,24 +1,22 @@
-import { Component, inject, input, OnInit } from '@angular/core';
-import { CalendarComponent } from '../../../../shared/calendar/calendar.component';
-import { CustomInputComponent } from '../../../../shared/input/input.component';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CustomButtonComponent } from '../../../../shared/button/button.component';
-import { ModalComponent } from '../../../../shared/modal/modal.component';
-import { ProgramacionMensual } from './programacion.mensual.component';
 import { CommonModule } from '@angular/common';
-import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
+import { Component, input } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CalendarComponent } from '../../../../shared/calendar/calendar.component';
+import { CustomButtonComponent } from '../../../../shared/button/button.component';
+import { CustomInputComponent } from '../../../../shared/input/input.component';
+import { IconComponent } from '../../../../shared/icons/icon.component';
 
 @Component({
-  selector: 'detail-presupuesto',
-  standalone: true,
-  template: `
-    <app-modal title="Programacion Mensual">
-      <ng-container *ngIf="visible">
-        <programacion-mensual [D_Presupuesto]="D_Presupuesto()" />
-      </ng-container>
-    </app-modal>
+  selector: 'programacion-mensual',
+  template: `<div class="  ">
     <section [formGroup]="userForm">
-      <article class="grid grid-cols-5 my-4 gap-2">
+      <p
+        class="p-4 border border-violet-200 rounded-lg bg-violet-50 text-violet-800  flex gap-2"
+      >
+        <app-icon name="alert" /> Estas por realizar la programacion mensual ,
+        ten encuenta que esto debes realizar solo una vez
+      </p>
+      <article class="grid grid-cols-4 my-4 gap-2">
         <app-custom-input
           label="Categoria Programada"
           formControlName="catPrg"
@@ -29,7 +27,7 @@ import { PanelService } from '../../../../../infraestructure/services/components
         <app-custom-input label="Org" formControlName="org" />
         <app-custom-input
           label="Descripcion de gastos"
-          class="col-span-2"
+          class="col-span-3"
           formControlName="descripcionGasto"
         />
         <app-custom-input
@@ -42,31 +40,33 @@ import { PanelService } from '../../../../../infraestructure/services/components
         />
       </article>
 
-      <app-calendar />
+      <app-calendar
+        [meses]="v_meses"
+        [loading]="isLoading"
+        [mode]="'form'"
+        (select)="onMesSeleccionado($event)"
+      />
+
       <nav class="flex justify-end ">
-        <app-custom-button [icon]="'calendar'" (btnClick)="onBudgets()">
+        <app-custom-button [icon]="'calendar'" (btnClick)="saveBudgets()">
           Realizar Programación
         </app-custom-button>
       </nav>
     </section>
-  `,
+  </div>`,
   imports: [
-    CalendarComponent,
-    CustomInputComponent,
-    ReactiveFormsModule,
-    CustomButtonComponent,
     CommonModule,
-    ModalComponent,
-    ProgramacionMensual,
+    ReactiveFormsModule,
+    CalendarComponent,
+    CustomButtonComponent,
+    CustomInputComponent,
+    IconComponent,
   ],
 })
-export class DetailComponent implements OnInit {
+export class ProgramacionMensual {
   D_Presupuesto = input<any>();
-  panelS = inject(PanelService);
 
-  visible: boolean = false;
   userForm!: FormGroup;
-
   ngOnInit(): void {
     const data = this.D_Presupuesto();
     console.log(data);
@@ -96,8 +96,28 @@ export class DetailComponent implements OnInit {
       }),
     });
   }
-  onBudgets() {
-    this.visible = true;
-    this.panelS.openModal();
+  saveBudgets() {}
+
+  isLoading = false;
+  v_meses = [
+    { mes: 'Ene', value: '0' },
+    { mes: 'Feb', value: '0' },
+    { mes: 'Mar', value: '0' },
+    { mes: 'Abr', value: '0' },
+    { mes: 'May', value: '0' },
+    { mes: 'Jun', value: '0' },
+    { mes: 'Jul', value: '0' },
+    { mes: 'Ago', value: '0' },
+    { mes: 'Sep', value: '0' },
+    { mes: 'Oct', value: '0' },
+    { mes: 'Nov', value: '0' },
+    { mes: 'Dic', value: '0' },
+  ];
+  onMesSeleccionado(index: number) {
+    const mesSeleccionado = this.v_meses[index];
+    console.log('Mes seleccionado:', mesSeleccionado);
+
+    this.userForm.get('pre_Programado')?.enable();
+    // Aquí puedes guardar el mes o marcarlo como seleccionado, etc.
   }
 }
