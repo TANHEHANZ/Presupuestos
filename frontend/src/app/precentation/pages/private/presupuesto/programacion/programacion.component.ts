@@ -1,15 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { WrapperComponent } from '../../../../shared/container/wrapper.component';
 import { MainTableComponent } from '../../../../shared/table/main.table.component';
-import { TableColumn } from '../../../../shared/table/table.component';
-import { Proyecto } from '../../../../../infraestructure/global/proyecto';
 import { ProyectoService } from '../../../../../infraestructure/services/apis/proyecto.service';
 import { ToastService } from '../../../../../infraestructure/lib/toast/toast.service';
-import {
-  DTO_proyectosR,
-  DTO_proyectosRItems,
-} from '../../../../../infraestructure/models/presupuestos/proyectos/m_proyectos';
+import { DTO_proyectosRItems } from '../../../../../infraestructure/models/presupuestos/proyectos/m_proyectos';
 import { DTO_FilterProyecto } from '../../../../../infraestructure/models/presupuestos/proyectos/m_filter';
+import { DetailComponent } from './detail.component';
 
 @Component({
   selector: 'programacion-compoenent',
@@ -39,13 +35,14 @@ import { DTO_FilterProyecto } from '../../../../../infraestructure/models/presup
         (limitChange)="onLimitChange($event)"
         [fetchPageData]="fetchPageData"
         (searchChange)="searchChange($event)"
+        [rowExpandTemplate]="expand"
       ></app-main-table>
-      <!-- <ng-template #expandTemplate let-row>
-        
-      </ng-template> -->
+      <ng-template #expand let-row>
+        <detail-presupuesto [D_Presupuesto]="row" />
+      </ng-template>
     </app-wrapper>
   `,
-  imports: [WrapperComponent, MainTableComponent],
+  imports: [WrapperComponent, MainTableComponent, DetailComponent],
 })
 export class ProgramacionComponent implements OnInit {
   proyectoS = inject(ProyectoService);
@@ -101,9 +98,9 @@ export class ProgramacionComponent implements OnInit {
     header: string;
     accessor: keyof DTO_proyectosRItems[number] | string;
   }[] = [
-    // { header: 'Cat Prg', accessor: 'org' },
-    { header: 'Descripcion', accessor: 'descripcionGasto' },
-    // { header: 'FTE', accessor: 'fte' },
+    { header: 'Cat Prg', accessor: 'org' },
+    { header: 'Descripcion', accessor: 'descripcion' },
+    { header: 'FTE', accessor: 'fte' },
     { header: 'Org', accessor: 'org' },
     { header: 'Objeto', accessor: 'objetoGasto' },
     { header: 'Descripcion gasto', accessor: 'descripcionGasto' },

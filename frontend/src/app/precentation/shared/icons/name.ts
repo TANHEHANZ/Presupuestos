@@ -34,6 +34,8 @@ import {
   faArrowLeft,
   faArrowRight,
   faChevronDown,
+  faChevronLeft,
+  faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 
 export const ICONS = {
@@ -68,8 +70,8 @@ export const ICONS = {
   calendar: faCalendar,
   upload: faCloudArrowDown,
   return: faArrowRotateLeft,
-  left: faArrowLeft,
-  right: faArrowRight,
+  left: faChevronLeft,
+  right: faChevronRight,
   down: faChevronDown,
 } as const;
 

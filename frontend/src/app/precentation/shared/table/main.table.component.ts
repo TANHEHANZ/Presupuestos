@@ -145,7 +145,7 @@ export class MainTableComponent<T> implements OnInit {
 
   @Input() currentLimit: number = 10;
   isLimitDropdownOpen = false;
-  limitOptions = [5, 10, 20, 50];
+  limitOptions = [8, 15, 20, 50];
 
   ngOnInit(): void {
     this.changePage(1);
