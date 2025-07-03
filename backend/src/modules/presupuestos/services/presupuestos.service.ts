@@ -1,6 +1,10 @@
+import { paginate } from "@/infraestructure/config/paginate";
 import { prismaC } from "@/infraestructure/config/prisma.client";
+import { Presupuesto, UnidadEjecutora } from "@prisma/client";
 
 interface FiltersProps {
+  page: string;
+  limit: string;
   descripcion?: string;
   org?: string;
   objeto?: string;
@@ -13,42 +17,51 @@ export const ProyectService = {
     descripcionGasto,
     objeto,
     org,
-  }: FiltersProps): Promise<any> => {
-    const presupuestos = await prismaC.presupuesto.findMany({
-      where: {
-        estado: {
-          in: ["ACTIVO", "RECUPERADO"],
-        },
-        ...(org && {
-          org: Number(org),
-        }),
-        ...(objeto && {
-          objetoGasto: {
-            contains: objeto,
-            mode: "insensitive",
-          },
-        }),
-        ...(descripcionGasto && {
-          descrpcionObjetoGasto: {
-            contains: descripcionGasto,
-            mode: "insensitive",
-          },
-        }),
-        unidadEjecutora: descripcion
-          ? {
-              descripcion: {
-                contains: descripcion,
-                mode: "insensitive",
-              },
-            }
-          : undefined,
+    page,
+    limit,
+  }: FiltersProps) => {
+    const where = {
+      estado: {
+        in: ["ACTIVO", "RECUPERADO"],
       },
+      ...(org && {
+        org: Number(org),
+      }),
+      ...(objeto && {
+        objetoGasto: {
+          contains: objeto,
+          mode: "insensitive",
+        },
+      }),
+      ...(descripcionGasto && {
+        descrpcionObjetoGasto: {
+          contains: descripcionGasto,
+          mode: "insensitive",
+        },
+      }),
+      unidadEjecutora: descripcion
+        ? {
+            descripcion: {
+              contains: descripcion,
+              mode: "insensitive",
+            },
+          }
+        : undefined,
+    };
+
+    const result = await paginate<
+      Presupuesto & { unidadEjecutora: UnidadEjecutora | null }
+    >(prismaC.presupuesto, {
+      page: Number(page),
+      limit: Number(limit),
+      where,
       include: {
         unidadEjecutora: true,
       },
+      orderBy: { createdAt: "desc" },
     });
 
-    return presupuestos.map((p) => ({
+    const data = result.data.map((p) => ({
       id: p.id,
       mes: p.mes,
       ue: p.ue,
@@ -60,5 +73,12 @@ export const ProyectService = {
       porcentajeEjecucion: p.porcentajeEjecucion,
       unidad: p.unidadEjecutora?.descripcion,
     }));
+
+    return {
+      data,
+      totalPages: result.totalPages,
+      currentPage: result.currentPage,
+      totalItems: result.totalItems,
+    };
   },
 };
