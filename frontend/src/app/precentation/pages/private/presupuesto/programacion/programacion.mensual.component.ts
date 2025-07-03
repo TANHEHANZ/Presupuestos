@@ -8,7 +8,7 @@ import { IconComponent } from '../../../../shared/icons/icon.component';
 
 @Component({
   selector: 'programacion-mensual',
-  template: `<div class="  ">
+  template: `<div class="  w-[75dvw]">
     <section [formGroup]="userForm">
       <p
         class="p-4 border border-violet-200 rounded-lg bg-violet-50 text-violet-800  flex gap-2"
@@ -45,6 +45,7 @@ import { IconComponent } from '../../../../shared/icons/icon.component';
         [loading]="isLoading"
         [mode]="'form'"
         (select)="onMesSeleccionado($event)"
+        class="w-full"
       />
 
       <nav class="flex justify-end ">
@@ -110,7 +111,7 @@ export class ProgramacionMensual {
     { mes: 'Ago', value: '0' },
     { mes: 'Sep', value: '0' },
     { mes: 'Oct', value: '0' },
-    { mes: 'Nov', value: '0' },
+    { mes: 'Nov', value: '100000000000' },
     { mes: 'Dic', value: '0' },
   ];
   onMesSeleccionado(index: number) {

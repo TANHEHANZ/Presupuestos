@@ -8,10 +8,10 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [ContainerComponent, IconComponent, CommonModule],
   template: `
-    <app-container [title]="'Programación'">
+    <app-container [title]="'Programación'" class="w-full">
       <ng-container *ngIf="!loading; else cargando">
-        <article class="flex gap-4">
-          <div class="flex gap-2 justify-center items-center">
+        <article class="">
+          <!-- <div class="flex gap-2 justify-center items-center">
             <div>
               <p class="text-sm">Gestión</p>
               <p class="text-3xl">2025</p>
@@ -22,7 +22,7 @@ import { CommonModule } from '@angular/common';
               <app-icon name="left" class="px-2" />
               <app-icon name="right" class="px-2" />
             </div>
-          </div>
+          </div> -->
 
           <section class="grid grid-cols-12 gap-2 flex-1">
             @for (item of meses; track $index; let i = $index) {

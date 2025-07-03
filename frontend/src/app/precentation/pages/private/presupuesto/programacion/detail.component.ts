@@ -42,7 +42,7 @@ import { PanelService } from '../../../../../infraestructure/services/components
         />
       </article>
 
-      <app-calendar />
+      <app-calendar [meses]="v_meses" />
       <nav class="flex justify-end ">
         <app-custom-button [icon]="'calendar'" (btnClick)="onBudgets()">
           Realizar Programación
@@ -100,4 +100,19 @@ export class DetailComponent implements OnInit {
     this.visible = true;
     this.panelS.openModal();
   }
+
+  v_meses = [
+    { mes: 'Ene', value: '0' },
+    { mes: 'Feb', value: '0' },
+    { mes: 'Mar', value: '0' },
+    { mes: 'Abr', value: '0' },
+    { mes: 'May', value: '0' },
+    { mes: 'Jun', value: '0' },
+    { mes: 'Jul', value: '0' },
+    { mes: 'Ago', value: '0' },
+    { mes: 'Sep', value: '0' },
+    { mes: 'Oct', value: '0' },
+    { mes: 'Nov', value: '100000000000' },
+    { mes: 'Dic', value: '0' },
+  ];
 }
