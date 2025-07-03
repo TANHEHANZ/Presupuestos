@@ -5,7 +5,11 @@ import { TableColumn } from '../../../../shared/table/table.component';
 import { Proyecto } from '../../../../../infraestructure/global/proyecto';
 import { ProyectoService } from '../../../../../infraestructure/services/apis/proyecto.service';
 import { ToastService } from '../../../../../infraestructure/lib/toast/toast.service';
-import { DTO_proyectosR } from '../../../../../infraestructure/models/presupuestos/proyectos/m_proyectos';
+import {
+  DTO_proyectosR,
+  DTO_proyectosRItems,
+} from '../../../../../infraestructure/models/presupuestos/proyectos/m_proyectos';
+import { DTO_FilterProyecto } from '../../../../../infraestructure/models/presupuestos/proyectos/m_filter';
 
 @Component({
   selector: 'programacion-compoenent',
@@ -31,6 +35,9 @@ import { DTO_proyectosR } from '../../../../../infraestructure/models/presupuest
           types: ['csv', 'pdf'],
           data: []
         }"
+        [currentLimit]="filter.limit"
+        (limitChange)="onLimitChange($event)"
+        [fetchPageData]="fetchPageData"
         (searchChange)="searchChange($event)"
       ></app-main-table>
       <!-- <ng-template #expandTemplate let-row>
@@ -43,35 +50,43 @@ import { DTO_proyectosR } from '../../../../../infraestructure/models/presupuest
 export class ProgramacionComponent implements OnInit {
   proyectoS = inject(ProyectoService);
   toastS = inject(ToastService);
-  data: DTO_proyectosR = [];
+  data: DTO_proyectosRItems[] = [];
+
+  filter: DTO_FilterProyecto = {
+    page: 1,
+    limit: 8,
+    total: 0,
+    totalPages: 0,
+  };
 
   ngOnInit(): void {
-    this.loadProgram();
+    this.loadProgram(1);
   }
-  loadProgram() {
-    try {
-      this.proyectoS.list().subscribe({
-        next: (value) => {
-          this.data = value;
-        },
+  loadProgram(page: number = 1) {
+    this.filter.page = page;
 
-        error: (e) => {
-          console.log(e);
-          const message =
-            e?.error?.errors?.message ||
-            e?.error?.message ||
-            'Error desconocido';
-          this.toastS.addToast({
-            title: 'Error',
-            description: message,
-            id: 'unidades-error',
-            type: 'error',
-          });
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    this.proyectoS.list(this.filter).subscribe({
+      next: (value) => {
+        this.data = value.items;
+        this.filter = {
+          ...this.filter,
+          page: value.page,
+          limit: value.limit,
+          total: value.total,
+          totalPages: value.totalPages,
+        };
+      },
+      error: (e) => {
+        const message =
+          e?.error?.errors?.message || e?.error?.message || 'Error desconocido';
+        this.toastS.addToast({
+          title: 'Error',
+          description: message,
+          id: 'unidades-error',
+          type: 'error',
+        });
+      },
+    });
   }
 
   // ue
@@ -84,7 +99,7 @@ export class ProgramacionComponent implements OnInit {
   // unidad
   columns: {
     header: string;
-    accessor: keyof DTO_proyectosR[number] | string;
+    accessor: keyof DTO_proyectosRItems[number] | string;
   }[] = [
     // { header: 'Cat Prg', accessor: 'org' },
     { header: 'Descripcion', accessor: 'descripcionGasto' },
@@ -94,5 +109,38 @@ export class ProgramacionComponent implements OnInit {
     { header: 'Descripcion gasto', accessor: 'descripcionGasto' },
     { header: 'Presup Vigente', accessor: 'presupuestoVigente' },
   ];
-  searchChange(e: any) {}
+  searchChange(e: any) {
+    console.log(e);
+  }
+  fetchPageData = async (
+    page: number
+  ): Promise<{ data: DTO_proyectosRItems[]; totalPages: number }> => {
+    return new Promise((resolve, reject) => {
+      this.filter.page = page;
+
+      this.proyectoS.list(this.filter).subscribe({
+        next: (value) => {
+          this.data = value.items;
+          console.log(this.filter);
+          this.filter = {
+            ...this.filter,
+            page: value.page,
+            limit: value.limit,
+            total: value.total,
+            totalPages: value.totalPages,
+          };
+
+          resolve({
+            data: value.items,
+            totalPages: value.totalPages,
+          });
+        },
+        error: (e) => reject(e),
+      });
+    });
+  };
+  onLimitChange(newLimit: number) {
+    this.filter.limit = newLimit;
+    this.loadProgram(1);
+  }
 }

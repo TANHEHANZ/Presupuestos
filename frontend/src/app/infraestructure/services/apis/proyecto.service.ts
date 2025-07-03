@@ -7,7 +7,7 @@ import { API_Proyectos } from '../../lib/fetch/modules.ts/api.proyecto';
 })
 export class ProyectoService {
   private s_http = inject(HttpService);
-  list(filter?: DTO_FilterProyecto) {
+  list(filter: DTO_FilterProyecto) {
     return this.s_http.request(API_Proyectos.all, filter);
   }
 }
