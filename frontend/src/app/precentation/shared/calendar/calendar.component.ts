@@ -1,62 +1,112 @@
-import { Component } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ContainerComponent } from '../container/container.component';
 import { IconComponent } from '../icons/icon.component';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-calendar',
+  standalone: true,
+  imports: [ContainerComponent, IconComponent, CommonModule],
   template: `
-    <app-container [title]="'Programación'">
-      <article class=" flex gap-4 ">
-        <div class="flex gap-2 justify-center items-center">
-          <div>
-            <p class="text-sm">gestion</p>
-            <p class="text-3xl">2025</p>
-          </div>
-          <div
-            class="flex  px-4 divide-x divide-slate-200 h-full justify-center items-center"
-          >
-            <app-icon name="left" class="px-2" />
-            <app-icon name="right" class="px-2" />
-          </div>
-        </div>
-        <section class="grid grid-cols-12 gap-2 flex-1">
-          @for (item of v_meses; track $index) {
-          <div
-            class="p-4 flex justify-center border transition-all delay-100 items-center flex-col rounded-lg "
-            [ngClass]="{
-              'border-olther  text-center hover:scale-110 cursor-pointer':
-                item.value !== '0',
-              'text-center  opacity-70': item.value === '0'
-            }"
-          >
-            <p>{{ item.mes }}</p>
-            <p class="">{{ item.value }}</p>
-          </div>
+    <app-container [title]="'Programación'" class="w-full">
+      <ng-container *ngIf="!loading; else cargando">
+        <article class="flex justify-center items-center flex-col gap-2">
+          <article class="flex gap-4">
+            <div class="flex gap-2 justify-center items-center">
+              <div>
+                <p class="text-sm">Gestión</p>
+                <p class="text-3xl">2025</p>
+              </div>
+              <div
+                class="flex px-4 divide-x divide-slate-200 h-full justify-center items-center"
+              >
+                <app-icon name="left" class="px-2" />
+                <app-icon name="right" class="px-2" />
+              </div>
+            </div>
 
-          } @empty {
-          <div>No se pudo obtener el calendario de meses</div>
+            <section class="grid grid-cols-12 gap-2 flex-1 mb-8">
+              @for (item of meses; track $index; let i = $index) {
+              <div
+                (click)="onSelectMonth(i)"
+                class="p-4 flex justify-center border transition-all items-center flex-col rounded-lg"
+                [ngClass]="getMonthClasses(item, i)"
+              >
+                <p class="">{{ item.mes.slice(0, 3) }}</p>
+              </div>
+              } @empty {
+              <div>No se pudo obtener el calendario de meses</div>
+              }
+            </section>
+          </article>
+
+          @if (selectedIndex !== null) {
+          <section
+            class="self-start border border-dashed p-4 rounded-xl w-full flex flex-col cursor-not-allowed"
+          >
+            <p
+              class="px-4 py-2 uppercase bg-primary/10 rounded-xl text-[10px] self-start"
+            >
+              Visualización de presupuesto asignado
+            </p>
+            <p>{{ selectedMes }}</p>
+            <p class="text-2xl font-normal">{{ selectedMesValue }}</p>
+          </section>
           }
-        </section>
-      </article>
+        </article>
+        <p class=" uppercase flex flex-col my-2">
+          <span class="text-xs"
+            >presupuesto vigente : {{ presupuestoVigente }}</span
+          >
+          <span class="text-xs">Total asignado : {{ totalAsignado }}</span>
+        </p>
+      </ng-container>
+
+      <ng-template #cargando>
+        <div class="text-center py-10">Cargando calendario...</div>
+      </ng-template>
     </app-container>
   `,
-  imports: [ContainerComponent, IconComponent, CommonModule],
-  standalone: true,
 })
 export class CalendarComponent {
-  v_meses = [
-    { mes: 'Ene', value: '0' },
-    { mes: 'Feb', value: '0' },
-    { mes: 'Mar', value: '0' },
-    { mes: 'Abr', value: '0' },
-    { mes: 'May', value: '0' },
-    { mes: 'Jun', value: '175500' },
-    { mes: 'Jul', value: '185000' },
-    { mes: 'Agos', value: '0' },
-    { mes: 'Sep', value: '0' },
-    { mes: 'Oct', value: '0' },
-    { mes: 'Nov', value: '0' },
-    { mes: 'Dic', value: '0' },
-  ];
+  @Input() meses: {
+    mes: string;
+    value: string | number;
+    asignado?: boolean;
+    pasado?: boolean;
+  }[] = [];
+  @Input() presupuestoVigente: number = 0;
+  @Input() totalAsignado: number = 0;
+
+  @Input() loading: boolean = false;
+  @Input() mode: 'readonly' | 'form' = 'readonly';
+
+  @Output() select = new EventEmitter<number>();
+
+  selectedIndex: number | null = null;
+  selectedMes: string = '';
+  selectedMesValue: string | number = '';
+
+  onSelectMonth(index: number) {
+    if (this.mode !== 'form') return;
+    const mes = this.meses[index];
+    if (mes.pasado) return;
+
+    this.selectedIndex = index;
+    this.selectedMes = mes.mes;
+    this.selectedMesValue = mes.value;
+    this.select.emit(index);
+  }
+
+  getMonthClasses(item: any, i: number) {
+    return {
+      'text-white bg-primary': item.asignado && !item.pasado,
+      'bg-primary/80 text-white ring-2 ring-primary':
+        item.asignado && item.pasado,
+      'opacity-60 bg-gray-100 cursor-not-allowed text-center': item.pasado,
+      'border-primary text-center hover:scale-110 cursor-pointer':
+        this.mode === 'form' && !item.pasado,
+      'scale-110': this.selectedIndex === i,
+    };
+  }
 }

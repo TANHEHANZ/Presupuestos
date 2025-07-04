@@ -1,12 +1,22 @@
-import { Component, input, OnInit } from '@angular/core';
+import { Component, inject, input, OnInit } from '@angular/core';
 import { CalendarComponent } from '../../../../shared/calendar/calendar.component';
 import { CustomInputComponent } from '../../../../shared/input/input.component';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CustomButtonComponent } from '../../../../shared/button/button.component';
+import { ModalComponent } from '../../../../shared/modal/modal.component';
+import { ProgramacionMensual } from './programacion.mensual.component';
+import { CommonModule } from '@angular/common';
+import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
 
 @Component({
   selector: 'detail-presupuesto',
   standalone: true,
   template: `
+    <app-modal title="Programacion Mensual">
+      <ng-container *ngIf="visible">
+        <programacion-mensual [D_Presupuesto]="D_Presupuesto()" />
+      </ng-container>
+    </app-modal>
     <section [formGroup]="userForm">
       <article class="grid grid-cols-5 my-4 gap-2">
         <app-custom-input
@@ -32,19 +42,34 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
         />
       </article>
 
-      <app-calendar></app-calendar>
+      <app-calendar [meses]="v_meses" />
+      <nav class="flex justify-end ">
+        <app-custom-button [icon]="'calendar'" (btnClick)="onBudgets()">
+          Realizar Programación
+        </app-custom-button>
+      </nav>
     </section>
   `,
-  imports: [CalendarComponent, CustomInputComponent, ReactiveFormsModule],
+  imports: [
+    CalendarComponent,
+    CustomInputComponent,
+    ReactiveFormsModule,
+    CustomButtonComponent,
+    CommonModule,
+    ModalComponent,
+    ProgramacionMensual,
+  ],
 })
 export class DetailComponent implements OnInit {
   D_Presupuesto = input<any>();
+  panelS = inject(PanelService);
 
+  visible: boolean = false;
   userForm!: FormGroup;
 
   ngOnInit(): void {
     const data = this.D_Presupuesto();
-
+    console.log(data);
     this.userForm = new FormGroup({
       catPrg: new FormControl({ value: data?.catPrg ?? '', disabled: true }),
       fte: new FormControl({ value: data?.fte ?? '', disabled: true }),
@@ -71,4 +96,23 @@ export class DetailComponent implements OnInit {
       }),
     });
   }
+  onBudgets() {
+    this.visible = true;
+    this.panelS.openModal();
+  }
+
+  v_meses = [
+    { mes: 'Ene', value: '0' },
+    { mes: 'Feb', value: '0' },
+    { mes: 'Mar', value: '0' },
+    { mes: 'Abr', value: '0' },
+    { mes: 'May', value: '0' },
+    { mes: 'Jun', value: '0' },
+    { mes: 'Jul', value: '0' },
+    { mes: 'Ago', value: '0' },
+    { mes: 'Sep', value: '0' },
+    { mes: 'Oct', value: '0' },
+    { mes: 'Nov', value: '100000000000' },
+    { mes: 'Dic', value: '0' },
+  ];
 }

@@ -15,7 +15,7 @@ import {
         class="ml-2 mb-1 font-semibold text-sm"
         [ngClass]="{
           'text-red-500': isInvalid,
-          ' text-olther/50  opacity-65 ': disabled,
+          ' text-olther  opacity-70 ': disabled,
           ' text-primary ': !disabled
         }"
         >{{ label }}</label
@@ -28,7 +28,7 @@ import {
         class="border   rounded-xl px-3 py-4 focus:outline-none focus:ring-2 focus:ring-primary transition w-full"
         [ngClass]="{
           'border-red-500': isInvalid,
-          'bg-white border-olther/50  border-dashed opacity-80 cursor-not-allowed':
+          'bg-white border-olther  border-dashed opacity-70 cursor-not-allowed':
             disabled,
           'border-primary': !disabled
         }"
