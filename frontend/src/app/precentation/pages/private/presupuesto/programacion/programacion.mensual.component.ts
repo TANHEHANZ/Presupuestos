@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CalendarComponent } from '../../../../shared/calendar/calendar.component';
 import { CustomButtonComponent } from '../../../../shared/button/button.component';
 import { CustomInputComponent } from '../../../../shared/input/input.component';
 import { IconComponent } from '../../../../shared/icons/icon.component';
+import { ToastService } from '../../../../../infraestructure/lib/toast/toast.service';
 
 @Component({
   selector: 'programacion-mensual',
@@ -37,20 +38,33 @@ import { IconComponent } from '../../../../shared/icons/icon.component';
         <app-custom-input
           label="Presupuesto Programado"
           formControlName="pre_Programado"
+          class=" col-span-2"
+          [type]="'number'"
         />
+        <section class="self-end">
+          <app-custom-button
+            [icon]="'calendar'"
+            variant="secondary"
+            (btnClick)="saveBudgetsMonth()"
+          >
+            Agregar Programacion
+          </app-custom-button>
+        </section>
       </article>
 
       <app-calendar
         [meses]="v_meses"
         [loading]="isLoading"
+        [presupuestoVigente]="userForm.get('pre_Vigente')?.value"
+        [totalAsignado]="getTotalAsignado()"
         [mode]="'form'"
         (select)="onMesSeleccionado($event)"
         class="w-full"
       />
 
       <nav class="flex justify-end ">
-        <app-custom-button [icon]="'calendar'" (btnClick)="saveBudgets()">
-          Realizar Programación
+        <app-custom-button [icon]="'calendar'" (btnClick)="onSaveBudgests()">
+          Guardar toda la programacion
         </app-custom-button>
       </nav>
     </section>
@@ -65,7 +79,10 @@ import { IconComponent } from '../../../../shared/icons/icon.component';
   ],
 })
 export class ProgramacionMensual {
+  toastS = inject(ToastService);
+
   D_Presupuesto = input<any>();
+  selectedMesIndex: number | null = null;
 
   userForm!: FormGroup;
   ngOnInit(): void {
@@ -97,28 +114,72 @@ export class ProgramacionMensual {
       }),
     });
   }
-  saveBudgets() {}
+  saveBudgetsMonth() {
+    const asignado = this.getTotalAsignado();
+    const monto = this.userForm.get('pre_Programado')?.value;
 
+    const vigente = this.userForm.get('pre_Vigente')?.value;
+    if (asignado + monto > vigente) {
+      this.toastS.addToast({
+        title: 'Monto excede al vigente',
+        type: 'error',
+        description: 'Estas exediendo el monto que tienes para presupestar',
+      });
+      return;
+    }
+
+    if (this.selectedMesIndex === null || monto === null || monto === '')
+      return;
+
+    this.v_meses[this.selectedMesIndex] = {
+      ...this.v_meses[this.selectedMesIndex],
+      value: monto,
+      asignado: true,
+    };
+
+    this.userForm.get('pre_Programado')?.disable();
+    this.onMesSeleccionado(this.selectedMesIndex);
+  }
+
+  mesSeleccionado = {};
   isLoading = false;
-  v_meses = [
-    { mes: 'Ene', value: '0' },
-    { mes: 'Feb', value: '0' },
-    { mes: 'Mar', value: '0' },
-    { mes: 'Abr', value: '0' },
-    { mes: 'May', value: '0' },
-    { mes: 'Jun', value: '0' },
-    { mes: 'Jul', value: '0' },
-    { mes: 'Ago', value: '0' },
-    { mes: 'Sep', value: '0' },
-    { mes: 'Oct', value: '0' },
-    { mes: 'Nov', value: '100000000000' },
-    { mes: 'Dic', value: '0' },
-  ];
-  onMesSeleccionado(index: number) {
-    const mesSeleccionado = this.v_meses[index];
-    console.log('Mes seleccionado:', mesSeleccionado);
+  readonly currentMonth = new Date().getMonth() - 1;
 
+  v_meses = [
+    'Enero',
+    'Febrero',
+    'Marzo',
+    'Abril',
+    'Mayo',
+    'Junio',
+    'Julio',
+    'Agosto',
+    'Septiembre',
+    'Octubre',
+    'Noviembre',
+    'Diciembre',
+  ].map((mes, i) => ({
+    mes,
+    value: '',
+    asignado: false,
+    pasado: i < this.currentMonth,
+  }));
+
+  onMesSeleccionado(index: number) {
+    this.selectedMesIndex = index;
+    this.mesSeleccionado = this.v_meses[index];
+    this.userForm
+      .get('pre_Programado')
+      ?.setValue(this.v_meses[index].value || '');
     this.userForm.get('pre_Programado')?.enable();
-    // Aquí puedes guardar el mes o marcarlo como seleccionado, etc.
+  }
+
+  getTotalAsignado(): number {
+    return this.v_meses
+      .filter((m) => m.asignado)
+      .reduce((sum, m) => sum + Number(m.value || 0), 0);
+  }
+  onSaveBudgests() {
+    console.log(this.v_meses);
   }
 }
