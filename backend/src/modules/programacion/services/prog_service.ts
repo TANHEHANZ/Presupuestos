@@ -2,6 +2,20 @@ import { prismaC } from "@/infraestructure/config/prisma.client";
 import { DTO_paramsProgramation } from "../validators/v_prog";
 import { Presupuesto, UnidadEjecutora } from "@prisma/client";
 import { paginate } from "@/infraestructure/config/paginate";
+const mesesOrdenados = [
+  "Enero",
+  "Febrero",
+  "Marzo",
+  "Abril",
+  "Mayo",
+  "Junio",
+  "Julio",
+  "Agosto",
+  "Septiembre",
+  "Octubre",
+  "Noviembre",
+  "Diciembre",
+];
 
 interface FiltersProps {
   page: string;
@@ -146,9 +160,15 @@ export const Prog_service = {
         limit: Number(limit),
         where,
         include: {
-          unidadEjecutora: true,
+          unidadEjecutora: {
+            select: {
+              id: true,
+              ue: true,
+              secretaria: true,
+              descripcion: true,
+            },
+          },
         },
-        orderBy: { createdAt: "desc" },
       });
 
       const resultados = [];
@@ -165,10 +185,30 @@ export const Prog_service = {
             value: true,
             version: true,
             updatedAt: true,
+            codigoObjetoGasto: true,
+            estado: true,
           },
           orderBy: {
             mes: "asc",
           },
+        });
+        const programacionMap = new Map(
+          programaciones.map((prog) => [prog.mes, prog])
+        );
+
+        const programacionesCompletas = mesesOrdenados.map((mes) => {
+          const existente = programacionMap.get(mes);
+          return existente
+            ? existente
+            : {
+                id: null,
+                mes,
+                value: 0,
+                version: 1,
+                updatedAt: null,
+                codigoObjetoGasto: presupuesto.codigoObjetoGasto,
+                estado: "ACTIVO",
+              };
         });
 
         resultados.push({
@@ -177,8 +217,14 @@ export const Prog_service = {
             codigoObjetoGasto: presupuesto.codigoObjetoGasto,
             descripcion: presupuesto.descrpcionObjetoGasto,
             mes: presupuesto.mes,
+            fte: presupuesto.fte,
+            org: presupuesto.org,
+            objetoGasto: presupuesto.objetoGasto,
+            descripcionGasto: presupuesto.descrpcionObjetoGasto,
+            presupuestoVigente: presupuesto.presupuestoVigente,
+            unidadEjecutora: presupuesto.unidadEjecutora,
           },
-          programacion: programaciones,
+          programacion: programacionesCompletas,
         });
       }
 

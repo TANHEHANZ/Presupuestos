@@ -30,12 +30,12 @@ export const PreUnidadService = {
         ue."ue" AS "ue",
         ue."descripcion" AS "descripcion",
         COALESCE(SUM(p."presupuestoVigente"), 0) AS "montoVigente",
-        COALESCE(SUM(CAST(pr."Programado" AS NUMERIC)), 0) AS "montoProgramado"
+        COALESCE(SUM(pg."value"), 0) AS "montoProgramado"
       FROM "UnidadEjecutora" ue
       LEFT JOIN "Presupuesto" p
         ON ue."id" = p."unidadId" AND p."estado" = 'ACTIVO'
-      LEFT JOIN "Programacion" pr
-        ON p."id" = pr."presupuestoId" AND pr."estado" = 'ACTIVO'
+      LEFT JOIN "Programacion" pg
+        ON pg."codigoObjetoGasto" = p."codigoObjetoGasto" AND pg."estado" = 'ACTIVO'
       ${whereSQL}
       GROUP BY ue."ue", ue."descripcion"
       ORDER BY ue."ue"
