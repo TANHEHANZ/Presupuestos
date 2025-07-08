@@ -4,7 +4,7 @@ export const M_presupuestoUnidadesR = z.array(
     ue: z.string(),
     descripcion: z.string(),
     montoVigente: z.number(),
-    montoProgramado: z.string(),
+    montoProgramado: z.number(),
   })
 );
 

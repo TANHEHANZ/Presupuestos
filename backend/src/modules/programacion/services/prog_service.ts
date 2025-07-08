@@ -38,11 +38,23 @@ export const Prog_service = {
         id: true,
         codigoObjetoGasto: true,
         mes: true,
+        presupuestoVigente: true,
       },
     });
 
     if (!presupuesto) {
       throw new Error("Presupuesto no encontrado");
+    }
+
+    const LIMIT_PRESUPUESTO = presupuesto.presupuestoVigente;
+    const totalProgramado = data.programacion.reduce(
+      (sum, prog) => sum + (prog.value || 0),
+      0
+    );
+    if (LIMIT_PRESUPUESTO < totalProgramado) {
+      throw new Error(
+        `El total programado (${totalProgramado}) supera el presupuesto vigente (${LIMIT_PRESUPUESTO})`
+      );
     }
 
     for (const prog of data.programacion) {
@@ -59,7 +71,10 @@ export const Prog_service = {
             accion: "MODIFICACION_VALOR",
             table: "Programacion",
             detalle: `Actualización de programación mensual para mes: ${prog.mes}`,
-            old_data: existe,
+            old_data: {
+              ...existe,
+              estado: " HISTORICO",
+            },
             new_data: {
               value: prog.value,
               version: existe.version + 1,
@@ -112,6 +127,12 @@ export const Prog_service = {
         });
       }
     }
+    return {
+      success: true,
+      totalProgramado: totalProgramado,
+      presupuesto: LIMIT_PRESUPUESTO,
+      programaciones: data.programacion,
+    };
   },
   list: async ({
     descripcion,
@@ -170,7 +191,18 @@ export const Prog_service = {
           },
         },
       });
-
+      const config = await prismaC.configuracion.findFirst({
+        where: {
+          key: "lastMonth",
+        },
+        select: {
+          key: true,
+          value: true,
+        },
+      });
+      if (!config) {
+        throw new Error("Configuración no encontrada");
+      }
       const resultados = [];
 
       for (const presupuesto of paginated.data) {
@@ -186,6 +218,7 @@ export const Prog_service = {
             version: true,
             updatedAt: true,
             codigoObjetoGasto: true,
+
             estado: true,
           },
           orderBy: {
@@ -210,19 +243,30 @@ export const Prog_service = {
                 estado: "ACTIVO",
               };
         });
-
+        const totalProgramado = programacionesCompletas.reduce(
+          (sum, p) => sum + (typeof p.value === "number" ? p.value : 0),
+          0
+        );
         resultados.push({
           presupuesto: {
             id: presupuesto.id,
             codigoObjetoGasto: presupuesto.codigoObjetoGasto,
             descripcion: presupuesto.descrpcionObjetoGasto,
-            mes: presupuesto.mes,
+            mes: presupuesto.mes.toLocaleString("default", {
+              month: "long",
+            }),
             fte: presupuesto.fte,
             org: presupuesto.org,
+            CatPrg: presupuesto.catPrg,
             objetoGasto: presupuesto.objetoGasto,
             descripcionGasto: presupuesto.descrpcionObjetoGasto,
             presupuestoVigente: presupuesto.presupuestoVigente,
+            presupuestoProgramado: totalProgramado,
             unidadEjecutora: presupuesto.unidadEjecutora,
+            lastMonth: config.value,
+            currentMonth: new Date().toLocaleString("default", {
+              month: "long",
+            }),
           },
           programacion: programacionesCompletas,
         });

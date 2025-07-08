@@ -32,17 +32,30 @@ import { PanelService } from '../../../../../infraestructure/services/components
           class="col-span-2"
           formControlName="descripcionGasto"
         />
+
+        <app-custom-input label="UE" formControlName="unidadEjecutoraUE" />
+        <app-custom-input
+          label="Unidad Ejecutora"
+          formControlName="unidadEjecutoraSecretaria"
+        />
+
+        <app-custom-input
+          label="Descripción UE"
+          formControlName="unidadEjecutoraDescripcion"
+        />
         <app-custom-input
           label="Presupuesto Vigente"
           formControlName="pre_Vigente"
         />
-        <app-custom-input
-          label="Presupuesto Programado"
-          formControlName="pre_Programado"
-        />
       </article>
 
-      <app-calendar [meses]="v_meses" />
+      <app-calendar
+        [meses]="programacionMensual"
+        [currentMonth]="D_Presupuesto().currentMonth"
+        [lastMonth]="D_Presupuesto().lastMonth"
+        [presupuestoVigente]="D_Presupuesto().presupuestoVigente"
+        [totalAsignado]="D_Presupuesto().presupuestoProgramado"
+      />
       <nav class="flex justify-end ">
         <app-custom-button [icon]="'calendar'" (btnClick)="onBudgets()">
           Realizar Programación
@@ -66,12 +79,14 @@ export class DetailComponent implements OnInit {
 
   visible: boolean = false;
   userForm!: FormGroup;
-
+  programacionMensual = [];
   ngOnInit(): void {
+    console.log('D_Presupuesto', this.D_Presupuesto());
     const data = this.D_Presupuesto();
-    console.log(data);
+    this.programacionMensual = data.programacion;
+
     this.userForm = new FormGroup({
-      catPrg: new FormControl({ value: data?.catPrg ?? '', disabled: true }),
+      catPrg: new FormControl({ value: data?.CatPrg ?? '', disabled: true }),
       fte: new FormControl({ value: data?.fte ?? '', disabled: true }),
       objeto: new FormControl({
         value: data?.objetoGasto ?? '',
@@ -90,8 +105,16 @@ export class DetailComponent implements OnInit {
         value: data?.presupuestoVigente ?? '',
         disabled: true,
       }),
-      pre_Programado: new FormControl({
-        value: data?.pre_Programado ?? '',
+      unidadEjecutoraSecretaria: new FormControl({
+        value: data?.unidadEjecutora.secretaria ?? '',
+        disabled: true,
+      }),
+      unidadEjecutoraUE: new FormControl({
+        value: data?.unidadEjecutora.ue ?? '',
+        disabled: true,
+      }),
+      unidadEjecutoraDescripcion: new FormControl({
+        value: data?.unidadEjecutora.descripcion ?? '',
         disabled: true,
       }),
     });
@@ -100,19 +123,4 @@ export class DetailComponent implements OnInit {
     this.visible = true;
     this.panelS.openModal();
   }
-
-  v_meses = [
-    { mes: 'Ene', value: '0' },
-    { mes: 'Feb', value: '0' },
-    { mes: 'Mar', value: '0' },
-    { mes: 'Abr', value: '0' },
-    { mes: 'May', value: '0' },
-    { mes: 'Jun', value: '0' },
-    { mes: 'Jul', value: '0' },
-    { mes: 'Ago', value: '0' },
-    { mes: 'Sep', value: '0' },
-    { mes: 'Oct', value: '0' },
-    { mes: 'Nov', value: '100000000000' },
-    { mes: 'Dic', value: '0' },
-  ];
 }

@@ -53,10 +53,11 @@ import { ToastService } from '../../../../../infraestructure/lib/toast/toast.ser
       </article>
 
       <app-calendar
-        [meses]="v_meses"
-        [loading]="isLoading"
-        [presupuestoVigente]="userForm.get('pre_Vigente')?.value"
-        [totalAsignado]="getTotalAsignado()"
+        [meses]="programacionMensual"
+        [currentMonth]="D_Presupuesto().currentMonth"
+        [lastMonth]="D_Presupuesto().lastMonth"
+        [presupuestoVigente]="D_Presupuesto().presupuestoVigente"
+        [totalAsignado]="D_Presupuesto().presupuestoProgramado"
         [mode]="'form'"
         (select)="onMesSeleccionado($event)"
         class="w-full"
@@ -80,6 +81,7 @@ import { ToastService } from '../../../../../infraestructure/lib/toast/toast.ser
 })
 export class ProgramacionMensual {
   toastS = inject(ToastService);
+  programacionMensual = [];
 
   D_Presupuesto = input<any>();
   selectedMesIndex: number | null = null;
@@ -88,6 +90,7 @@ export class ProgramacionMensual {
   ngOnInit(): void {
     const data = this.D_Presupuesto();
     console.log(data);
+    this.programacionMensual = data.programacion;
     this.userForm = new FormGroup({
       catPrg: new FormControl({ value: data?.catPrg ?? '', disabled: true }),
       fte: new FormControl({ value: data?.fte ?? '', disabled: true }),
@@ -115,71 +118,42 @@ export class ProgramacionMensual {
     });
   }
   saveBudgetsMonth() {
-    const asignado = this.getTotalAsignado();
-    const monto = this.userForm.get('pre_Programado')?.value;
+    const MONTO_ASIGNADO = this.getTotalAsignado();
+    const MONTO_PROGRAMADO =
+      Number(this.userForm.get('pre_Programado')?.value) || 0;
+    const MONTO_VIGENTE = Number(this.userForm.get('pre_Vigente')?.value) || 0;
 
-    const vigente = this.userForm.get('pre_Vigente')?.value;
-    if (asignado + monto > vigente) {
+    if (MONTO_ASIGNADO + MONTO_PROGRAMADO > MONTO_VIGENTE) {
       this.toastS.addToast({
         title: 'Monto excede al vigente',
         type: 'error',
-        description: 'Estas exediendo el monto que tienes para presupestar',
+        description: 'Estas excediendo el monto que tienes para presupuestar',
       });
       return;
     }
 
-    if (this.selectedMesIndex === null || monto === null || monto === '')
-      return;
-
-    this.v_meses[this.selectedMesIndex] = {
-      ...this.v_meses[this.selectedMesIndex],
-      value: monto,
-      asignado: true,
-    };
+    if (this.selectedMesIndex === null || MONTO_PROGRAMADO === 0) return;
 
     this.userForm.get('pre_Programado')?.disable();
-    this.onMesSeleccionado(this.selectedMesIndex);
   }
 
   mesSeleccionado = {};
   isLoading = false;
   readonly currentMonth = new Date().getMonth() - 1;
 
-  v_meses = [
-    'Enero',
-    'Febrero',
-    'Marzo',
-    'Abril',
-    'Mayo',
-    'Junio',
-    'Julio',
-    'Agosto',
-    'Septiembre',
-    'Octubre',
-    'Noviembre',
-    'Diciembre',
-  ].map((mes, i) => ({
-    mes,
-    value: '',
-    asignado: false,
-    pasado: i < this.currentMonth,
-  }));
-
-  onMesSeleccionado(index: number) {
-    this.selectedMesIndex = index;
-    this.mesSeleccionado = this.v_meses[index];
-    this.userForm
-      .get('pre_Programado')
-      ?.setValue(this.v_meses[index].value || '');
-    this.userForm.get('pre_Programado')?.enable();
+  onMesSeleccionado(event: { index: number; value: number }) {
+    console.log('Mes seleccionado:', event.index, 'Valor:', event.value);
+    // Aquí puedes manejar el cambio, guardar, mostrar modal, etc.
   }
 
   getTotalAsignado(): number {
-    return this.v_meses
-      .filter((m) => m.asignado)
-      .reduce((sum, m) => sum + Number(m.value || 0), 0);
+    return 0;
   }
   onSaveBudgests() {
-    console.log(this.v_meses);
+    const data = {
+      idPresupuesto: this.D_Presupuesto().id,
+      programacion: '',
+    };
+    console.log(data);
   }
 }

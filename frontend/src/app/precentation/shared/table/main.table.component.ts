@@ -148,6 +148,8 @@ export class MainTableComponent<T> implements OnInit {
   limitOptions = [8, 15, 20, 50];
 
   ngOnInit(): void {
+    console.log('data', this.data);
+    console.log('columns', this.columns);
     this.changePage(1);
   }
 

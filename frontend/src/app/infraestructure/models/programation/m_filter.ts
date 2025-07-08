@@ -1,5 +1,5 @@
 import { z } from 'zod';
-export const FilterProyectos = z.object({
+export const FilterProgramation = z.object({
   descripcion: z.string().optional(),
   org: z.string().optional(),
   objeto: z.string().optional(),
@@ -9,4 +9,4 @@ export const FilterProyectos = z.object({
   limit: z.number(),
   totalPages: z.number(),
 });
-export type DTO_FilterProyecto = z.infer<typeof FilterProyectos>;
+export type DTO_Filter = z.infer<typeof FilterProgramation>;

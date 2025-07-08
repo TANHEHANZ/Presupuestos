@@ -9,7 +9,8 @@ export const Prog_controller = {
       const create = await Prog_service.create(req.body, userId);
       API.success(res, "Programacion realizada", create);
     } catch (error: any) {
-      API.serverError(res, error);
+      console.error("Error en programación:", error); // Log para depuración
+      API.serverError(res, error.message || "Error desconocido");
     }
   },
   list: async (req: Request, res: Response) => {
