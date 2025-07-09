@@ -5,6 +5,7 @@ import ln_Routes from "./login/login.routes";
 import { validAcces } from "@/infraestructure/middleware/access";
 import c_Router from "./configuration/config.routes";
 import pre_Routes from "./presupuestos/presupuestos.routes";
+import prog_Router from "./programacion/programation.routes";
 
 const routes = Router();
 routes.use("/login", ln_Routes);
@@ -13,4 +14,5 @@ routes.use("/user", u_Router);
 routes.use("/unidad", uni_Routes);
 routes.use("/configuration", c_Router);
 routes.use("/presupuesto", pre_Routes);
+routes.use("/programacion", prog_Router);
 export default routes;

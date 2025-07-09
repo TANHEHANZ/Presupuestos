@@ -1,4 +1,5 @@
 import { prismaC } from "../../src/infraestructure/config/prisma.client";
+import { seederConfig } from "./configuration/programacion.seeder";
 import { seederUnidad } from "./unidades/unidad.seeder";
 import { seederAdmin } from "./user/admin.seeder";
 
@@ -7,6 +8,7 @@ async function main() {
     console.log("Starting database seeding...");
     await seederUnidad();
     await seederAdmin();
+    await seederConfig();
     console.log("All seeds completed successfully!");
   } catch (error) {
     console.error("Error during seeding:", error);

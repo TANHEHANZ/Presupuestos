@@ -1,10 +1,7 @@
 import { prismaC } from "../../../src/infraestructure/config/prisma.client";
 import bcrypt from "bcryptjs";
 import config from "../../../src/infraestructure/config/config";
-import {
-  NotFoundError,
-  ValidationError,
-} from "../../../src/infraestructure/helpers/error";
+import { NotFoundError } from "../../../src/infraestructure/helpers/error";
 import { Uservice } from "../../../src/modules/user/services/u_service";
 
 export async function seederAdmin() {
@@ -19,8 +16,8 @@ export async function seederAdmin() {
 
   try {
     const validate = await Uservice.uValidate({ ci });
-    console.log("Usuario ya existe, se omite creación.");
-    if (!validate) {
+    if (validate) {
+      console.log("Usuario ya existe, se omite creación.");
       return;
     }
   } catch (error) {

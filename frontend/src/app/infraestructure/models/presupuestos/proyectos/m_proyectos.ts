@@ -1,13 +1,5 @@
-import { string, z } from 'zod';
-// "id": "cmcdr0q240005uob0v73lddnt",
-//                 "catPrg": " 001 0  001",
-//                 "descripcion": "Concejo Municipal",
-//                 "fte": 20,
-//                 "mes": "2025-06-26T19:00:41.559Z",
-//                 "org": 210,
-//                 "objetoGasto": "1.1.6",
-//                 "descripcionGasto": "Asignaciones Familiares",
-//                 "presupuestoVigente": 170000
+import { z } from 'zod';
+
 const items = z.array(
   z.object({
     id: z.string(),

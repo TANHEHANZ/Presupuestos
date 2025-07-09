@@ -28,9 +28,9 @@ pre_Routes.get(
   checkPermission(P_preUnidad.LIST),
   PreUnidadController.listUEgrup
 );
-pre_Routes.get(
-  "/proyecto",
-  checkPermission(P_proyect.LIST),
-  ProyectController.list
-);
+// pre_Routes.get(
+//   "/proyecto",
+//   checkPermission(P_proyect.LIST),
+//   ProyectController.list
+// );
 export default pre_Routes;

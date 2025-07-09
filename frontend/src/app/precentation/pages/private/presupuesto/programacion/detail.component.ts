@@ -1,12 +1,22 @@
-import { Component, input, OnInit } from '@angular/core';
+import { Component, inject, input, OnInit } from '@angular/core';
 import { CalendarComponent } from '../../../../shared/calendar/calendar.component';
 import { CustomInputComponent } from '../../../../shared/input/input.component';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CustomButtonComponent } from '../../../../shared/button/button.component';
+import { ModalComponent } from '../../../../shared/modal/modal.component';
+import { ProgramacionMensual } from './programacion.mensual.component';
+import { CommonModule } from '@angular/common';
+import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
 
 @Component({
   selector: 'detail-presupuesto',
   standalone: true,
   template: `
+    <app-modal title="Programacion Mensual">
+      <ng-container *ngIf="visible">
+        <programacion-mensual [D_Presupuesto]="D_Presupuesto()" />
+      </ng-container>
+    </app-modal>
     <section [formGroup]="userForm">
       <article class="grid grid-cols-5 my-4 gap-2">
         <app-custom-input
@@ -22,31 +32,61 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
           class="col-span-2"
           formControlName="descripcionGasto"
         />
+
+        <app-custom-input label="UE" formControlName="unidadEjecutoraUE" />
+        <app-custom-input
+          label="Unidad Ejecutora"
+          formControlName="unidadEjecutoraSecretaria"
+        />
+
+        <app-custom-input
+          label="Descripción UE"
+          formControlName="unidadEjecutoraDescripcion"
+        />
         <app-custom-input
           label="Presupuesto Vigente"
           formControlName="pre_Vigente"
         />
-        <app-custom-input
-          label="Presupuesto Programado"
-          formControlName="pre_Programado"
-        />
       </article>
 
-      <app-calendar></app-calendar>
+      <app-calendar
+        [meses]="programacionMensual"
+        [currentMonth]="D_Presupuesto().currentMonth"
+        [lastMonth]="D_Presupuesto().lastMonth"
+        [presupuestoVigente]="D_Presupuesto().presupuestoVigente"
+        [totalAsignado]="D_Presupuesto().presupuestoProgramado"
+      />
+      <nav class="flex justify-end ">
+        <app-custom-button [icon]="'calendar'" (btnClick)="onBudgets()">
+          Realizar Programación
+        </app-custom-button>
+      </nav>
     </section>
   `,
-  imports: [CalendarComponent, CustomInputComponent, ReactiveFormsModule],
+  imports: [
+    CalendarComponent,
+    CustomInputComponent,
+    ReactiveFormsModule,
+    CustomButtonComponent,
+    CommonModule,
+    ModalComponent,
+    ProgramacionMensual,
+  ],
 })
 export class DetailComponent implements OnInit {
   D_Presupuesto = input<any>();
+  panelS = inject(PanelService);
 
+  visible: boolean = false;
   userForm!: FormGroup;
-
+  programacionMensual = [];
   ngOnInit(): void {
+    console.log('D_Presupuesto', this.D_Presupuesto());
     const data = this.D_Presupuesto();
+    this.programacionMensual = data.programacion;
 
     this.userForm = new FormGroup({
-      catPrg: new FormControl({ value: data?.catPrg ?? '', disabled: true }),
+      catPrg: new FormControl({ value: data?.CatPrg ?? '', disabled: true }),
       fte: new FormControl({ value: data?.fte ?? '', disabled: true }),
       objeto: new FormControl({
         value: data?.objetoGasto ?? '',
@@ -65,10 +105,22 @@ export class DetailComponent implements OnInit {
         value: data?.presupuestoVigente ?? '',
         disabled: true,
       }),
-      pre_Programado: new FormControl({
-        value: data?.pre_Programado ?? '',
+      unidadEjecutoraSecretaria: new FormControl({
+        value: data?.unidadEjecutora.secretaria ?? '',
+        disabled: true,
+      }),
+      unidadEjecutoraUE: new FormControl({
+        value: data?.unidadEjecutora.ue ?? '',
+        disabled: true,
+      }),
+      unidadEjecutoraDescripcion: new FormControl({
+        value: data?.unidadEjecutora.descripcion ?? '',
         disabled: true,
       }),
     });
+  }
+  onBudgets() {
+    this.visible = true;
+    this.panelS.openModal();
   }
 }

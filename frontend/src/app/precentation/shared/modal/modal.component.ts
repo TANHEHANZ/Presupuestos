@@ -15,7 +15,7 @@ import { PanelService } from '../../../infraestructure/services/components/panel
       (click)="closeModal()"
     >
       <div
-        class="bg-white rounded-lg shadow-lg p-6 relative min-w-[300px] max-w-[70dvw] transform transition-transform duration-300 ease-in-out"
+        class="bg-white rounded-lg shadow-lg p-6 relative min-w-[300px] max-w-[85dvw] transform transition-transform duration-300 ease-in-out"
         [ngClass]="isOpen ? 'scale-100' : 'scale-90'"
         (click)="$event.stopPropagation()"
       >

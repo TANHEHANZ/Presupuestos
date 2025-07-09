@@ -27,20 +27,20 @@ enum U_estado {
 }
 
 model User {
-  id              String            @id @default(cuid())
-  ci              String            @unique
+  id              String          @id @default(cuid())
+  ci              String          @unique
   name            String
   rol             Role
   password        String
-  estado          U_estado          @default(ACTIVO)
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
+  estado          U_estado        @default(ACTIVO)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
   permisos        String[]
   accesos         String[]
-  unidadEjecutora UnidadEjecutora   @relation(fields: [unidadId], references: [id])
+  unidadEjecutora UnidadEjecutora @relation(fields: [unidadId], references: [id])
   unidadId        String
-  historiales     HistorialCambio[]
-  Presupuesto     Presupuesto[]     @relation("CreadoPor")
+  historiales     Historial[]
+  Presupuesto     Presupuesto[]   @relation("CreadoPor")
   Programacion    Programacion[]
 }
 
@@ -55,15 +55,14 @@ model U_navigation {
 }
 
 model UnidadEjecutora {
-  id           String            @id @default(cuid())
-  ue           String            @unique
+  id           String        @id @default(cuid())
+  ue           String        @unique
   secretaria   String
   descripcion  String?
-  estado       U_estado          @default(ACTIVO)
-  createdAt    DateTime          @default(now())
-  updatedAt    DateTime          @updatedAt
+  estado       U_estado      @default(ACTIVO)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
   presupuestos Presupuesto[]
-  historiales  HistorialCambio[]
   User         User[]
 }
 
@@ -85,38 +84,59 @@ model Presupuesto {
   updatedAt           DateTime       @updatedAt
 
   descrpcionObjetoGasto String
-  unidadEjecutora       UnidadEjecutora   @relation(fields: [unidadId], references: [id])
+  unidadEjecutora       UnidadEjecutora @relation(fields: [unidadId], references: [id])
   unidadId              String
-  creadoPor             User              @relation(fields: [creadoPorId], references: [id], name: "CreadoPor")
+  creadoPor             User            @relation(fields: [creadoPorId], references: [id], name: "CreadoPor")
   creadoPorId           String
-  historiales           HistorialCambio[]
-  Programacion          Programacion[]
 
   @@unique([unidadId, codigoObjetoGasto, mes])
 }
 
-model Programacion {
-  id            String      @id @default(uuid())
-  mes           DateTime // de aca debemos obtener el  mes y la año que se realizo la programacion  
-  Programado    Float
-  estado        U_estado    @default(ACTIVO)
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  presupuesto   Presupuesto @relation(fields: [presupuestoId], references: [id])
-  presupuestoId String
-  usuario       User        @relation(fields: [usuarioId], references: [id])
-  usuarioId     String
+enum Accion {
+  CREACION
+  MODIFICACION_VALOR
+  CAMBIO_ESTADO
+  VALIDACION
+  RECHAZO
+  REVERSION
 }
 
-model HistorialCambio {
-  id            String           @id @default(cuid())
-  accion        String // "CREACION", "MODIFICACION", "VALIDACION", "RECHAZO"
-  detalle       String?
-  fecha         DateTime         @default(now())
-  usuario       User             @relation(fields: [usuarioId], references: [id])
-  usuarioId     String
-  presupuesto   Presupuesto?     @relation(fields: [presupuestoId], references: [id])
-  presupuestoId String?
-  unidad        UnidadEjecutora? @relation(fields: [unidadId], references: [id])
-  unidadId      String?
+model Programacion {
+  id                String    @id @default(uuid())
+  mes               String
+  value             Float
+  estado            U_estado  @default(ACTIVO)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  codigoObjetoGasto String
+  version           Int       @default(1)
+  User              User?     @relation(fields: [userId], references: [id])
+  userId            String?
+  Historial         Historial @relation(fields: [historialId], references: [id])
+  historialId       String
+}
+
+model Historial {
+  id        String   @id @default(cuid())
+  accion    Accion
+  table     String
+  detalle   String?
+  old_data  Json?
+  new_data  Json
+  fecha     DateTime @default(now())
+  usuario   User     @relation(fields: [usuarioId], references: [id])
+  usuarioId String
+  ipAddress String?
+  userAgent String?
+
+  Programacion Programacion[]
+}
+
+model Configuracion {
+  id        String   @id @default(cuid())
+  module    String
+  key       String   @unique
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
