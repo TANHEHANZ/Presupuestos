@@ -64,5 +64,19 @@ export const M_programation = z.object({
   totalPages: z.number(),
 });
 
+/// create programation
+
+const SchemaProgramacion = z.object({
+  mes: z.string(),
+  value: z.number(),
+});
+
+export const createProgramation = z.object({
+  idPresupuesto: z.string(),
+  programacion: z.array(SchemaProgramacion),
+});
+
+export type DTO_ProgramationCreate = z.infer<typeof createProgramation>;
+
 export type DTO_ProgramationR = z.infer<typeof M_programation>;
 export type DTO_ProgramationRData = z.infer<typeof items>;

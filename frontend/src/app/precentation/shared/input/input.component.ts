@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, forwardRef } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  ViewChild,
+  forwardRef,
+} from '@angular/core';
 import {
   NG_VALUE_ACCESSOR,
   ControlValueAccessor,
@@ -21,6 +27,7 @@ import {
         >{{ label }}</label
       >
       <input
+        #inputRef
         [id]="id"
         [type]="type"
         [placeholder]="placeholder"
@@ -59,7 +66,7 @@ export class CustomInputComponent implements ControlValueAccessor {
   @Input() autocomplete = 'off';
   @Input() value: string = '';
   @Input() disabled: boolean = false;
-
+  @ViewChild('inputRef') inputRef!: ElementRef<HTMLInputElement>;
   isInvalid = false;
 
   onChange = (value: any) => {};
@@ -77,6 +84,12 @@ export class CustomInputComponent implements ControlValueAccessor {
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
   }
+  focusInput() {
+    if (this.inputRef) {
+      this.inputRef.nativeElement.focus();
+    }
+  }
+
   onInput(event: Event) {
     const value = (event.target as HTMLInputElement).value;
     this.value = value;

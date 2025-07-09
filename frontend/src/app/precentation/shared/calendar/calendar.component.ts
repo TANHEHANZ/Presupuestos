@@ -53,7 +53,7 @@ import { FormsModule } from '@angular/forms';
               <div class="uppercase flex gap-2  divide-x divide-gray-300">
                 <p class="flex flex-col  items-center px-8">
                   <span class="text-5xl font-light">
-                    {{ presupuestoVigente - totalAsignado }}</span
+                    {{ presupuestoVigente }}</span
                   >
                   <span class="text-xs"> vigente: </span>
                 </p>

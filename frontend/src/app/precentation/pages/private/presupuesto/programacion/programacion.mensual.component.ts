@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, input, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CalendarComponent } from '../../../../shared/calendar/calendar.component';
 import { CustomButtonComponent } from '../../../../shared/button/button.component';
 import { CustomInputComponent } from '../../../../shared/input/input.component';
 import { IconComponent } from '../../../../shared/icons/icon.component';
 import { ToastService } from '../../../../../infraestructure/lib/toast/toast.service';
+import { ProgramationService } from '../../../../../infraestructure/services/apis/programation.service';
+import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
 
 @Component({
   selector: 'programacion-mensual',
@@ -36,6 +38,8 @@ import { ToastService } from '../../../../../infraestructure/lib/toast/toast.ser
           formControlName="pre_Vigente"
         />
         <app-custom-input
+          #programadoInput
+          id="pre_Programado"
           label="Presupuesto Programado"
           formControlName="pre_Programado"
           class=" col-span-2"
@@ -57,7 +61,7 @@ import { ToastService } from '../../../../../infraestructure/lib/toast/toast.ser
         [currentMonth]="D_Presupuesto().currentMonth"
         [lastMonth]="D_Presupuesto().lastMonth"
         [presupuestoVigente]="D_Presupuesto().presupuestoVigente"
-        [totalAsignado]="D_Presupuesto().presupuestoProgramado"
+        [totalAsignado]="TOTAL_ASIGNADO"
         [mode]="'form'"
         (select)="onMesSeleccionado($event)"
         class="w-full"
@@ -81,16 +85,30 @@ import { ToastService } from '../../../../../infraestructure/lib/toast/toast.ser
 })
 export class ProgramacionMensual {
   toastS = inject(ToastService);
-  programacionMensual = [];
-
+  modalS = inject(PanelService);
+  programacionMensual: {
+    mes: string;
+    value: string | number;
+    asignado?: boolean;
+    version: number;
+    updatedAt: string;
+    pasado?: boolean;
+  }[] = [];
+  @ViewChild('programadoInput') programadoInputRef!: CustomInputComponent;
   D_Presupuesto = input<any>();
   selectedMesIndex: number | null = null;
-
+  TOTAL_ASIGNADO = 0;
+  mesSeleccionado = {};
+  isLoading = false;
+  programationS = inject(ProgramationService);
+  readonly currentMonth = new Date().getMonth() - 1;
   userForm!: FormGroup;
   ngOnInit(): void {
     const data = this.D_Presupuesto();
+
     console.log(data);
     this.programacionMensual = data.programacion;
+    this.TOTAL_ASIGNADO = this.getTotalAsignado();
     this.userForm = new FormGroup({
       catPrg: new FormControl({ value: data?.catPrg ?? '', disabled: true }),
       fte: new FormControl({ value: data?.fte ?? '', disabled: true }),
@@ -118,10 +136,14 @@ export class ProgramacionMensual {
     });
   }
   saveBudgetsMonth() {
-    const MONTO_ASIGNADO = this.getTotalAsignado();
+    if (this.selectedMesIndex === null) return;
+
     const MONTO_PROGRAMADO =
       Number(this.userForm.get('pre_Programado')?.value) || 0;
+    const MONTO_ASIGNADO = this.getTotalAsignado(this.selectedMesIndex); // ← excluye el mes actual
     const MONTO_VIGENTE = Number(this.userForm.get('pre_Vigente')?.value) || 0;
+
+    if (MONTO_PROGRAMADO < 0) return;
 
     if (MONTO_ASIGNADO + MONTO_PROGRAMADO > MONTO_VIGENTE) {
       this.toastS.addToast({
@@ -132,28 +154,72 @@ export class ProgramacionMensual {
       return;
     }
 
-    if (this.selectedMesIndex === null || MONTO_PROGRAMADO === 0) return;
+    this.programacionMensual[this.selectedMesIndex].value = MONTO_PROGRAMADO;
+    this.programacionMensual = [...this.programacionMensual];
 
     this.userForm.get('pre_Programado')?.disable();
-  }
 
-  mesSeleccionado = {};
-  isLoading = false;
-  readonly currentMonth = new Date().getMonth() - 1;
+    // Recalcular el TOTAL_ASIGNADO incluyendo ahora el nuevo valor
+    this.TOTAL_ASIGNADO = this.getTotalAsignado();
+  }
 
   onMesSeleccionado(event: { index: number; value: number }) {
-    console.log('Mes seleccionado:', event.index, 'Valor:', event.value);
-    // Aquí puedes manejar el cambio, guardar, mostrar modal, etc.
+    const mesSeleccionado = event.index;
+    const mesActual = new Date().getMonth() - 1;
+    if (mesSeleccionado < mesActual) {
+      this.userForm.get('pre_Programado')?.disable();
+      this.userForm.get('pre_Programado')?.setValue(0);
+
+      return;
+    }
+    this.selectedMesIndex = mesSeleccionado;
+
+    this.userForm.get('pre_Programado')?.enable();
+    this.userForm.get('pre_Programado')?.setValue(event.value);
+    setTimeout(() => {
+      this.programadoInputRef?.focusInput();
+    });
   }
 
-  getTotalAsignado(): number {
-    return 0;
+  getTotalAsignado(excludeIndex?: number): number {
+    return this.programacionMensual.reduce((acc, mes, index) => {
+      if (index === excludeIndex) return acc;
+
+      const valor =
+        typeof mes.value === 'number' ? mes.value : Number(mes.value);
+      return acc + (isNaN(valor) ? 0 : valor);
+    }, 0);
   }
+
   onSaveBudgests() {
     const data = {
-      idPresupuesto: this.D_Presupuesto().id,
-      programacion: '',
+      idPresupuesto: this.D_Presupuesto().id as string,
+      programacion: this.programacionMensual.map((mes) => ({
+        mes: mes.mes,
+        value: Number(mes.value || 0),
+      })),
     };
-    console.log(data);
+    this.programationS.crate(data).subscribe({
+      next: (value) => {
+        console.log('Programación guardada:', value);
+        this.toastS.addToast({
+          title: 'Programación guardada',
+          description: 'La programación mensual se ha guardado correctamente',
+          id: 'programacion-success',
+          type: 'success',
+        });
+        this.modalS.closeModal(true);
+      },
+      error: (e) => {
+        const message =
+          e?.error?.errors?.message || e?.error?.message || 'Error desconocido';
+        this.toastS.addToast({
+          title: 'Error',
+          description: message,
+          id: 'user-save-error',
+          type: 'error',
+        });
+      },
+    });
   }
 }

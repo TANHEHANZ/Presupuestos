@@ -10,6 +10,7 @@ import {
   DTO_ProgramationR,
   DTO_ProgramationRData,
 } from '../../../../../infraestructure/models/programation/m_programation';
+import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
 
 @Component({
   selector: 'programacion-compoenent',
@@ -52,7 +53,7 @@ export class ProgramacionComponent implements OnInit {
   programationS = inject(ProgramationService);
   toastS = inject(ToastService);
   data: DTO_ProgramationRData = [];
-
+  modalS = inject(PanelService);
   filter: DTO_Filter = {
     page: 1,
     limit: 8,
@@ -62,6 +63,9 @@ export class ProgramacionComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadProgram(1);
+    this.modalS.refresh$.subscribe(() => {
+      this.loadProgram(1);
+    });
   }
   loadProgram(page: number = 1) {
     this.filter.page = page;
