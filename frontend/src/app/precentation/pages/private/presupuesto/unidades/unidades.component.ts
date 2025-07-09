@@ -10,28 +10,24 @@ import { ImportUnidadesComponent } from './import.component';
   selector: 'app-unidades',
   template: `
     <app-wrapper
-      title="Presupuestos"
+      title="Unidades Ejecutoras"
       [path]="{
         initial: 'Modulos',
         finally: 'Unidades Ejecutoras'
       }"
     >
-      <app-import-Unidades />
+      <!-- <app-import-Unidades /> -->
 
       <app-main-table
         [columns]="columns"
         [data]="data"
         [rowExpandTemplate]="expandTemplate"
-        title="Registros de usuarios"
+        title="Lisatado de unidades ejecutoras"
         [searchConfig]="{
           label : 'Filtrar',
           placeholder: 'Filtrar por nombre ,ci',
           buttonLabel: 'filtrar',
           icon: 'filter',
-        }"
-        [export]="{
-          types: ['csv', 'pdf'],
-          data: []
         }"
         (searchChange)="searchChange($event)"
       ></app-main-table>

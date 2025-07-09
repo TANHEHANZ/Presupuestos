@@ -19,10 +19,10 @@ import { IconComponent } from '../icons/icon.component';
   selector: 'app-main-table',
   template: `
     <app-container [title]="title">
-      <article class="grid grid-cols-2 my-4">
+      <article class="flex justify-between gap-4 my-4">
         @if (searchConfig && searchConfig) {
         <app-search
-          class="w-[70%]"
+          class="w-[50%]"
           [label]="searchConfig.label ?? ''"
           [placeholder]="searchConfig.placeholder ?? ''"
           [buttonLabel]="searchConfig.buttonLabel ?? ''"
@@ -30,7 +30,7 @@ import { IconComponent } from '../icons/icon.component';
           (searchChange)="searchChange.emit($event)"
         ></app-search>
         }
-        <section class=" flex gap-2 justify-center items-end">
+        <section class=" flex gap-2 justify-center items-end self-end">
           <app-export-button
             *ngIf="export"
             [data]="export.data"
@@ -38,7 +38,7 @@ import { IconComponent } from '../icons/icon.component';
             class="self-end ml-auto"
           />
 
-          <div class="relative">
+          <div class="relative ">
             <div
               class="border border-primary h-14 flex justify-center items-center px-4 rounded-lg gap-2 text-gray-500 cursor-pointer select-none"
               (click)="toggleLimitDropdown()"
