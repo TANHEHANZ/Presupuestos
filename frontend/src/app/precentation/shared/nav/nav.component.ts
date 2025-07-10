@@ -48,23 +48,6 @@ interface NavGroup {
   imports: [IconComponent, RouterModule, CommonModule],
 })
 export class NavComponent {
-  // @Input() navGroups: NavGroup[] = [
-  //   {
-  //     title: 'MODULOS',
-  //     items: [
-  //       {
-  //         label: 'Inicio',
-  //         icon: 'home',
-  //         path: '/dashboard/unidad_ejecutora/dashboard',
-  //       },
-  //       {
-  //         label: 'Proyectos',
-  //         icon: 'proyect',
-  //         path: '/dashboard/unidad_ejecutora/registros',
-  //       },
-  //     ],
-  //   },
-  // ];
   @Input() navGroups: NavGroup[] = [
     {
       title: 'graficas',
@@ -95,6 +78,12 @@ export class NavComponent {
           icon: 'calendar',
           path: '/dashboard/presupuestos/programacion',
         },
+        {
+          label: 'Consultas',
+          icon: 'search',
+          path: '/dashboard/presupuestos/consultas',
+        },
+
         {
           label: 'Usuarios',
           icon: 'users',

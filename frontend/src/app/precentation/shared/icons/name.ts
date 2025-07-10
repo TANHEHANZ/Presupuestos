@@ -38,6 +38,7 @@ import {
   faChevronRight,
   faTriangleExclamation,
   faWarning,
+  faFilterCircleXmark,
 } from '@fortawesome/free-solid-svg-icons';
 
 export const ICONS = {
@@ -77,6 +78,7 @@ export const ICONS = {
   down: faChevronDown,
   alert: faTriangleExclamation,
   warning: faWarning,
+  clearFilter: faFilterCircleXmark,
 } as const;
 
 import { z } from 'zod';
