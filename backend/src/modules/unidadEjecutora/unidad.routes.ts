@@ -8,7 +8,7 @@ const uni_Routes = Router();
 uni_Routes
   .route("/")
   .get(Uni_controller.all)
-  .post(validate(CreateUnidadSchema), Uni_controller.create);
+  .post(validate(CreateUnidadSchema, "body"), Uni_controller.create);
 uni_Routes
   .route("/:id")
   .put(Uni_controller.update)

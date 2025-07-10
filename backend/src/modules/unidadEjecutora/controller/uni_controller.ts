@@ -8,10 +8,23 @@ import {
 import { API } from "@/infraestructure/config/response";
 
 export const Uni_controller = {
-  all: async (_req: Request, res: Response) => {
+  all: async (req: Request, res: Response) => {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+
     try {
-      const unidades = await Uni_service.all();
-      API.success(res, "Unidades ejecutoras obtenidas exitosamente", unidades);
+      const unidades = await Uni_service.all({
+        page: page,
+        limit: limit,
+      });
+
+      API.paginated(res, "Unidades ejecutoras obtenidas exitosamente", {
+        items: unidades.data,
+        total: unidades.totalItems,
+        page: unidades.currentPage,
+        limit: limit,
+        totalPages: unidades.totalPages,
+      });
     } catch (err) {
       API.serverError(
         res,
@@ -54,15 +67,7 @@ export const Uni_controller = {
       const unidad = await Uni_service.create(req.body);
       API.created(res, "Unidad ejecutora creada exitosamente", unidad);
     } catch (err) {
-      if (err instanceof z.ZodError) {
-        API.badRequest(res, "Datos inválidos enviados", err);
-        return;
-      }
-      API.serverError(
-        res,
-        "Ocurrió un error al crear la unidad ejecutora",
-        err
-      );
+      API.serverError(res, "Error al crear la unidad ejecutora");
     }
   },
 
