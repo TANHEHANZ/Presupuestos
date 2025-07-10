@@ -73,10 +73,7 @@ export const Uni_controller = {
 
   update: async (req: Request, res: Response) => {
     try {
-      const id = req.params.id;
-      if (!id) throw new ValidationError("El parámetro 'id' es requerido.");
-
-      const unidad = await Uni_service.update(id, req.body);
+      const unidad = await Uni_service.update(req.body);
       API.success(res, "Unidad ejecutora actualizada exitosamente", unidad);
     } catch (err) {
       if (err instanceof ValidationError) {
@@ -97,9 +94,7 @@ export const Uni_controller = {
 
   delete: async (req: Request, res: Response) => {
     try {
-      const id = req.params.id;
-      if (!id) throw new ValidationError("El parámetro 'id' es requerido.");
-
+      const id = req.body;
       const unidad = await Uni_service.delete(id);
       API.success(res, "Unidad ejecutora marcada como inactiva", unidad);
     } catch (err) {

@@ -44,16 +44,18 @@ export const Uni_service = {
   },
 
   update: async (
-    id: string,
-    data: Partial<DTO_uniCreate>
+    data: Partial<DTO_uniCreate> & { id: string }
   ): Promise<UnidadEjecutora> => {
     return await prismaC.unidadEjecutora.update({
-      where: { id },
-      data,
+      where: { id: data.id },
+      data: {
+        ...data,
+        id: undefined,
+      },
     });
   },
 
-  delete: async (id: string): Promise<UnidadEjecutora> => {
+  delete: async ({ id }: { id: string }): Promise<UnidadEjecutora> => {
     return await prismaC.unidadEjecutora.update({
       where: { id },
       data: { estado: "INACTIVO" },
