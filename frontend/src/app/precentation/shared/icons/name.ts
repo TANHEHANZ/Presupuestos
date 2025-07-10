@@ -37,6 +37,7 @@ import {
   faChevronLeft,
   faChevronRight,
   faTriangleExclamation,
+  faWarning,
 } from '@fortawesome/free-solid-svg-icons';
 
 export const ICONS = {
@@ -75,6 +76,7 @@ export const ICONS = {
   right: faChevronRight,
   down: faChevronDown,
   alert: faTriangleExclamation,
+  warning: faWarning,
 } as const;
 
 import { z } from 'zod';
