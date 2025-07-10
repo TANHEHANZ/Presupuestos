@@ -1,14 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { WrapperComponent } from '../../../../shared/container/wrapper.component';
 import { MainTableComponent } from '../../../../shared/table/main.table.component';
 import { TableColumn } from '../../../../shared/table/table.component';
-import { D_Unidades } from '../../../../../infraestructure/modules/unidades/unidades';
 import { DetailUnidadesComponent } from './detail.component';
-import { ImportUnidadesComponent } from './import.component';
+import { UnidadesService } from '../../../../../infraestructure/services/apis/unidades.service';
+import {
+  DTO_FilterUnidad,
+  DTO_UnidadesR,
+} from '../../../../../infraestructure/models/unidades/m_unidades';
+import { ImportUnidadesComponent } from './add.component';
+import { ModalComponent } from '../../../../shared/modal/modal.component';
+import { FormUnidadesComponent } from './form.unidades.component';
+import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
 
 @Component({
   selector: 'app-unidades',
   template: `
+    <app-modal title="Formulario de unidades ejecutoras">
+      <app-unidades-form />
+    </app-modal>
     <app-wrapper
       title="Unidades Ejecutoras"
       [path]="{
@@ -16,19 +26,22 @@ import { ImportUnidadesComponent } from './import.component';
         finally: 'Unidades Ejecutoras'
       }"
     >
-      <!-- <app-import-Unidades /> -->
+      <app-add-unidades />
 
       <app-main-table
         [columns]="columns"
         [data]="data"
         [rowExpandTemplate]="expandTemplate"
-        title="Lisatado de unidades ejecutoras"
+        title="Listado de unidades ejecutoras"
         [searchConfig]="{
           label : 'Filtrar',
-          placeholder: 'Filtrar por nombre ,ci',
-          buttonLabel: 'filtrar',
+          placeholder: 'Busca por UE o  secretaria ',
+          buttonLabel: 'Filtrar',
           icon: 'filter',
         }"
+        [currentLimit]="filter.limit"
+        (limitChange)="onLimitChange($event)"
+        [fetchPageData]="fetchPageData"
         (searchChange)="searchChange($event)"
       ></app-main-table>
       <ng-template #expandTemplate let-row>
@@ -41,17 +54,84 @@ import { ImportUnidadesComponent } from './import.component';
     MainTableComponent,
     DetailUnidadesComponent,
     ImportUnidadesComponent,
+    ModalComponent,
+    FormUnidadesComponent,
   ],
 })
-export class UnidadesComponent {
-  data = D_Unidades;
+export class UnidadesComponent implements OnInit {
+  unidadesS = inject(UnidadesService);
+  data: DTO_UnidadesR[] = [];
+  modalS = inject(PanelService);
+  filter: DTO_FilterUnidad = {
+    page: 1,
+    limit: 8,
+    total: 0,
+    totalPages: 0,
+  };
+
+  ngOnInit(): void {
+    this.fetchPageData(1);
+
+    this.modalS.refresh$.subscribe(() => {
+      this.fetchPageData(1);
+    });
+  }
+
+  private loadUnidades(
+    page: number
+  ): Promise<{ items: DTO_UnidadesR[]; totalPages: number }> {
+    this.filter.page = page;
+
+    return new Promise((resolve, reject) => {
+      this.unidadesS.all(this.filter).subscribe({
+        next: (res) => {
+          this.data = res.items;
+
+          this.filter = {
+            ...this.filter,
+            page: res.page,
+            limit: res.limit,
+            total: res.total,
+            totalPages: res.totalPages,
+          };
+
+          resolve({
+            items: res.items,
+            totalPages: res.totalPages,
+          });
+        },
+        error: (e) => {
+          console.error('Error al cargar unidades:', e);
+          reject(e);
+        },
+      });
+    });
+  }
+
+  fetchPageData = async (
+    page: number
+  ): Promise<{ data: DTO_UnidadesR[]; totalPages: number }> => {
+    const { items, totalPages } = await this.loadUnidades(page);
+    return {
+      data: items,
+      totalPages,
+    };
+  };
+
   columns: TableColumn<any>[] = [
-    { header: 'CI', accessor: 'ci' },
-    { header: 'Nombre', accessor: 'name' },
-    { header: 'Email', accessor: 'email' },
-    { header: 'Rol', accessor: 'rol' },
+    { header: 'UE', accessor: 'ue' },
+    { header: 'Secretaría', accessor: 'secretaria' },
+    { header: 'Descripción', accessor: 'descripcion' },
     { header: 'Estado', accessor: 'estado' },
-    { header: 'Fecha Creación', accessor: 'createdAt' },
   ];
-  searchChange(data: string) {}
+
+  onLimitChange(newLimit: number) {
+    this.filter.limit = newLimit;
+    this.fetchPageData(1);
+  }
+
+  searchChange(query: string) {
+    console.log('Search query:', query);
+    // puedes aplicar lógica de filtrado aquí si necesitas
+  }
 }
