@@ -46,6 +46,15 @@ export const Uni_service = {
   update: async (
     data: Partial<DTO_uniCreate> & { id: string }
   ): Promise<UnidadEjecutora> => {
+    const validateExisting = await prismaC.unidadEjecutora.findUnique({
+      where: {
+        ue: data.ue,
+      },
+    });
+    if (validateExisting) {
+      throw new Error("Ya existe una unidad ejecutora con esta UE:" + data.ue);
+    }
+
     return await prismaC.unidadEjecutora.update({
       where: { id: data.id },
       data: {
@@ -63,6 +72,14 @@ export const Uni_service = {
   },
 
   create: async (data: DTO_uniCreate): Promise<UnidadEjecutora> => {
+    const validateExisting = await prismaC.unidadEjecutora.findUnique({
+      where: {
+        ue: data.ue,
+      },
+    });
+    if (validateExisting) {
+      throw new Error("Ya existe una unidad ejecutora con esta UE:" + data.ue);
+    }
     return await prismaC.unidadEjecutora.create({
       data,
     });

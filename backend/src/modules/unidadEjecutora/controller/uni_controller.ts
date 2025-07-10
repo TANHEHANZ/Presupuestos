@@ -66,8 +66,8 @@ export const Uni_controller = {
     try {
       const unidad = await Uni_service.create(req.body);
       API.created(res, "Unidad ejecutora creada exitosamente", unidad);
-    } catch (err) {
-      API.serverError(res, "Error al crear la unidad ejecutora");
+    } catch (err: any) {
+      API.serverError(res, err.message || "Error al crear la unidad ejecutora");
     }
   },
 
@@ -75,20 +75,8 @@ export const Uni_controller = {
     try {
       const unidad = await Uni_service.update(req.body);
       API.success(res, "Unidad ejecutora actualizada exitosamente", unidad);
-    } catch (err) {
-      if (err instanceof ValidationError) {
-        API.badRequest(res, "Error de validación", err);
-        return;
-      }
-      if (err instanceof z.ZodError) {
-        API.badRequest(res, "Datos inválidos enviados", err);
-        return;
-      }
-      API.serverError(
-        res,
-        "Ocurrió un error al actualizar la unidad ejecutora",
-        err
-      );
+    } catch (err: any) {
+      API.serverError(res, err.message || "Error al crear la unidad ejecutora");
     }
   },
 
