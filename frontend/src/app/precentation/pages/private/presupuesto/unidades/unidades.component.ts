@@ -45,7 +45,7 @@ import { PanelService } from '../../../../../infraestructure/services/components
         (searchChange)="searchChange($event)"
       ></app-main-table>
       <ng-template #expandTemplate let-row>
-        <app-unidades-detail />
+        <app-unidades-detail [D_Unidades]="row" />
       </ng-template>
     </app-wrapper>
   `,
