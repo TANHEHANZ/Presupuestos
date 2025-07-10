@@ -7,6 +7,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CustomButtonComponent } from '../../../../shared/button/button.component';
 import { MainTableComponent } from '../../../../shared/table/main.table.component';
 import { TableColumn } from '../../../../shared/table/table.component';
+import { FormConsultas } from './form.component';
 
 @Component({
   selector: 'app-consultas',
@@ -17,30 +18,7 @@ import { TableColumn } from '../../../../shared/table/table.component';
       finally: 'Consultas'
     }"
   >
-    <app-container [title]="'Formulario de consultas'" class="">
-      <form class="grid grid-cols-4 gap-4 " [formGroup]="form">
-        <app-custom-input label="Cat Prog" />
-        <app-custom-input label="FTE" />
-        <app-custom-input label="Objetivo" class="col-span-2" />
-        <app-custom-input label="Description" class="col-span-2" />
-        <app-custom-input label="Org" />
-        <app-custom-input label="Description gasto" />
-        <div class="grid grid-cols-[1fr_50px_1fr] w-full col-span-full">
-          <p class="col-span-full text-primary font-semibold text-sm ml-3">
-            Presupuesto Vigente
-          </p>
-          <app-custom-input class="" />
-          <app-custom-select [items]="options" formControlName="operador" />
-          <app-custom-input class="" />
-        </div>
-        <div class="col-span-full flex justify-end items-center  gap-4 mt-6">
-          <app-custom-button variant="secondary" icon="clearFilter"
-            >Limpiar filtro</app-custom-button
-          >
-          <app-custom-button icon="filter">Filtrar</app-custom-button>
-        </div>
-      </form>
-    </app-container>
+    <app-form-consultas />
     <app-main-table
       [columns]="columns"
       [data]="[]"
@@ -62,25 +40,12 @@ import { TableColumn } from '../../../../shared/table/table.component';
   </app-wrapper>`,
   imports: [
     WrapperComponent,
-    ContainerComponent,
-    CustomInputComponent,
-    CustomSelectComponent,
     ReactiveFormsModule,
-    CustomButtonComponent,
     MainTableComponent,
+    FormConsultas,
   ],
 })
 export class ConsultasComponent {
-  form = new FormGroup({
-    operador: new FormControl('IGUAL'),
-  });
-
-  options = [
-    { label: '=', value: 'IGUAL' },
-    { label: '>', value: 'MAYOR_QUE' },
-    { label: '<', value: 'MENOR_QUE' },
-  ];
-
   columns: TableColumn<any>[] = [
     { header: 'UE', accessor: 'ue' },
     { header: 'Secretaría', accessor: 'secretaria' },
