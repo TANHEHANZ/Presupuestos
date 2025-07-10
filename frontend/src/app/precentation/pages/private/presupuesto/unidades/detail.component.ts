@@ -74,32 +74,41 @@ export class DetailUnidadesComponent implements OnInit {
     });
   }
   deleteUnidad() {
-    const confirmed = confirm(
-      '¿Estás seguro de eliminar esta Unidad Ejecutora?'
-    );
-    if (!confirmed) return;
-
-    this.unidadesS
-      .deleted({
-        id: this.D_Unidades().id,
-      })
-      .subscribe({
-        next: () => {
-          this.toastS.addToast({
-            title: 'Unidad Ejecutora Eliminada',
-            description: 'La Unidad Ejecutora ha sido eliminada correctamente.',
-            type: 'success',
+    this.toastS.addToast({
+      title: '¿Eliminar Unidad Ejecutora?',
+      description: '¿Estás seguro de eliminar esta Unidad Ejecutora?',
+      type: 'warning',
+      action: {
+        label: 'Eliminar',
+        callback: async () => {
+          this.unidadesS.deleted({ id: this.D_Unidades().id }).subscribe({
+            next: () => {
+              this.toastS.addToast({
+                title: 'Unidad Ejecutora Eliminada',
+                description:
+                  'La Unidad Ejecutora ha sido eliminada correctamente.',
+                type: 'success',
+              });
+              this.modalS.closeModal(true);
+            },
+            error: () => {
+              this.toastS.addToast({
+                title: 'Error al eliminar Unidad Ejecutora',
+                description:
+                  'Ocurrió un error al eliminar la Unidad Ejecutora.',
+                type: 'error',
+              });
+            },
           });
-          this.modalS.closeModal(true);
         },
-        error: () => {
-          this.toastS.addToast({
-            title: 'Error al eliminar Unidad Ejecutora',
-            description: 'Ocurrió un error al eliminar la Unidad Ejecutora.',
-            type: 'error',
-          });
+      },
+      cancelAction: {
+        label: 'Cancelar',
+        callback: () => {
+          console.log('Eliminación cancelada');
         },
-      });
+      },
+    });
   }
 
   editarUnidades() {
