@@ -1,15 +1,37 @@
 import { prismaC } from "@/infraestructure/config/prisma.client";
 import { DTO_uniCreate } from "../validations/v_create";
 import { UnidadEjecutora } from "@prisma/client";
+import { paginate } from "@/infraestructure/config/paginate";
+interface FiltersProps {
+  ue?: string;
+  secretaria?: string;
+  page: number;
+  limit: number;
+}
+
 export const Uni_service = {
-  all: async (): Promise<Partial<UnidadEjecutora>[]> => {
+  all: async ({ ue, secretaria, page, limit }: FiltersProps): Promise<any> => {
     try {
-      const uni_all = await prismaC.unidadEjecutora.findMany({
-        where: { estado: "ACTIVO" },
-        omit: {
-          createdAt: true,
-          updatedAt: true,
-        },
+      const where = {
+        estado: "ACTIVO",
+        ...(ue && {
+          ue: {
+            contains: ue,
+            mode: "insensitive",
+          },
+        }),
+        ...(secretaria && {
+          secretaria: {
+            contains: secretaria,
+            mode: "insensitive",
+          },
+        }),
+      };
+      const uni_all = await paginate<UnidadEjecutora>(prismaC.unidadEjecutora, {
+        where,
+        page: Number(page),
+        limit: Number(limit),
+        orderBy: { createdAt: "desc" },
       });
       return uni_all;
     } catch (error) {
@@ -22,16 +44,18 @@ export const Uni_service = {
   },
 
   update: async (
-    id: string,
-    data: Partial<DTO_uniCreate>
+    data: Partial<DTO_uniCreate> & { id: string }
   ): Promise<UnidadEjecutora> => {
     return await prismaC.unidadEjecutora.update({
-      where: { id },
-      data,
+      where: { id: data.id },
+      data: {
+        ...data,
+        id: undefined,
+      },
     });
   },
 
-  delete: async (id: string): Promise<UnidadEjecutora> => {
+  delete: async ({ id }: { id: string }): Promise<UnidadEjecutora> => {
     return await prismaC.unidadEjecutora.update({
       where: { id },
       data: { estado: "INACTIVO" },

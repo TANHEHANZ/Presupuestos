@@ -9,15 +9,25 @@ export class PanelService {
   private drawerOpen$ = new BehaviorSubject<boolean>(false);
   private refreshSubject$ = new Subject<void>();
   private drawerData$ = new BehaviorSubject<any>(null);
+  private modalData$ = new BehaviorSubject<any>(null);
+  modalDataState$ = this.modalData$.asObservable();
+
   modalState$ = this.modalOpen$.asObservable();
   drawerState$ = this.drawerOpen$.asObservable();
   refresh$ = this.refreshSubject$.asObservable();
   drawerDataState$ = this.drawerData$.asObservable();
-  openModal(triggerRefresh = false) {
+  openModal(triggerRefresh = false, data?: any) {
+    if (data !== undefined) {
+      this.modalData$.next(data);
+    }
     this.modalOpen$.next(true);
     if (triggerRefresh) {
       this.triggerRefresh();
     }
+  }
+  openModalWithData(data: any, triggerRefresh = false) {
+    this.modalData$.next(data);
+    this.openModal(triggerRefresh);
   }
 
   closeModal(triggerRefresh = false) {
