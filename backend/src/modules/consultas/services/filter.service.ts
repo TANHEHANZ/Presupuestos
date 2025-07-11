@@ -85,7 +85,17 @@ export const FilterService = async (params: DTO_consultaParams) => {
     page: params.page,
     limit: params.limit,
     where,
-    include: {
+    select: {
+      mes: true,
+      da: true,
+      ue: true,
+      catPrg: true,
+      fte: true,
+      org: true,
+      objetoGasto: true,
+      presupuestoVigente: true,
+      descrpcionObjetoGasto: true,
+      devengado: true,
       unidadEjecutora: {
         select: {
           ue: true,

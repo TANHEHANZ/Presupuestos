@@ -14,7 +14,7 @@ export const FilterController = async (
       items: data.data,
       total: data.totalItems,
       page: data.currentPage,
-      limit: params.limit,
+      limit: Number(params.limit) || 0,
       totalPages: data.totalPages,
     });
   } catch (error) {
