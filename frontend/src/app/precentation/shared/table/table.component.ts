@@ -82,7 +82,7 @@ export interface TableColumn<T> {
                 class="flex justify-start items-center flex-col h-[40dvh] w-full"
               >
                 <img
-                  src="/lampara.png"
+                  src="assets/lampara.png"
                   alt="lampara de no datos"
                   class="h-48"
                 />

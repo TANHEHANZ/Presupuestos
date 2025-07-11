@@ -34,11 +34,12 @@ gsap.registerPlugin(TextPlugin);
           class="logo text-white  skew-x-[12deg] w-full h-full relative flex justify-center items-center flex-col gap-4"
         >
           <img
-            src="/logoBK.png"
+            src="assets/logo.png"
             alt="Logo"
-            class="logo aspect-square w-44 "
+            class="logo aspect-square w-44"
             #logoImg
           />
+
           <section class="carga hidden scale-0 absolute bottom-[30%]">
             <div class="spinner">
               <div></div>
