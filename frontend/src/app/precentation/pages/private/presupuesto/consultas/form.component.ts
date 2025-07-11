@@ -75,21 +75,24 @@ import { CommonModule } from '@angular/common';
             placeholder="Seleccione un rango de fechas"
           ></p-datePicker>
           <p class="py-4 text-sm font-semibold text-primary">Escogiste :</p>
-          <div
-            *ngIf="form.get('periodo')?.value as range"
-            class="flex gap-2 justify-center items-center"
-          >
-            <ng-container *ngIf="range.length === 2">
-              <p class="flex flex-col gap-2 justify-center items-center px-4">
-                <samp class="text-2xl">{{ range[0] | date : 'dd' }}</samp>
-                <span>de {{ range[0] | date : 'MMMM' }}</span>
-              </p>
-              <span class="h-full px-2">al</span>
-              <p class="flex flex-col gap-2 justify-center items-center px-4">
-                <samp class="text-2xl">{{ range[1] | date : 'dd' }}</samp>
-                <span>de {{ range[1] | date : 'MMMM' }}</span>
-              </p>
-            </ng-container>
+          <div class="flex gap-2 justify-center items-center text-center">
+            @let range = form.get('periodo')?.value; @if (range?.length === 2) {
+            <p class="flex flex-col gap-2 justify-center items-center px-4">
+              <samp class="text-2xl">{{ range![0] | date : 'dd' }}</samp>
+              <span>de {{ range![0] | date : 'MMMM' }}</span>
+            </p>
+            <span class="h-full px-2">al</span>
+            <p class="flex flex-col gap-2 justify-center items-center px-4">
+              <samp class="text-2xl">{{ range![1] | date : 'dd' }}</samp>
+              <span>de {{ range![1] | date : 'MMMM' }}</span>
+            </p>
+            } @else {
+            <p
+              class="text-sm text-primary border border-dashed h-full min-h-14 w-full grid content-center text-center rounded-lg bg-slate-50"
+            >
+              Escoge un rango de fechas
+            </p>
+            }
           </div>
         </section>
         <div class="col-span-full flex justify-end items-center  gap-4 mt-6">

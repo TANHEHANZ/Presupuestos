@@ -25,6 +25,6 @@ export const appConfig: ApplicationConfig = {
       },
     }),
     provideAnimations(),
-    { provide: LOCALE_ID, useValue: 'es' }, // ✅ Agregar esta línea
+    { provide: LOCALE_ID, useValue: 'es' },
   ],
 };
