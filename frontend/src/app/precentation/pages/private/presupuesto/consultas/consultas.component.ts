@@ -22,8 +22,10 @@ import { DTO_consultasRItems } from '../../../../../infraestructure/models/consu
         [data]="data"
         title="Listado de unidades ejecutoras"
         [fetchPageData]="fetchPageData"
+        [currentLimit]="limit"
+        [totalPagesInput]="totalPages"
         (limitChange)="onLimitChange($event)"
-      ></app-main-table>
+      />
     </app-wrapper>
   `,
   imports: [
@@ -60,7 +62,6 @@ export class ConsultasComponent {
 
   handleFiltrar(filtro: DTO_consultaQuery) {
     this.filters = filtro;
-    this.page = 1;
     this.fetchPageData(this.page);
   }
 
