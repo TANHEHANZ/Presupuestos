@@ -16,7 +16,7 @@ import { ToastService } from '../../../../../infraestructure/lib/toast/toast.ser
   template: `
     <app-container [title]="'Formulario de consultas'" class="">
       <form class="grid grid-cols-5 gap-4 " [formGroup]="form">
-        <section class="col-span-4  grid grid-cols-6 gap-4">
+        <section class="col-span-4  grid grid-cols-6 gap-4 ">
           <app-custom-select
             label="Tipo de gasto"
             formControlName="tipoGasto"
@@ -94,8 +94,9 @@ import { ToastService } from '../../../../../infraestructure/lib/toast/toast.ser
           <app-custom-input
             label="Codigo objeto de gasto"
             formControlName="objetoGasto"
+            class="self-end mb-1"
           />
-          <div class="grid grid-cols-[50px_1fr] w-full col-span-2">
+          <div class="grid grid-cols-[50px_1fr] w-full col-span-2 self-end">
             <p class="col-span-full text-primary font-semibold text-sm ml-3">
               Presupuesto Vigente
             </p>
