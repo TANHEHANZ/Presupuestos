@@ -129,7 +129,10 @@ import { ToastService } from '../../../../../infraestructure/lib/toast/toast.ser
             (btnClick)="clearFormFilter()"
             >Limpiar filtro</app-custom-button
           >
-          <app-custom-button icon="filter" (btnClick)="submitFilter()"
+          <app-custom-button
+            icon="filter"
+            (btnClick)="submitFilter()"
+            type="submit"
             >Filtrar</app-custom-button
           >
         </div>

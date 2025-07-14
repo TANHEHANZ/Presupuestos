@@ -13,12 +13,7 @@ export const FilterService = async (params: DTO_consultaParams) => {
     ...(params.fte !== undefined && {
       fte: Number(params.fte),
     }),
-    ...(params.catProg && {
-      catPrg: {
-        contains: params.catProg,
-        mode: "insensitive",
-      },
-    }),
+
     ...(params.descripcionGasto && {
       descrpcionObjetoGasto: {
         contains: params.descripcionGasto,
@@ -43,6 +38,13 @@ export const FilterService = async (params: DTO_consultaParams) => {
     where.org = {};
     if (params.orgDesde !== undefined) where.org.gte = Number(params.orgDesde);
     if (params.orgHasta !== undefined) where.org.lte = Number(params.orgHasta);
+  }
+
+  if (params.catProg) {
+    where.catPrg = {
+      contains: params.catProg,
+      mode: "insensitive",
+    };
   }
 
   if (params.descripcion) {
@@ -76,15 +78,11 @@ export const FilterService = async (params: DTO_consultaParams) => {
   }
 
   if (Array.isArray(params.periodo) && params.periodo.length === 2) {
-    console.log("Periodo1 : ", params.periodo[0]);
-    console.log("Periodo2 : ", params.periodo[1]);
-
     where.mes = {
       gte: new Date(params.periodo[0]),
       lte: new Date(params.periodo[1]),
     };
   }
-
   const result = await paginate<
     Prisma.PresupuestoGetPayload<{ include: { unidadEjecutora: true } }>
   >(prismaC.presupuesto, {
