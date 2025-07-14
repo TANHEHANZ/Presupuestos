@@ -1,5 +1,5 @@
 import { z } from 'zod';
-export const M_presupuestoUnidadesR = z.array(
+const items = z.array(
   z.object({
     ue: z.string(),
     descripcion: z.string(),
@@ -7,5 +7,13 @@ export const M_presupuestoUnidadesR = z.array(
     montoProgramado: z.number(),
   })
 );
+export const M_presupuestoUnidadesR = z.object({
+  items,
+  limit: z.number(),
+  page: z.number(),
+  total: z.number(),
+  totalPages: z.number(),
+});
 
 export type DTO_presupuestoUnidadesR = z.infer<typeof M_presupuestoUnidadesR>;
+export type DTO_presupuestoUnidadesItem = z.infer<typeof items>;

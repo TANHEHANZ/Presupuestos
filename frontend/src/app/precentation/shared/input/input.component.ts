@@ -32,7 +32,7 @@ import {
         [type]="type"
         [placeholder]="placeholder"
         [autocomplete]="autocomplete"
-        class="border   rounded-xl px-3 py-4 focus:outline-none focus:ring-2 focus:ring-primary transition w-full"
+        class="border   rounded-xl px-3 py-4 focus:outline-none focus:ring-2  focus:ring-primary transition w-full h-full"
         [ngClass]="{
           'border-red-500': isInvalid,
           'bg-white border-olther  border-dashed opacity-70 cursor-not-allowed':

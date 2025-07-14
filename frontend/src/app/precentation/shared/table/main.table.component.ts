@@ -134,6 +134,12 @@ export class MainTableComponent<T> implements OnInit {
 
   @Output() searchChange = new EventEmitter<string>();
   @Output() limitChange = new EventEmitter<number>();
+  @Input() totalPagesInput = 1;
+
+  ngOnChanges() {
+    this.totalPages = this.totalPagesInput;
+    this.updatePages();
+  }
 
   @Input() fetchPageData!: (
     page: number

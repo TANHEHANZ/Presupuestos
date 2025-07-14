@@ -19,7 +19,11 @@ interface NavGroup {
   template: `
     <aside class="border-r w-full h-full flex flex-col  items-center">
       <div class="my-4">
-        <img src="/logo2.png" alt="Logo" class="h-20 mx-auto aspect-square" />
+        <img
+          src="assets/logo2.png"
+          alt="Logo"
+          class="h-20 mx-auto aspect-square"
+        />
       </div>
       <ng-container *ngFor="let group of navGroups">
         <span
@@ -28,7 +32,7 @@ interface NavGroup {
         >
         <ng-container *ngFor="let item of group.items">
           <a
-            class="nav-anim-item w-full  flex-col hidden justify-center text-balance  text-center items-center gap-2 min-h-24 cursor-pointer transition-all hover:bg-primary/10 pt-4"
+            class="nav-anim-item w-full  flex-col hidden justify-center text-balance  text-center items-center gap-2 min-h-24 cursor-pointer transition-all hover:bg-primary/10 pb-4 "
             [routerLink]="item.path"
             routerLinkActive="bg-primary/5 border-l-4 border-primary "
             [routerLinkActiveOptions]="{ exact: true }"
@@ -48,23 +52,6 @@ interface NavGroup {
   imports: [IconComponent, RouterModule, CommonModule],
 })
 export class NavComponent {
-  // @Input() navGroups: NavGroup[] = [
-  //   {
-  //     title: 'MODULOS',
-  //     items: [
-  //       {
-  //         label: 'Inicio',
-  //         icon: 'home',
-  //         path: '/dashboard/unidad_ejecutora/dashboard',
-  //       },
-  //       {
-  //         label: 'Proyectos',
-  //         icon: 'proyect',
-  //         path: '/dashboard/unidad_ejecutora/registros',
-  //       },
-  //     ],
-  //   },
-  // ];
   @Input() navGroups: NavGroup[] = [
     {
       title: 'graficas',
@@ -95,6 +82,12 @@ export class NavComponent {
           icon: 'calendar',
           path: '/dashboard/presupuestos/programacion',
         },
+        {
+          label: 'Consultas',
+          icon: 'search',
+          path: '/dashboard/presupuestos/consultas',
+        },
+
         {
           label: 'Usuarios',
           icon: 'users',

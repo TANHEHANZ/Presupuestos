@@ -82,6 +82,7 @@ export class DetailComponent implements OnInit {
   programacionMensual = [];
   ngOnInit(): void {
     console.log('D_Presupuesto', this.D_Presupuesto());
+
     const data = this.D_Presupuesto();
     this.programacionMensual = data.programacion;
 

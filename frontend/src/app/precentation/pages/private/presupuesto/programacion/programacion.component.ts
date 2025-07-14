@@ -2,14 +2,10 @@ import { Component, inject, OnInit } from '@angular/core';
 import { WrapperComponent } from '../../../../shared/container/wrapper.component';
 import { MainTableComponent } from '../../../../shared/table/main.table.component';
 import { ToastService } from '../../../../../infraestructure/lib/toast/toast.service';
-import { DTO_proyectosRItems } from '../../../../../infraestructure/models/presupuestos/proyectos/m_proyectos';
 import { DTO_Filter } from '../../../../../infraestructure/models/programation/m_filter';
 import { DetailComponent } from './detail.component';
 import { ProgramationService } from '../../../../../infraestructure/services/apis/programation.service';
-import {
-  DTO_ProgramationR,
-  DTO_ProgramationRData,
-} from '../../../../../infraestructure/models/programation/m_programation';
+import { DTO_ProgramationRData } from '../../../../../infraestructure/models/programation/m_programation';
 import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
 
 @Component({
@@ -41,6 +37,7 @@ import { PanelService } from '../../../../../infraestructure/services/components
         [fetchPageData]="fetchPageData"
         (searchChange)="searchChange($event)"
         [rowExpandTemplate]="expand"
+        [totalPagesInput]="filter.totalPages"
       ></app-main-table>
       <ng-template #expand let-row>
         <detail-presupuesto [D_Presupuesto]="row" />
