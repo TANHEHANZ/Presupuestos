@@ -71,8 +71,14 @@ export const FilterService = async (params: DTO_consultaParams) => {
         break;
     }
   }
+  if (params.periodo && typeof params.periodo === "string") {
+    params.periodo = params.periodo.split(",").map((str) => str.trim());
+  }
 
-  if (params.periodo && params.periodo.length === 2) {
+  if (Array.isArray(params.periodo) && params.periodo.length === 2) {
+    console.log("Periodo1 : ", params.periodo[0]);
+    console.log("Periodo2 : ", params.periodo[1]);
+
     where.mes = {
       gte: new Date(params.periodo[0]),
       lte: new Date(params.periodo[1]),

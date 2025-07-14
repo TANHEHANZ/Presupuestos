@@ -16,16 +16,7 @@ export const consultaSchema = z.object({
   descripcionGasto: z.string().optional(),
   operador: z.enum(["IGUAL", "MAYOR_QUE", "MENOR_QUE"]).optional(),
   presupuestoVigenteComparar: z.number().optional(),
-  periodo: z
-    .tuple([
-      z
-        .string()
-        .refine((d) => !isNaN(Date.parse(d)), { message: "Fecha inválida" }),
-      z
-        .string()
-        .refine((d) => !isNaN(Date.parse(d)), { message: "Fecha inválida" }),
-    ])
-    .optional(),
+  periodo: z.any().optional(),
 });
 
 export type DTO_consultaParams = z.infer<typeof consultaSchema>;

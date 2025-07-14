@@ -215,6 +215,11 @@ export class FormConsultas implements OnInit {
 
   submitFilter() {
     const rawQuery = this.form.value;
+    const periodoISO =
+      rawQuery.periodo && rawQuery.periodo.length === 2
+        ? rawQuery.periodo.map((fecha: Date) => fecha.toISOString())
+        : undefined;
+
     const query: DTO_consultaQuery = {
       ...Object.fromEntries(
         Object.entries(rawQuery).map(([key, value]) => {
@@ -235,12 +240,11 @@ export class FormConsultas implements OnInit {
           ) {
             return [key, Number(value)];
           }
-
+          if (key === 'periodo') return [key, periodoISO];
           return [key, value];
         })
       ),
     };
-    console.log('Query limpio:', query);
     this.filtrar.emit(query);
   }
 
