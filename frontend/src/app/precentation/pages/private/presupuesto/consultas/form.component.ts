@@ -16,7 +16,7 @@ import { ToastService } from '../../../../../infraestructure/lib/toast/toast.ser
   template: `
     <app-container [title]="'Formulario de consultas'" class="">
       <form class="grid grid-cols-5 gap-4 " [formGroup]="form">
-        <section class="col-span-4  grid grid-cols-4 gap-4">
+        <section class="col-span-4  grid grid-cols-6 gap-4">
           <app-custom-select
             label="Tipo de gasto"
             formControlName="tipoGasto"
@@ -32,8 +32,15 @@ import { ToastService } from '../../../../../infraestructure/lib/toast/toast.ser
             formControlName="fte"
             [type]="'number'"
           />
-          <app-custom-input label="Cat Prog" formControlName="catProg" />
-
+          <app-custom-input
+            label="UE Description"
+            formControlName="descripcion"
+          />
+          <app-custom-input
+            label="Description gasto"
+            class="col-span-2 "
+            formControlName="descripcionGasto"
+          />
           <div
             class="col-span-2 border border-dashed border-violet-300 grid grid-cols-2 gap-2 rounded-lg p-4 bg-violet-50/30"
           >
@@ -65,18 +72,28 @@ import { ToastService } from '../../../../../infraestructure/lib/toast/toast.ser
               [type]="'number'"
             />
           </div>
-          <app-custom-input
-            label="UE Description"
-            formControlName="descripcion"
-          />
+
+          <div
+            class="col-span-2 border border-dashed border-violet-300 grid grid-cols-2 gap-2 rounded-lg p-4 bg-violet-50/30"
+          >
+            <p class="col-span-full text-sm text-primary font-semibold">
+              CAT PROG
+            </p>
+            <app-custom-input
+              label="Cat Prog"
+              formControlName="catProgDesde"
+              label="Desde"
+            />
+            <app-custom-input
+              label="Cat Prog"
+              formControlName="catProgHasta"
+              label="Hasta"
+            />
+          </div>
+
           <app-custom-input
             label="Codigo objeto de gasto"
             formControlName="objetoGasto"
-          />
-          <app-custom-input
-            label="Description gasto"
-            class="col-span-2"
-            formControlName="descripcionGasto"
           />
           <div class="grid grid-cols-[50px_1fr] w-full col-span-2">
             <p class="col-span-full text-primary font-semibold text-sm ml-3">
@@ -171,7 +188,8 @@ export class FormConsultas implements OnInit {
     tipoGasto: new FormControl(''),
     da: new FormControl(''),
     fte: new FormControl(''),
-    catProg: new FormControl(''),
+    catProgDesde: new FormControl(''),
+    catProgHasta: new FormControl(''),
     ueDesde: new FormControl(''),
     ueHasta: new FormControl(''),
     orgDesde: new FormControl(''),

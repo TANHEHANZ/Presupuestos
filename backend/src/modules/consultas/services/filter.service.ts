@@ -27,6 +27,23 @@ export const FilterService = async (params: DTO_consultaParams) => {
       },
     }),
   };
+  if (params.tipoGasto === "FUNCIONAMIENTO") {
+    where.OR = [
+      { catPrg: { startsWith: "000" } },
+      { catPrg: { startsWith: " 000" } },
+    ];
+  }
+
+  if (params.tipoGasto === "ELEGIBLES") {
+    where.AND = [
+      {
+        NOT: [
+          { catPrg: { startsWith: "000" } },
+          { catPrg: { startsWith: " 000" } },
+        ],
+      },
+    ];
+  }
 
   if (params.ueDesde !== undefined || params.ueHasta !== undefined) {
     where.ue = {};
@@ -39,12 +56,18 @@ export const FilterService = async (params: DTO_consultaParams) => {
     if (params.orgDesde !== undefined) where.org.gte = Number(params.orgDesde);
     if (params.orgHasta !== undefined) where.org.lte = Number(params.orgHasta);
   }
+  if (params.catProgDesde !== undefined || params.catProgHasta !== undefined) {
+    const catPrgFilter: Prisma.StringFilter = {};
 
-  if (params.catProg) {
-    where.catPrg = {
-      contains: params.catProg,
-      mode: "insensitive",
-    };
+    if (params.catProgDesde !== undefined) {
+      catPrgFilter.gte = params.catProgDesde;
+    }
+
+    if (params.catProgHasta !== undefined) {
+      catPrgFilter.lte = params.catProgHasta;
+    }
+
+    where.catPrg = catPrgFilter;
   }
 
   if (params.descripcion) {
