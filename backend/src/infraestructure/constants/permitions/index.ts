@@ -1,5 +1,7 @@
+import { P_consultas } from "./p_consultas";
 import { P_config } from "./p_permisos";
 import { P_preUnidad } from "./p_preUnidad";
+import { P_programation } from "./p_programation";
 import { P_report } from "./p_report";
 import { P_unit } from "./p_unidades";
 import { P_user } from "./p_user";
@@ -30,11 +32,26 @@ export const PERMITION_KEYS = {
     },
   ],
   reportes: [{ name: "Descargar", key: P_report.DOWNLOAD, icon: "download" }],
+  consultas: [
+    { name: "Consultas", key: P_consultas.CONSULTAR, icon: "search" },
+  ],
   permisos: [
     {
       name: "Asignar permisos ",
       key: P_config.ALL_PERMITION,
       icon: "download",
+    },
+  ],
+  programation: [
+    {
+      name: "Listar Programación",
+      key: P_programation.LIST,
+      icon: "calendar",
+    },
+    {
+      name: "Programar",
+      key: P_programation.CREATE,
+      icon: "calendar",
     },
   ],
   all: [{ key: "ALL" }],

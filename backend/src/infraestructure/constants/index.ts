@@ -27,4 +27,16 @@ export const PERMISSION: Permition[] = [
     icon: "download",
     permissions: PERMITION_KEYS.reportes,
   },
+  {
+    group: "Consultas",
+    color: "#FF9F3B",
+    icon: "search",
+    permissions: PERMITION_KEYS.consultas,
+  },
+  {
+    group: "Programacion",
+    color: "#753AB7",
+    icon: "calendar",
+    permissions: PERMITION_KEYS.programation,
+  },
 ];
