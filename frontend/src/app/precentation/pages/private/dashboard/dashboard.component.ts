@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { WrapperComponent } from '../../../../shared/container/wrapper.component';
+import { WrapperComponent } from '../../../shared/container/wrapper.component';
 
 @Component({
   selector: 'app-dashboard-presupuesto',

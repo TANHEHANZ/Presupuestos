@@ -1,17 +1,17 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { WrapperComponent } from '../../../../shared/container/wrapper.component';
-import { MainTableComponent } from '../../../../shared/table/main.table.component';
-import { TableColumn } from '../../../../shared/table/table.component';
+import { WrapperComponent } from '../../../shared/container/wrapper.component';
+import { MainTableComponent } from '../../../shared/table/main.table.component';
+import { TableColumn } from '../../../shared/table/table.component';
 import { DetailUnidadesComponent } from './detail.component';
-import { UnidadesService } from '../../../../../infraestructure/services/apis/unidades.service';
+import { UnidadesService } from '../../../../infraestructure/services/apis/unidades.service';
 import {
   DTO_FilterUnidad,
   DTO_UnidadesR,
-} from '../../../../../infraestructure/models/unidades/m_unidades';
+} from '../../../../infraestructure/models/unidades/m_unidades';
 import { ImportUnidadesComponent } from './add.component';
-import { ModalComponent } from '../../../../shared/modal/modal.component';
+import { ModalComponent } from '../../../shared/modal/modal.component';
 import { FormUnidadesComponent } from './form.unidades.component';
-import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
+import { PanelService } from '../../../../infraestructure/services/components/panel.service';
 
 @Component({
   selector: 'app-unidades',

@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-import { PresupuestoLayoutComponent } from '../presupuesto/layout.component';
+import { LayoutComponent } from './layout.component';
 
 export const PRESUPUSTO_ROUTES: Routes = [
   {
     path: '',
-    component: PresupuestoLayoutComponent,
+    component: LayoutComponent,
     children: [
       {
         path: 'user',

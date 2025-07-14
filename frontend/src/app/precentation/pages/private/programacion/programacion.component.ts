@@ -1,12 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { WrapperComponent } from '../../../../shared/container/wrapper.component';
-import { MainTableComponent } from '../../../../shared/table/main.table.component';
-import { ToastService } from '../../../../../infraestructure/lib/toast/toast.service';
-import { DTO_Filter } from '../../../../../infraestructure/models/programation/m_filter';
+import { WrapperComponent } from '../../../shared/container/wrapper.component';
+import { MainTableComponent } from '../../../shared/table/main.table.component';
+import { ToastService } from '../../../../infraestructure/lib/toast/toast.service';
+import { DTO_Filter } from '../../../../infraestructure/models/programation/m_filter';
 import { DetailComponent } from './detail.component';
-import { ProgramationService } from '../../../../../infraestructure/services/apis/programation.service';
-import { DTO_ProgramationRData } from '../../../../../infraestructure/models/programation/m_programation';
-import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
+import { ProgramationService } from '../../../../infraestructure/services/apis/programation.service';
+import { DTO_ProgramationRData } from '../../../../infraestructure/models/programation/m_programation';
+import { PanelService } from '../../../../infraestructure/services/components/panel.service';
 
 @Component({
   selector: 'programacion-compoenent',

@@ -1,16 +1,16 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { WrapperComponent } from '../../../../shared/container/wrapper.component';
-import { MainTableComponent } from '../../../../shared/table/main.table.component';
+import { WrapperComponent } from '../../../shared/container/wrapper.component';
+import { MainTableComponent } from '../../../shared/table/main.table.component';
 import { PresupuestarDetailComponent } from './p_detail.component';
 import { UploadExcelComponent } from './upload-items.component';
-import { ModalComponent } from '../../../../shared/modal/modal.component';
-import { ContainerComponent } from '../../../../shared/container/container.component';
-import { CustomButtonComponent } from '../../../../shared/button/button.component';
-import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
-import { PresupuestoService } from '../../../../../infraestructure/services/apis/presupuesto.service';
-import { DTO_presupuestoUnidadesItem } from '../../../../../infraestructure/models/presupuestos/unidad/m_presupuestoUnidad';
-import { ToastService } from '../../../../../infraestructure/lib/toast/toast.service';
-import { DTO_FilterPresupuestoUnidad } from '../../../../../infraestructure/models/presupuestos/unidad/m_filters';
+import { ModalComponent } from '../../../shared/modal/modal.component';
+import { ContainerComponent } from '../../../shared/container/container.component';
+import { CustomButtonComponent } from '../../../shared/button/button.component';
+import { PanelService } from '../../../../infraestructure/services/components/panel.service';
+import { PresupuestoService } from '../../../../infraestructure/services/apis/presupuesto.service';
+import { DTO_presupuestoUnidadesItem } from '../../../../infraestructure/models/presupuestos/unidad/m_presupuestoUnidad';
+import { ToastService } from '../../../../infraestructure/lib/toast/toast.service';
+import { DTO_FilterPresupuestoUnidad } from '../../../../infraestructure/models/presupuestos/unidad/m_filters';
 import { CalendarComponent } from './calendar.component';
 
 @Component({

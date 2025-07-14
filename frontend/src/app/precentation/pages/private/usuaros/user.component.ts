@@ -1,15 +1,15 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { TableColumn } from '../../../../shared/table/table.component';
-import { D_User } from '../../../../../infraestructure/modules/presupuesto/usuarios';
+import { TableColumn } from '../../../shared/table/table.component';
+import { D_User } from '../../../../infraestructure/modules/presupuesto/usuarios';
 import { CommonModule } from '@angular/common';
 import { DetailUserComponent } from './detail.component';
-import { MainTableComponent } from '../../../../shared/table/main.table.component';
+import { MainTableComponent } from '../../../shared/table/main.table.component';
 import { AddUserComponent } from './add.user.component';
-import { WrapperComponent } from '../../../../shared/container/wrapper.component';
-import { UserService } from '../../../../../infraestructure/services/apis/user.service';
-import { DTO_uList } from '../../../../../infraestructure/models/user/m_list';
-import { ToastService } from '../../../../../infraestructure/lib/toast/toast.service';
-import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
+import { WrapperComponent } from '../../../shared/container/wrapper.component';
+import { UserService } from '../../../../infraestructure/services/apis/user.service';
+import { DTO_uList } from '../../../../infraestructure/models/user/m_list';
+import { ToastService } from '../../../../infraestructure/lib/toast/toast.service';
+import { PanelService } from '../../../../infraestructure/services/components/panel.service';
 
 @Component({
   selector: 'app-user',

@@ -1,12 +1,12 @@
 import { Component, inject } from '@angular/core';
-import { UploadComponent } from '../../../../shared/upload/upload.component';
+import { UploadComponent } from '../../../shared/upload/upload.component';
 import { CommonModule } from '@angular/common';
-import { CustomButtonComponent } from '../../../../shared/button/button.component';
+import { CustomButtonComponent } from '../../../shared/button/button.component';
 import * as XLSX from 'xlsx';
-import { ExcelRendererComponent } from '../../../../shared/xlsx/xlsx.component';
-import { ToastService } from '../../../../../infraestructure/lib/toast/toast.service';
-import { PresupuestoService } from '../../../../../infraestructure/services/apis/presupuesto.service';
-import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
+import { ExcelRendererComponent } from '../../../shared/xlsx/xlsx.component';
+import { ToastService } from '../../../../infraestructure/lib/toast/toast.service';
+import { PresupuestoService } from '../../../../infraestructure/services/apis/presupuesto.service';
+import { PanelService } from '../../../../infraestructure/services/components/panel.service';
 @Component({
   selector: 'app-upload-excel',
   standalone: true,

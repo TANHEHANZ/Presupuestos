@@ -1,11 +1,11 @@
 import { Component, inject, input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CustomInputComponent } from '../../../../shared/input/input.component';
-import { CustomSelectComponent } from '../../../../shared/select/select.component';
-import { CustomButtonComponent } from '../../../../shared/button/button.component';
-import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
-import { ToastService } from '../../../../../infraestructure/lib/toast/toast.service';
-import { UnidadesService } from '../../../../../infraestructure/services/apis/unidades.service';
+import { CustomInputComponent } from '../../../shared/input/input.component';
+import { CustomSelectComponent } from '../../../shared/select/select.component';
+import { CustomButtonComponent } from '../../../shared/button/button.component';
+import { PanelService } from '../../../../infraestructure/services/components/panel.service';
+import { ToastService } from '../../../../infraestructure/lib/toast/toast.service';
+import { UnidadesService } from '../../../../infraestructure/services/apis/unidades.service';
 
 @Component({
   selector: 'app-unidades-detail',

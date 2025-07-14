@@ -1,21 +1,21 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CustomInputComponent } from '../../../../shared/input/input.component';
-import { CustomSelectComponent } from '../../../../shared/select/select.component';
-import { CustomButtonComponent } from '../../../../shared/button/button.component';
+import { CustomInputComponent } from '../../../shared/input/input.component';
+import { CustomSelectComponent } from '../../../shared/select/select.component';
+import { CustomButtonComponent } from '../../../shared/button/button.component';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ToastService } from '../../../../../infraestructure/lib/toast/toast.service';
-import { UnidadesService } from '../../../../../infraestructure/services/apis/unidades.service';
-import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
-import { DTO_CreateUnidad } from '../../../../../infraestructure/models/unidades/m_ucreate';
+import { ToastService } from '../../../../infraestructure/lib/toast/toast.service';
+import { UnidadesService } from '../../../../infraestructure/services/apis/unidades.service';
+import { PanelService } from '../../../../infraestructure/services/components/panel.service';
+import { DTO_CreateUnidad } from '../../../../infraestructure/models/unidades/m_ucreate';
 import {
   DTO_UnidadesR,
   DTO_UnidadesRItems,
-} from '../../../../../infraestructure/models/unidades/m_unidades';
+} from '../../../../infraestructure/models/unidades/m_unidades';
 
 @Component({
   selector: 'app-unidades-form',

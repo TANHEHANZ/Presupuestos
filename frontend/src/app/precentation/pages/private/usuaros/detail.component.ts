@@ -1,14 +1,14 @@
 import { Component, inject, input, OnInit } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
-import { R_UserDTO } from '../../../../../infraestructure/modules/presupuesto/types';
-import { CustomInputComponent } from '../../../../shared/input/input.component';
-import { CustomButtonComponent } from '../../../../shared/button/button.component';
+import { R_UserDTO } from '../../../../infraestructure/modules/presupuesto/types';
+import { CustomInputComponent } from '../../../shared/input/input.component';
+import { CustomButtonComponent } from '../../../shared/button/button.component';
 import { CommonModule } from '@angular/common';
-import { PermitionViewerComponent } from '../../../../../infraestructure/modules/permition/render.permition';
-import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
-import { DrawerComponent } from '../../../../shared/drawer/drawer.component';
+import { PermitionViewerComponent } from '../../../../infraestructure/modules/permition/render.permition';
+import { PanelService } from '../../../../infraestructure/services/components/panel.service';
+import { DrawerComponent } from '../../../shared/drawer/drawer.component';
 import { ConfigUserComponent } from './config.user.component';
-import { ToastService } from '../../../../../infraestructure/lib/toast/toast.service';
+import { ToastService } from '../../../../infraestructure/lib/toast/toast.service';
 
 @Component({
   selector: 'app-usuer-detail',

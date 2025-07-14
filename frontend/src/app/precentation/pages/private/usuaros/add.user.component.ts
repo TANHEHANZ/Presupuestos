@@ -1,19 +1,19 @@
 import { Component, inject } from '@angular/core';
-import { CustomInputComponent } from '../../../../shared/input/input.component';
-import { CustomButtonComponent } from '../../../../shared/button/button.component';
-import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
-import { ContainerComponent } from '../../../../shared/container/container.component';
-import { UserService } from '../../../../../infraestructure/services/apis/user.service';
+import { CustomInputComponent } from '../../../shared/input/input.component';
+import { CustomButtonComponent } from '../../../shared/button/button.component';
+import { PanelService } from '../../../../infraestructure/services/components/panel.service';
+import { ContainerComponent } from '../../../shared/container/container.component';
+import { UserService } from '../../../../infraestructure/services/apis/user.service';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ToastService } from '../../../../../infraestructure/lib/toast/toast.service';
-import { DrawerComponent } from '../../../../shared/drawer/drawer.component';
+import { ToastService } from '../../../../infraestructure/lib/toast/toast.service';
+import { DrawerComponent } from '../../../shared/drawer/drawer.component';
 import { ConfigUserComponent } from './config.user.component';
-import { DTO_UserValidR } from '../../../../../infraestructure/models/user/m_valid';
+import { DTO_UserValidR } from '../../../../infraestructure/models/user/m_valid';
 import { CommonModule } from '@angular/common';
 
 @Component({

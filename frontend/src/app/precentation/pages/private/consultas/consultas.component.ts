@@ -1,13 +1,13 @@
 import { Component, inject } from '@angular/core';
-import { WrapperComponent } from '../../../../shared/container/wrapper.component';
+import { WrapperComponent } from '../../../shared/container/wrapper.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MainTableComponent } from '../../../../shared/table/main.table.component';
-import { TableColumn } from '../../../../shared/table/table.component';
+import { MainTableComponent } from '../../../shared/table/main.table.component';
+import { TableColumn } from '../../../shared/table/table.component';
 import { FormConsultas } from './form.component';
-import { ConsultasService } from '../../../../../infraestructure/services/apis/consultas.service';
+import { ConsultasService } from '../../../../infraestructure/services/apis/consultas.service';
 import { firstValueFrom } from 'rxjs';
-import { DTO_consultaQuery } from '../../../../../infraestructure/models/consultas/m_query';
-import { DTO_consultasRItems } from '../../../../../infraestructure/models/consultas/m_consultas';
+import { DTO_consultaQuery } from '../../../../infraestructure/models/consultas/m_query';
+import { DTO_consultasRItems } from '../../../../infraestructure/models/consultas/m_consultas';
 
 @Component({
   selector: 'app-consultas',

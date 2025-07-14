@@ -1,12 +1,12 @@
 import { Component, inject, input, OnInit } from '@angular/core';
-import { CalendarComponent } from '../../../../shared/calendar/calendar.component';
-import { CustomInputComponent } from '../../../../shared/input/input.component';
+import { CalendarComponent } from '../../../shared/calendar/calendar.component';
+import { CustomInputComponent } from '../../../shared/input/input.component';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CustomButtonComponent } from '../../../../shared/button/button.component';
-import { ModalComponent } from '../../../../shared/modal/modal.component';
+import { CustomButtonComponent } from '../../../shared/button/button.component';
+import { ModalComponent } from '../../../shared/modal/modal.component';
 import { ProgramacionMensual } from './programacion.mensual.component';
 import { CommonModule } from '@angular/common';
-import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
+import { PanelService } from '../../../../infraestructure/services/components/panel.service';
 
 @Component({
   selector: 'detail-presupuesto',

@@ -7,20 +7,20 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { CustomInputComponent } from '../../../../shared/input/input.component';
+import { CustomInputComponent } from '../../../shared/input/input.component';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CustomButtonComponent } from '../../../../shared/button/button.component';
-import { PermitionViewerComponent } from '../../../../../infraestructure/modules/permition/render.permition';
-import { DTO_UserValidR } from '../../../../../infraestructure/models/user/m_valid';
-import { CustomSelectComponent } from '../../../../shared/select/select.component';
-import { UnidadesService } from '../../../../../infraestructure/services/apis/unidades.service';
-import { DTO_UnidadesR } from '../../../../../infraestructure/models/unidades/m_unidades';
-import { ToastService } from '../../../../../infraestructure/lib/toast/toast.service';
-import { ConfigService } from '../../../../../infraestructure/services/apis/config.service';
-import { DTO_pPermitionsR } from '../../../../../infraestructure/models/permitions/m_permitions';
-import { UserService } from '../../../../../infraestructure/services/apis/user.service';
-import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
+import { CustomButtonComponent } from '../../../shared/button/button.component';
+import { PermitionViewerComponent } from '../../../../infraestructure/modules/permition/render.permition';
+import { DTO_UserValidR } from '../../../../infraestructure/models/user/m_valid';
+import { CustomSelectComponent } from '../../../shared/select/select.component';
+import { UnidadesService } from '../../../../infraestructure/services/apis/unidades.service';
+import { DTO_UnidadesR } from '../../../../infraestructure/models/unidades/m_unidades';
+import { ToastService } from '../../../../infraestructure/lib/toast/toast.service';
+import { ConfigService } from '../../../../infraestructure/services/apis/config.service';
+import { DTO_pPermitionsR } from '../../../../infraestructure/models/permitions/m_permitions';
+import { UserService } from '../../../../infraestructure/services/apis/user.service';
+import { PanelService } from '../../../../infraestructure/services/components/panel.service';
 
 @Component({
   selector: 'app-config-user-component',

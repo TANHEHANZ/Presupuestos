@@ -1,15 +1,15 @@
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
-import { ContainerComponent } from '../../../../shared/container/container.component';
-import { CustomInputComponent } from '../../../../shared/input/input.component';
-import { CustomSelectComponent } from '../../../../shared/select/select.component';
-import { CustomButtonComponent } from '../../../../shared/button/button.component';
+import { ContainerComponent } from '../../../shared/container/container.component';
+import { CustomInputComponent } from '../../../shared/input/input.component';
+import { CustomSelectComponent } from '../../../shared/select/select.component';
+import { CustomButtonComponent } from '../../../shared/button/button.component';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { IconComponent } from '../../../../shared/icons/icon.component';
+import { IconComponent } from '../../../shared/icons/icon.component';
 import { DatePickerModule } from 'primeng/datepicker';
 import { CommonModule } from '@angular/common';
-import { ConsultasService } from '../../../../../infraestructure/services/apis/consultas.service';
-import { DTO_consultaQuery } from '../../../../../infraestructure/models/consultas/m_query';
-import { ToastService } from '../../../../../infraestructure/lib/toast/toast.service';
+import { ConsultasService } from '../../../../infraestructure/services/apis/consultas.service';
+import { DTO_consultaQuery } from '../../../../infraestructure/models/consultas/m_query';
+import { ToastService } from '../../../../infraestructure/lib/toast/toast.service';
 
 @Component({
   selector: 'app-form-consultas',

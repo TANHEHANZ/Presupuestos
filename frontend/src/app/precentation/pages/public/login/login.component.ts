@@ -143,7 +143,7 @@ export class LoginComponent implements OnInit {
         const tl = gsap.timeline({
           onComplete: () => {
             setTimeout(() => {
-              this.router.navigate(['/dashboard/presupuestos']);
+              this.router.navigate(['/dashboard']);
             }, 500);
           },
         });

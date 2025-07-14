@@ -10,18 +10,11 @@ export const routes: Routes = [
     path: 'dashboard',
     children: [
       {
-        path: 'unidad_ejecutora',
+        path: '',
         loadChildren: () =>
-          import(
-            './precentation/pages/private/unidadEjecutora/unidad.routes'
-          ).then((m) => m.UNIDAD_ROUTES),
-      },
-      {
-        path: 'presupuestos',
-        loadChildren: () =>
-          import(
-            './precentation/pages/private/presupuesto/presupuestos.routes'
-          ).then((m) => m.PRESUPUSTO_ROUTES),
+          import('./precentation/pages/private/presupuestos.routes').then(
+            (m) => m.PRESUPUSTO_ROUTES
+          ),
       },
     ],
   },

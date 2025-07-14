@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
-import { IconComponent } from '../../../../shared/icons/icon.component';
-import { DTO_Pre_CalendarR } from '../../../../../infraestructure/models/presupuestos/filters/m_calendar';
-import { PresupuestoService } from '../../../../../infraestructure/services/apis/presupuesto.service';
-import { ContainerComponent } from '../../../../shared/container/container.component';
+import { IconComponent } from '../../../shared/icons/icon.component';
+import { DTO_Pre_CalendarR } from '../../../../infraestructure/models/presupuestos/filters/m_calendar';
+import { PresupuestoService } from '../../../../infraestructure/services/apis/presupuesto.service';
+import { ContainerComponent } from '../../../shared/container/container.component';
 
 @Component({
   selector: 'app-calendar-component',

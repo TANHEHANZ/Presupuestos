@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, input, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CalendarComponent } from '../../../../shared/calendar/calendar.component';
-import { CustomButtonComponent } from '../../../../shared/button/button.component';
-import { CustomInputComponent } from '../../../../shared/input/input.component';
-import { IconComponent } from '../../../../shared/icons/icon.component';
-import { ToastService } from '../../../../../infraestructure/lib/toast/toast.service';
-import { ProgramationService } from '../../../../../infraestructure/services/apis/programation.service';
-import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
+import { CalendarComponent } from '../../../shared/calendar/calendar.component';
+import { CustomButtonComponent } from '../../../shared/button/button.component';
+import { CustomInputComponent } from '../../../shared/input/input.component';
+import { IconComponent } from '../../../shared/icons/icon.component';
+import { ToastService } from '../../../../infraestructure/lib/toast/toast.service';
+import { ProgramationService } from '../../../../infraestructure/services/apis/programation.service';
+import { PanelService } from '../../../../infraestructure/services/components/panel.service';
 
 @Component({
   selector: 'programacion-mensual',

@@ -59,7 +59,7 @@ export class NavComponent {
         {
           label: 'Dashboard',
           icon: 'chart',
-          path: '/dashboard/presupuestos',
+          path: '/dashboard',
         },
       ],
     },
@@ -69,29 +69,29 @@ export class NavComponent {
         {
           label: 'Presupuesto por unidad',
           icon: 'coins',
-          path: '/dashboard/presupuestos/presupestar',
+          path: '/dashboard/presupestar',
         },
 
         {
           label: 'Unidades ejecutoras',
           icon: 'unidades',
-          path: '/dashboard/presupuestos/unidades',
+          path: '/dashboard/unidades',
         },
         {
           label: 'Programación finanicera',
           icon: 'calendar',
-          path: '/dashboard/presupuestos/programacion',
+          path: '/dashboard/programacion',
         },
         {
           label: 'Consultas',
           icon: 'search',
-          path: '/dashboard/presupuestos/consultas',
+          path: '/dashboard/consultas',
         },
 
         {
           label: 'Usuarios',
           icon: 'users',
-          path: '/dashboard/presupuestos/user',
+          path: '/dashboard/user',
         },
       ],
     },
