@@ -134,7 +134,7 @@ ng serve
 
 Para dudas o sugerencias, puedes contactarme en:
 
-- GitHub: [HANZ TAPIA ](https://github.com/THANHEHANZ)  
+- GitHub: [HANZ TAPIA ](https://github.com/TANHEHANZ)  
 
 ---
 
