@@ -102,9 +102,18 @@ export class FormUnidadesComponent implements OnInit {
       } else {
         this.isEditMode = false;
         this.unidadId = null;
-        this.form.reset();
       }
     });
+    this.modalS.modalState$.subscribe((isOpen) => {
+      if (!isOpen) {
+        this.resetForm();
+      }
+    });
+  }
+  private resetForm() {
+    this.isEditMode = false;
+    this.unidadId = null;
+    this.form.reset();
   }
 
   submitForm() {
@@ -135,7 +144,6 @@ export class FormUnidadesComponent implements OnInit {
               type: 'success',
             });
             this.modalS.closeModal(true);
-            this.form.reset();
           },
           error: (error) => {
             const message =
@@ -160,7 +168,6 @@ export class FormUnidadesComponent implements OnInit {
             type: 'success',
           });
           this.modalS.closeModal(true);
-          this.form.reset();
         },
         error: (error) => {
           const message =
