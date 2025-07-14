@@ -134,8 +134,7 @@ ng serve
 
 Para dudas o sugerencias, puedes contactarme en:
 
-- Correo: tu-email@dominio.com  
-- GitHub: [tu-usuario](https://github.com/tu-usuario)  
+- GitHub: [HANZ TAPIA ](https://github.com/THANHEHANZ)  
 
 ---
 
