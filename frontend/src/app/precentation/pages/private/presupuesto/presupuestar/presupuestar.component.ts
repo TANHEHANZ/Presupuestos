@@ -2,7 +2,6 @@ import { Component, inject, OnInit } from '@angular/core';
 import { WrapperComponent } from '../../../../shared/container/wrapper.component';
 import { MainTableComponent } from '../../../../shared/table/main.table.component';
 import { PresupuestarDetailComponent } from './p_detail.component';
-import { CalendarComponent } from './calendar.component';
 import { UploadExcelComponent } from './upload-items.component';
 import { ModalComponent } from '../../../../shared/modal/modal.component';
 import { ContainerComponent } from '../../../../shared/container/container.component';
@@ -12,6 +11,7 @@ import { PresupuestoService } from '../../../../../infraestructure/services/apis
 import { DTO_presupuestoUnidadesItem } from '../../../../../infraestructure/models/presupuestos/unidad/m_presupuestoUnidad';
 import { ToastService } from '../../../../../infraestructure/lib/toast/toast.service';
 import { DTO_FilterPresupuestoUnidad } from '../../../../../infraestructure/models/presupuestos/unidad/m_filters';
+import { CalendarComponent } from './calendar.component';
 
 @Component({
   selector: 'presupuestos-component',
@@ -61,11 +61,11 @@ import { DTO_FilterPresupuestoUnidad } from '../../../../../infraestructure/mode
     WrapperComponent,
     MainTableComponent,
     PresupuestarDetailComponent,
-    CalendarComponent,
     ModalComponent,
     ContainerComponent,
     CustomButtonComponent,
     UploadExcelComponent,
+    CalendarComponent,
   ],
 })
 export class PresupuestarComponent implements OnInit {

@@ -2,6 +2,7 @@ import {
   M_filtersPresupuesto,
   M_presupuestoUnidadesR,
 } from '../../../models/presupuestos';
+import { ItemsRCalendar } from '../../../models/presupuestos/filters/m_calendar';
 import {
   M_presupuestoUniUpload,
   M_presupuestoUniUploadR,
@@ -19,6 +20,11 @@ export const API_PresupuestoUni = {
     path: 'POST v1/api/presupuesto/unidad/upload-xlsx',
     response: M_presupuestoUniUploadR,
     query: M_presupuestoUniUpload,
+    isPaginated: false,
+  },
+  calendar: {
+    path: 'GET v1/api/presupuesto/calendar',
+    response: ItemsRCalendar,
     isPaginated: false,
   },
 } satisfies Record<string, RouteDefinition<any, any>>;

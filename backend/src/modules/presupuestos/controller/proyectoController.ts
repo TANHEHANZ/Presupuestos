@@ -33,4 +33,16 @@ export const ProyectController = {
       API.serverError(res, "Error al listar Proyectos", error);
     }
   },
+  calendar: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const calendar = await ProyectService.dataCalendar();
+
+      API.success(res, "Calendario obtenido exitosamente", calendar);
+    } catch (error) {
+      API.serverError(
+        res,
+        error instanceof Error ? error.message : "Error desconocido"
+      );
+    }
+  },
 };
