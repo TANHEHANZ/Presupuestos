@@ -6,7 +6,7 @@ export const ProyectController = {
   list: async (req: Request, res: Response): Promise<void> => {
     try {
       const page = parseInt(req.query.page as string) || 1;
-      const limit = parseInt(req.query.limit as string) || 10;
+      const limit = parseInt(req.query.limit as string) || 8;
 
       const descripcion = req.query.descripcion?.toString();
       const org = req.query.org?.toString();

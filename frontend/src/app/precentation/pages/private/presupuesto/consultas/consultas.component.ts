@@ -25,6 +25,7 @@ import { DTO_consultasRItems } from '../../../../../infraestructure/models/consu
         [currentLimit]="limit"
         [totalPagesInput]="totalPages"
         (limitChange)="onLimitChange($event)"
+        [totalPagesInput]="totalPages"
       />
     </app-wrapper>
   `,

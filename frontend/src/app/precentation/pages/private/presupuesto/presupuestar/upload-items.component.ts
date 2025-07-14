@@ -53,7 +53,7 @@ import { PanelService } from '../../../../../infraestructure/services/components
 
         <div
           *ngIf="selectedFiles.length > 0"
-          class=" rounded-xl p-4 flex items-center gap-2 justify-between flex-wrap w-auto border border-gray-300 mx-auto gap-4 "
+          class=" rounded-xl p-4 flex items-center justify-between flex-wrap w-auto border border-gray-300 mx-auto gap-4 "
         >
           <img
             src="./hojaExcel.png"

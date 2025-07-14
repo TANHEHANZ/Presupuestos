@@ -41,6 +41,7 @@ import { PanelService } from '../../../../../infraestructure/services/components
         [fetchPageData]="fetchPageData"
         (searchChange)="searchChange($event)"
         [rowExpandTemplate]="expand"
+        [totalPagesInput]="filter.totalPages"
       ></app-main-table>
       <ng-template #expand let-row>
         <detail-presupuesto [D_Presupuesto]="row" />

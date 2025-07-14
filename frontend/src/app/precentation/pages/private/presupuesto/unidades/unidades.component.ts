@@ -43,6 +43,7 @@ import { PanelService } from '../../../../../infraestructure/services/components
         (limitChange)="onLimitChange($event)"
         [fetchPageData]="fetchPageData"
         (searchChange)="searchChange($event)"
+        [totalPagesInput]="filter.totalPages"
       ></app-main-table>
       <ng-template #expandTemplate let-row>
         <app-unidades-detail [D_Unidades]="row" />

@@ -38,6 +38,7 @@ import { PanelService } from '../../../../../infraestructure/services/components
           data: []
         }"
         (searchChange)="searchChange($event)"
+        [totalPagesInput]="1"
       ></app-main-table>
       <ng-template #expandTemplate let-row>
         <app-usuer-detail [D_user]="row" />

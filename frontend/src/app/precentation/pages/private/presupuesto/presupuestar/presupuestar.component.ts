@@ -9,8 +9,9 @@ import { ContainerComponent } from '../../../../shared/container/container.compo
 import { CustomButtonComponent } from '../../../../shared/button/button.component';
 import { PanelService } from '../../../../../infraestructure/services/components/panel.service';
 import { PresupuestoService } from '../../../../../infraestructure/services/apis/presupuesto.service';
-import { DTO_presupuestoUnidadesR } from '../../../../../infraestructure/models/presupuestos/unidad/m_presupuestoUnidad';
+import { DTO_presupuestoUnidadesItem } from '../../../../../infraestructure/models/presupuestos/unidad/m_presupuestoUnidad';
 import { ToastService } from '../../../../../infraestructure/lib/toast/toast.service';
+import { DTO_FilterPresupuestoUnidad } from '../../../../../infraestructure/models/presupuestos/unidad/m_filters';
 
 @Component({
   selector: 'presupuestos-component',
@@ -33,21 +34,25 @@ import { ToastService } from '../../../../../infraestructure/lib/toast/toast.ser
         </div>
       </app-container>
       <app-main-table
-        title="Registros presupuestos por unidad ejecutora"
+        title="Listado de proyectos"
         [columns]="columns"
-        [data]="dataPresupuesto"
-        [rowExpandTemplate]="expandTemplate"
+        [data]="data"
         [searchConfig]="{
-          label : 'Filtrar',
-          placeholder: 'Filtrar por ue ,unidad ejecutora',
+          label: 'Filtrar',
+          placeholder: 'Aca podras filtrar',
           buttonLabel: 'filtrar',
-          icon: 'filter',
+          icon: 'filter'
         }"
         [export]="{
           types: ['csv', 'pdf'],
           data: []
         }"
-      ></app-main-table>
+        [currentLimit]="filter.limit"
+        (limitChange)="onLimitChange($event)"
+        [fetchPageData]="fetchPageData"
+        [totalPagesInput]="filter.totalPages"
+      />
+
       <ng-template #expandTemplate let-row>
         <app-presupuestar-detail />
       </ng-template>
@@ -67,51 +72,91 @@ export class PresupuestarComponent implements OnInit {
   drawerS = inject(PanelService);
   toastS = inject(ToastService);
   presupuestoUniS = inject(PresupuestoService);
-  dataPresupuesto: DTO_presupuestoUnidadesR = [];
+  dataPresupuesto: DTO_presupuestoUnidadesItem = [];
+
+  filter: DTO_FilterPresupuestoUnidad = {
+    page: 1,
+    limit: 8,
+    total: 0,
+    totalPages: 0,
+  };
+
   openDrawe() {
     this.drawerS.openModal();
   }
   ngOnInit(): void {
-    this.loadPresupuestos();
+    this.loadPresupuestos(1);
     this.drawerS.refresh$.subscribe(() => {
-      this.loadPresupuestos();
+      this.loadPresupuestos(1);
     });
   }
-  loadPresupuestos() {
-    try {
-      this.presupuestoUniS.list().subscribe({
-        next: (value) => {
-          this.dataPresupuesto = value;
-          console.log(this.dataPresupuesto);
-        },
-
-        error: (e) => {
-          console.log(e);
-          const message =
-            e?.error?.errors?.message ||
-            e?.error?.message ||
-            'Error desconocido';
-          this.toastS.addToast({
-            title: 'Error',
-            description: message,
-            id: 'unidades-error',
-            type: 'error',
-          });
-        },
-      });
-    } catch (error) {
-      console.log(error);
-    }
+  loadPresupuestos(page: number = 1) {
+    this.filter.page = page;
+    this.presupuestoUniS.list(this.filter).subscribe({
+      next: (value) => {
+        this.data = value.items;
+        this.filter = {
+          ...this.filter,
+          page: value.page,
+          limit: value.limit,
+          total: value.total,
+          totalPages: value.totalPages,
+        };
+      },
+      error: (e) => {
+        const message =
+          e?.error?.errors?.message || e?.error?.message || 'Error desconocido';
+        this.toastS.addToast({
+          title: 'Error',
+          description: message,
+          id: 'unidades-error',
+          type: 'error',
+        });
+      },
+    });
   }
 
   data = [];
   columns: {
     header: string;
-    accessor: keyof DTO_presupuestoUnidadesR[number] | string;
+    accessor: keyof DTO_presupuestoUnidadesItem[number] | string;
   }[] = [
     { header: 'UE', accessor: 'ue' },
     { header: 'Unidad Ejecutora', accessor: 'descripcion' },
     { header: 'Monto Vijente', accessor: 'montoVigente' },
     { header: 'Monto Presupuestado', accessor: 'montoProgramado' },
   ];
+
+  fetchPageData = async (
+    page: number
+  ): Promise<{ data: DTO_presupuestoUnidadesItem; totalPages: number }> => {
+    return new Promise((resolve, reject) => {
+      this.filter.page = page;
+
+      this.presupuestoUniS.list(this.filter).subscribe({
+        next: (value) => {
+          this.dataPresupuesto = value.items;
+
+          this.filter = {
+            ...this.filter,
+            page: value.page,
+            limit: value.limit,
+            total: value.total,
+            totalPages: value.totalPages,
+          };
+
+          resolve({
+            data: value.items,
+            totalPages: value.totalPages,
+          });
+        },
+        error: (e) => reject(e),
+      });
+    });
+  };
+
+  onLimitChange(newLimit: number) {
+    this.filter.limit = newLimit;
+    this.loadPresupuestos(1);
+  }
 }
