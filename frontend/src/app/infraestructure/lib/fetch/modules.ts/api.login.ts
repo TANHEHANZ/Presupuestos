@@ -13,4 +13,8 @@ export const API_Login = {
     path: 'POST v1/api/login/refresh',
     response: AnyResponse,
   },
+  me: {
+    path: 'GET v1/api/configuration/me',
+    response: z.string(),
+  },
 } satisfies Record<string, RouteDefinition<any, any>>;

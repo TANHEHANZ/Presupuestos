@@ -127,6 +127,7 @@ export class LoginComponent implements OnInit {
   onLogin(event: Event) {
     const formValue = this.form.getRawValue();
     event.preventDefault();
+
     if (this.form.invalid) {
       this.toastS.addToast({
         id: 'invalid-form',
@@ -138,15 +139,9 @@ export class LoginComponent implements OnInit {
     }
 
     this.LoginS.login(formValue).subscribe({
-      next: (response) => {
-        console.log(response);
-        const tl = gsap.timeline({
-          onComplete: () => {
-            setTimeout(() => {
-              this.router.navigate(['/dashboard']);
-            }, 500);
-          },
-        });
+      next: () => {
+        const tl = gsap.timeline();
+
         tl.to(this.loginForm.nativeElement, {
           opacity: 0,
           duration: 0.5,
@@ -183,12 +178,30 @@ export class LoginComponent implements OnInit {
           ease: 'power2.inOut',
           display: 'flex',
         });
-        tl.to(this.bloque.nativeElement, {
-          translateY: -3000,
-          ease: 'power2.inOut',
-          duration: 0.5,
-          delay: 2,
-          display: 'none',
+
+        tl.call(() => {
+          this.LoginS.me().subscribe({
+            next: (meResponse) => {
+              sessionStorage.setItem('_u', JSON.stringify(meResponse));
+
+              gsap.to(this.bloque.nativeElement, {
+                translateY: -3000,
+                ease: 'power2.inOut',
+                duration: 0.5,
+                delay: 2,
+                display: 'none',
+                onComplete: () => {
+                  this.router.navigate(['/dashboard']);
+                },
+              });
+            },
+            error: () => {
+              this.toastS.addToast({
+                title: 'Ocurrió un error al obtener los datos del usuario',
+                type: 'error',
+              });
+            },
+          });
         });
       },
       error: (err) => {
