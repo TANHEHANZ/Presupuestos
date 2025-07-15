@@ -73,7 +73,9 @@ import { PanelService } from '../../../../infraestructure/services/components/pa
           >
           </app-custom-select>
         </div>
-        <section class=" rounded-lg flex-1 overflow-y-auto relative border p-4">
+        <section
+          class=" rounded-lg flex-1 overflow-y-auto max-h-[70dvh] relative border p-4"
+        >
           <p class="col-span-full font-medium  ">Asignar permisos</p>
 
           <app-permition-viewer

@@ -18,6 +18,7 @@ import { LoginService } from '../../../../infraestructure/services/apis/login.se
 import { CustomInputComponent } from '../../../shared/input/input.component';
 import { ToastService } from '../../../../infraestructure/lib/toast/toast.service';
 import { ToastComponent } from '../../../../infraestructure/lib/toast/toast.component';
+import { MeService } from '../../../../infraestructure/services/components/me.service';
 gsap.registerPlugin(TextPlugin);
 @Component({
   selector: 'app-login',
@@ -94,6 +95,7 @@ export class LoginComponent implements OnInit {
   @ViewChild('bloque') bloque!: ElementRef;
   @ViewChild('loginForm') loginForm!: ElementRef;
   router = inject(Router);
+  meS = inject(MeService);
   LoginS = inject(LoginService);
   toastS = inject(ToastService);
   form = new FormGroup({
@@ -106,7 +108,6 @@ export class LoginComponent implements OnInit {
       validators: Validators.required,
     }),
   });
-
   ngOnInit(): void {
     gsap.fromTo(
       '.bloque',
@@ -182,7 +183,7 @@ export class LoginComponent implements OnInit {
         tl.call(() => {
           this.LoginS.me().subscribe({
             next: (meResponse) => {
-              sessionStorage.setItem('_u', JSON.stringify(meResponse));
+              this.meS.setToken(meResponse);
 
               gsap.to(this.bloque.nativeElement, {
                 translateY: -3000,
@@ -191,7 +192,18 @@ export class LoginComponent implements OnInit {
                 delay: 2,
                 display: 'none',
                 onComplete: () => {
-                  this.router.navigate(['/dashboard']);
+                  const firstPath = this.meS.navigation[0]?.items[0]?.path;
+
+                  if (firstPath) {
+                    this.router.navigate([firstPath]);
+                  } else {
+                    this.toastS.addToast({
+                      title: 'No tienes acceso a ningún módulo',
+                      type: 'error',
+                    });
+                    this.meS.clearSession();
+                    this.router.navigate(['/']);
+                  }
                 },
               });
             },

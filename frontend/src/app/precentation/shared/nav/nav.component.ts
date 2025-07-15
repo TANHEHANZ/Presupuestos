@@ -1,8 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { IconComponent, IconName } from '../icons/icon.component';
 import { CommonModule } from '@angular/common';
 import gsap from 'gsap';
+import { MeService } from '../../../infraestructure/services/components/me.service';
+import { Subscription } from 'rxjs';
 interface NavItem {
   label: string;
   icon: IconName;
@@ -52,55 +54,13 @@ interface NavGroup {
   imports: [IconComponent, RouterModule, CommonModule],
 })
 export class NavComponent {
-  @Input() navGroups: NavGroup[] = [
-    {
-      title: 'graficas',
-      items: [
-        {
-          label: 'Dashboard',
-          icon: 'chart',
-          path: '/dashboard',
-        },
-      ],
-    },
-    {
-      title: 'Modulos',
-      items: [
-        {
-          label: 'Presupuesto por unidad',
-          icon: 'coins',
-          path: '/dashboard/presupestar',
-        },
+  meS = inject(MeService);
+  navGroups: any[] = [];
 
-        {
-          label: 'Unidades ejecutoras',
-          icon: 'unidades',
-          path: '/dashboard/unidades',
-        },
-        {
-          label: 'Programación finanicera',
-          icon: 'calendar',
-          path: '/dashboard/programacion',
-        },
-        {
-          label: 'Consultas',
-          icon: 'search',
-          path: '/dashboard/consultas',
-        },
+  ngOnInit() {
+    this.navGroups = this.meS.navigation;
+  }
 
-        {
-          label: 'Usuarios',
-          icon: 'users',
-          path: '/dashboard/user',
-        },
-        {
-          label: 'Configuracion',
-          icon: 'settings',
-          path: '/dashboard/configuration',
-        },
-      ],
-    },
-  ];
   ngAfterViewInit() {
     gsap.fromTo(
       '.nav-anim-item',

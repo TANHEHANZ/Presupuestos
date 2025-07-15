@@ -17,4 +17,8 @@ export const API_Login = {
     path: 'GET v1/api/configuration/me',
     response: z.string(),
   },
+  meValid: {
+    path: 'GET v1/api/configuration/me/valid',
+    response: z.boolean().optional(),
+  },
 } satisfies Record<string, RouteDefinition<any, any>>;

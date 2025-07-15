@@ -29,13 +29,19 @@ export const PERMITION_KEYS = {
     },
     {
       name: "Ejecucioón presupuestaria",
-      key: P_preUnidad.UPLODAD,
+      key: P_preUnidad.LIST,
       icon: "calendar",
     },
   ],
   reportes: [{ name: "Descargar", key: P_report.DOWNLOAD, icon: "download" }],
   consultas: [
     { name: "Consultas", key: P_consultas.CONSULTAR, icon: "search" },
+    { name: "exportar en PDF", key: P_consultas.EXPORT_CONSULTA, icon: "pdf" },
+    {
+      name: "exportar en xlsx",
+      key: P_consultas.EXPORT_CONSULTA,
+      icon: "csv",
+    },
   ],
   permisos: [
     {

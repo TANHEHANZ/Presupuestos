@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { LayoutComponent } from './layout.component';
+import { NavGuard } from '../../../infraestructure/guards/nav.guard';
 
 export const PRESUPUSTO_ROUTES: Routes = [
   {
@@ -8,11 +9,15 @@ export const PRESUPUSTO_ROUTES: Routes = [
     children: [
       {
         path: 'user',
+        canActivate: [NavGuard],
+
         loadComponent: () =>
           import('./usuaros/user.component').then((c) => c.UserComponent),
       },
       {
         path: 'consultas',
+        canActivate: [NavGuard],
+
         loadComponent: () =>
           import('./consultas/consultas.component').then(
             (c) => c.ConsultasComponent
@@ -20,6 +25,8 @@ export const PRESUPUSTO_ROUTES: Routes = [
       },
       {
         path: 'presupestar',
+        canActivate: [NavGuard],
+
         loadComponent: () =>
           import('./presupuestar/presupuestar.component').then(
             (c) => c.PresupuestarComponent
@@ -28,6 +35,8 @@ export const PRESUPUSTO_ROUTES: Routes = [
 
       {
         path: 'unidades',
+        canActivate: [NavGuard],
+
         loadComponent: () =>
           import('./unidades/unidades.component').then(
             (c) => c.UnidadesComponent
@@ -35,6 +44,8 @@ export const PRESUPUSTO_ROUTES: Routes = [
       },
       {
         path: 'configuration',
+        canActivate: [NavGuard],
+
         children: [
           {
             path: '',
@@ -45,6 +56,8 @@ export const PRESUPUSTO_ROUTES: Routes = [
           },
           {
             path: 'perfil',
+            canActivate: [NavGuard],
+
             loadComponent: () =>
               import('./configurations/perfil/perfil.component').then(
                 (c) => c.PerfilComponent
@@ -55,6 +68,8 @@ export const PRESUPUSTO_ROUTES: Routes = [
 
       {
         path: 'programacion',
+        canActivate: [NavGuard],
+
         loadComponent: () =>
           import('./programacion/programacion.component').then(
             (c) => c.ProgramacionComponent
@@ -62,6 +77,7 @@ export const PRESUPUSTO_ROUTES: Routes = [
       },
       {
         path: '',
+        canActivate: [NavGuard],
         loadComponent: () =>
           import('./dashboard/dashboard.component').then(
             (c) => c.DashboardComponent

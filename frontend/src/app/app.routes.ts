@@ -7,6 +7,13 @@ export const routes: Routes = [
     component: LoginComponent,
   },
   {
+    path: 'notFound',
+    loadComponent: () =>
+      import('./precentation/pages/public/notFound/notFound.component').then(
+        (c) => c.NotFoundComponent
+      ),
+  },
+  {
     path: 'dashboard',
     children: [
       {
@@ -17,5 +24,9 @@ export const routes: Routes = [
           ),
       },
     ],
+  },
+  {
+    path: '**',
+    redirectTo: 'notFound',
   },
 ];
