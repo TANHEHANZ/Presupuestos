@@ -1,4 +1,4 @@
 export enum P_preUnidad {
-  UPLODAD = "UPLODAD_xlsx",
-  LIST = "PREUNI_LIST",
+  UPLODAD = "UPLOAD:PREUNIDAD",
+  LIST = "LIST:PREUNIDAD",
 }

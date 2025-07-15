@@ -33,6 +33,25 @@ export const PRESUPUSTO_ROUTES: Routes = [
             (c) => c.UnidadesComponent
           ),
       },
+      {
+        path: 'configuration',
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./configurations/config.component').then(
+                (c) => c.ConfigComponent
+              ),
+          },
+          {
+            path: 'perfil',
+            loadComponent: () =>
+              import('./configurations/perfil/perfil.component').then(
+                (c) => c.PerfilComponent
+              ),
+          },
+        ],
+      },
 
       {
         path: 'programacion',

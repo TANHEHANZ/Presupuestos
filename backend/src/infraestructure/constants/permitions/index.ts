@@ -1,4 +1,6 @@
+import { P_configuration } from "./p_configuration";
 import { P_consultas } from "./p_consultas";
+import { P_dashboard } from "./p_dashboard";
 import { P_config } from "./p_permisos";
 import { P_preUnidad } from "./p_preUnidad";
 import { P_programation } from "./p_programation";
@@ -52,6 +54,30 @@ export const PERMITION_KEYS = {
       name: "Programar",
       key: P_programation.CREATE,
       icon: "calendar",
+    },
+  ],
+  dashboard: [
+    {
+      name: "Ver Dashboard",
+      key: P_dashboard.VIEW_DASHBOARD,
+      icon: "chart",
+    },
+    {
+      name: "Exportar Reporte",
+      key: P_dashboard.EXPORT_REPORT,
+      icon: "chart",
+    },
+  ],
+  configuration: [
+    {
+      name: "Listar Permisos",
+      key: P_configuration.ALL_PERMITION,
+      icon: "settings",
+    },
+    {
+      name: "Perfil",
+      key: P_configuration.ME,
+      icon: "user",
     },
   ],
   all: [{ key: "ALL" }],

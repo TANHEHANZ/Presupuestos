@@ -93,6 +93,11 @@ export class NavComponent {
           icon: 'users',
           path: '/dashboard/user',
         },
+        {
+          label: 'Configuracion',
+          icon: 'settings',
+          path: '/dashboard/configuration',
+        },
       ],
     },
   ];
