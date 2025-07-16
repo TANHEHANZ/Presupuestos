@@ -1,0 +1,5 @@
+export enum P_config {
+  ALL_PERMITION = "ALL:PERMITION",
+  KEY_PERMITION = "KEY:PERMITION",
+  ME = "ME:PERMITION",
+}

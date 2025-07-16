@@ -1,6 +1,4 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { TableColumn } from '../../../shared/table/table.component';
-import { D_User } from '../../../../infraestructure/modules/presupuesto/usuarios';
 import { CommonModule } from '@angular/common';
 import { DetailUserComponent } from './detail.component';
 import { MainTableComponent } from '../../../shared/table/main.table.component';
@@ -10,6 +8,7 @@ import { UserService } from '../../../../infraestructure/services/apis/user.serv
 import { DTO_uList } from '../../../../infraestructure/models/user/m_list';
 import { ToastService } from '../../../../infraestructure/lib/toast/toast.service';
 import { PanelService } from '../../../../infraestructure/services/components/panel.service';
+import { P_user } from '../../../../infraestructure/constants/permitions/p_user';
 
 @Component({
   selector: 'app-user',
@@ -37,11 +36,12 @@ import { PanelService } from '../../../../infraestructure/services/components/pa
           types: ['csv', 'pdf'],
           data: []
         }"
+        [permissionsRequired]="[permisos.table]"
         (searchChange)="searchChange($event)"
         [totalPagesInput]="1"
       ></app-main-table>
       <ng-template #expandTemplate let-row>
-        <app-usuer-detail [D_user]="row" />
+        <app-usuer-detail [D_user]="row" [PermitionsForm]="permisos.form" />
       </ng-template>
     </app-wrapper>
   `,
@@ -58,6 +58,11 @@ export class UserComponent implements OnInit {
   toastS = inject(ToastService);
   panelS = inject(PanelService);
   data: DTO_uList = [];
+  permisos = {
+    table: P_user.LIST,
+    form: [P_user.CREATE, P_user.UPDATE, P_user.DELETE],
+  };
+
   ngOnInit(): void {
     this.loadUser();
     this.panelS.refresh$.subscribe(() => {

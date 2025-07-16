@@ -3,16 +3,16 @@ import {
   EventEmitter,
   Input,
   OnInit,
+  OnChanges,
   Output,
+  SimpleChanges,
   inject,
-  input,
 } from '@angular/core';
-import { CustomInputComponent } from '../../../shared/input/input.component';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CustomInputComponent } from '../../../shared/input/input.component';
 import { CustomButtonComponent } from '../../../shared/button/button.component';
 import { PermitionViewerComponent } from '../../../../infraestructure/modules/permition/render.permition';
-import { DTO_UserValidR } from '../../../../infraestructure/models/user/m_valid';
 import { CustomSelectComponent } from '../../../shared/select/select.component';
 import { UnidadesService } from '../../../../infraestructure/services/apis/unidades.service';
 import { DTO_UnidadesR } from '../../../../infraestructure/models/unidades/m_unidades';
@@ -37,20 +37,22 @@ import { PanelService } from '../../../../infraestructure/services/components/pa
     <div class="flex flex-col gap-4 h-[80dvh] w-[50dvw]">
       <form
         [formGroup]="userForm"
-        class="grid grid-cols-2 gap-2 "
+        class="grid grid-cols-2 gap-2"
         (ngSubmit)="saveUser()"
       >
         <div class="p-4 border border-gray-200 rounded-lg flex flex-col gap-4">
-          <p class="col-span-full font-medium">Informacion del usuario</p>
+          <p class="col-span-full font-medium">Información del usuario</p>
+
           <app-custom-input label="CI" formControlName="ci" />
           <app-custom-input label="Nombre" formControlName="name" />
+
           <app-custom-select
             label="Unidades"
             id="unidades-select"
             [items]="valueUnidaes"
             formControlName="unidadId"
-          >
-          </app-custom-select>
+          />
+
           <app-custom-select
             label="Tipo usuario"
             id="rol-select"
@@ -60,8 +62,8 @@ import { PanelService } from '../../../../infraestructure/services/components/pa
               { label: 'Presupuestos', value: 'PRESUPUESTOS' }
             ]"
             formControlName="rol"
-          >
-          </app-custom-select>
+          />
+
           <app-custom-select
             label="Estado"
             id="estado-select"
@@ -70,13 +72,13 @@ import { PanelService } from '../../../../infraestructure/services/components/pa
               { label: 'Inactivo', value: 'INACTIVO' }
             ]"
             formControlName="estado"
-          >
-          </app-custom-select>
+          />
         </div>
+
         <section
-          class=" rounded-lg flex-1 overflow-y-auto max-h-[70dvh] relative border p-4"
+          class="rounded-lg flex-1 overflow-y-auto max-h-[70dvh] relative border p-4"
         >
-          <p class="col-span-full font-medium  ">Asignar permisos</p>
+          <p class="col-span-full font-medium">Asignar permisos</p>
 
           <app-permition-viewer
             [permitions]="D_permisos"
@@ -84,13 +86,18 @@ import { PanelService } from '../../../../infraestructure/services/components/pa
             (selectedChange)="selectedPermitions = $event"
           ></app-permition-viewer>
         </section>
+
         <section class="flex gap-4 flex-wrap col-span-2 justify-end mt-4">
           <app-custom-button
             [icon]="edit ? 'edit' : 'save'"
             [type]="'submit'"
-            >{{ edit ? 'editar' : 'Guardar' }}</app-custom-button
+            >{{ edit ? 'Editar' : 'Guardar' }}</app-custom-button
           >
-          <app-custom-button [variant]="'danger'" [icon]="'close'">
+          <app-custom-button
+            [variant]="'danger'"
+            [icon]="'close'"
+            (btnClick)="closeDrawer()"
+          >
             Cancelar
           </app-custom-button>
         </section>
@@ -98,17 +105,21 @@ import { PanelService } from '../../../../infraestructure/services/components/pa
     </div>
   `,
 })
-export class ConfigUserComponent implements OnInit {
+export class ConfigUserComponent implements OnInit, OnChanges {
   @Output() userCreated = new EventEmitter<void>();
   @Input() edit = false;
+  @Input() D_user: any;
 
   unidadesS = inject(UnidadesService);
   toastS = inject(ToastService);
   userS = inject(UserService);
   permitionsS = inject(ConfigService);
   drawerS = inject(PanelService);
-  D_user = input<any>();
+
   D_permisos: DTO_pPermitionsR | [] = [];
+  selectedPermitions: string[] = [];
+  valueUnidaes: { label: string; value: string }[] = [];
+
   userForm = new FormGroup({
     ci: new FormControl({ value: '', disabled: true }),
     name: new FormControl({ value: '', disabled: true }),
@@ -117,11 +128,16 @@ export class ConfigUserComponent implements OnInit {
     rol: new FormControl('', { nonNullable: true }),
     estado: new FormControl('', { nonNullable: true }),
   });
-  selectedPermitions: string[] = [];
-  valueUnidaes: { label: string; value: string }[] = [];
+
   ngOnInit() {
-    const user = this.D_user() as any;
-    if (user) {
+    this.loadUnidades();
+    this.loadPermisos();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['D_user'] && changes['D_user'].currentValue) {
+      const user = changes['D_user'].currentValue;
+
       this.userForm.patchValue({
         ci: user.ci ?? '',
         name: user.name ?? '',
@@ -135,43 +151,45 @@ export class ConfigUserComponent implements OnInit {
             group.permissions.map((p: any) => p.key)
           )
         : [];
-    }
-    if (this.edit) {
-      console.log('edicion', user);
-      this.userForm.get('ci')?.disable();
-      this.userForm.get('name')?.disable();
-    }
 
-    this.loadUnidades();
-    this.loadPermisos();
+      if (this.edit) {
+        this.userForm.get('ci')?.disable();
+        this.userForm.get('name')?.disable();
+      } else {
+        this.userForm.get('ci')?.enable();
+        this.userForm.get('name')?.enable();
+      }
+    }
   }
 
   loadUnidades() {
-    this.unidadesS.all().subscribe({
-      next: (value) => {
-        console.log('Datos de unidades:', value);
-        this.valueUnidaes = this.mapUnidades(value);
-      },
-      error: (e) => {
-        console.error('Error al cargar unidades:', e);
-        const message =
-          e?.error?.errors?.message || e?.error?.message || 'Error desconocido';
-        this.toastS.addToast({
-          title: 'Error',
-          description: message,
-          id: 'unidades-error',
-          type: 'error',
-        });
-      },
-    });
+    this.unidadesS
+      .all({ total: 0, page: 1, limit: 1000, totalPages: 1 })
+      .subscribe({
+        next: (value) => {
+          this.valueUnidaes = this.mapUnidades(value.items);
+        },
+        error: (e) => {
+          const message =
+            e?.error?.errors?.message ||
+            e?.error?.message ||
+            'Error desconocido';
+          this.toastS.addToast({
+            title: 'Error',
+            description: message,
+            id: 'unidades-error',
+            type: 'error',
+          });
+        },
+      });
   }
+
   loadPermisos() {
     this.permitionsS.permitionsAll().subscribe({
       next: (value) => {
         this.D_permisos = value;
       },
       error: (e) => {
-        console.error('Error al cargar permisos:', e);
         const message =
           e?.error?.errors?.message || e?.error?.message || 'Error desconocido';
         this.toastS.addToast({
@@ -190,24 +208,6 @@ export class ConfigUserComponent implements OnInit {
       value: unidad.id,
     }));
   }
-  onPermitionToggle(key: string, event: Event) {
-    const input = event.target as HTMLInputElement | null;
-    if (!input) return;
-    const checked = input.checked;
-    if (checked) {
-      this.selectedPermitions = [...this.selectedPermitions, key];
-    } else {
-      this.selectedPermitions = this.selectedPermitions.filter(
-        (k) => k !== key
-      );
-    }
-  }
-
-  getPermClass(permiso: { color: string; key: string }) {
-    return this.selectedPermitions.includes(permiso.key)
-      ? permiso.color + ' border-2'
-      : 'bg-white text-gray-700';
-  }
 
   saveUser() {
     const formData = this.userForm.getRawValue();
@@ -218,7 +218,7 @@ export class ConfigUserComponent implements OnInit {
       permisos: this.selectedPermitions,
       rol: formData.rol,
       estado: formData.estado,
-      idUser: this.D_user().id,
+      idUser: this.D_user?.id,
     };
 
     const request$ = this.edit
@@ -226,13 +226,11 @@ export class ConfigUserComponent implements OnInit {
       : this.userS.create(payload);
 
     request$.subscribe({
-      next: (value) => {
-        console.log(value);
+      next: () => {
         this.userCreated.emit();
         this.drawerS.closeDrawer(true);
       },
       error: (e) => {
-        console.log(e);
         const message =
           e?.error?.errors?.message || e?.error?.message || 'Error desconocido';
         this.toastS.addToast({
@@ -243,5 +241,9 @@ export class ConfigUserComponent implements OnInit {
         });
       },
     });
+  }
+
+  closeDrawer() {
+    this.drawerS.closeDrawer();
   }
 }

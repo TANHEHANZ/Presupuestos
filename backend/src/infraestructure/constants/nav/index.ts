@@ -8,7 +8,11 @@ export const NAV: Nav[] = [
   },
   {
     title: "MODULOS",
-    items: [NAV_ITEMS.unidad, NAV_ITEMS.Programacion],
+    items: [
+      NAV_ITEMS.unidad,
+      NAV_ITEMS.Programacion,
+      NAV_ITEMS.presupuestoUnidad,
+    ],
   },
   {
     title: "CONFIGURACIÓN",

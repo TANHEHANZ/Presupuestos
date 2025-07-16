@@ -1,12 +1,11 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IconComponent } from '../icons/icon.component';
 import { ToastService } from '../../../infraestructure/lib/toast/toast.service';
 
 @Component({
   selector: 'app-upload',
   standalone: true,
-  imports: [CommonModule, IconComponent],
+  imports: [CommonModule],
   template: `
     <section
       class="border-2 border-dashed flex-1 h-full w-full  min-h-[50dvh] cursor-pointer flex justify-center items-center flex-col rounded-xl p-4 transition-all duration-75 ease-out"

@@ -6,6 +6,7 @@ import {
   TemplateRef,
   OnInit,
   HostListener,
+  inject,
 } from '@angular/core';
 import { SearchComponent } from '../search/serach.component';
 import { TableComponent, TableColumn } from './table.component';
@@ -14,14 +15,18 @@ import { IconName } from '../../../infraestructure/modules/presupuesto/types';
 import { ExportButtonComponent, TypeExport } from '../button/export.component';
 import { ContainerComponent } from '../container/container.component';
 import { IconComponent } from '../icons/icon.component';
+import { MeService } from '../../../infraestructure/services/components/me.service';
+import { PermissionKey } from '../../../infraestructure/constants/permitions';
+import { hasPermissions } from '../../../infraestructure/utils/checkPermitions';
 
 @Component({
   selector: 'app-main-table',
   template: `
     <app-container [title]="title">
       <article class="flex justify-between gap-4 my-4">
-        @if (searchConfig && searchConfig) {
+        @if (searchConfig && searchConfig ) {
         <app-search
+          *ngIf="permissions[permissionsRequired[0]]"
           class="w-[50%]"
           [label]="searchConfig.label ?? ''"
           [placeholder]="searchConfig.placeholder ?? ''"
@@ -32,13 +37,18 @@ import { IconComponent } from '../icons/icon.component';
         }
         <section class=" flex gap-2 justify-center items-end self-end">
           <app-export-button
-            *ngIf="export"
+            *ngIf="
+              export &&
+              permissions[permissionsRequired[0]] &&
+              permissions[permissionsRequired[1]] &&
+              permissions[permissionsRequired[2]]
+            "
             [data]="export.data"
             [types]="export.types"
             class="self-end ml-auto"
           />
 
-          <div class="relative ">
+          <div class="relative " *ngIf="permissions[permissionsRequired[0]]">
             <div
               class="border border-primary h-14 flex justify-center items-center px-4 rounded-lg gap-2 text-gray-500 cursor-pointer select-none"
               (click)="toggleLimitDropdown()"
@@ -68,12 +78,16 @@ import { IconComponent } from '../icons/icon.component';
       </article>
 
       <app-table
+        *ngIf="permissions[permissionsRequired[0]]"
         [columns]="columns"
         [data]="data"
         [rowExpandTemplate]="rowExpandTemplate"
       ></app-table>
 
-      <nav class="flex justify-end gap-4 mt-4 items-center relative">
+      <nav
+        *ngIf="permissions[permissionsRequired[0]]"
+        class="flex justify-end gap-4 mt-4 items-center relative"
+      >
         <span>Página {{ currentPage }} de {{ totalPages }}</span>
 
         <button
@@ -126,6 +140,7 @@ export class MainTableComponent<T> implements OnInit {
     buttonLabel?: string;
     icon?: IconName;
   };
+
   @Input() export?: {
     types: TypeExport[];
     data: T[];
@@ -135,7 +150,9 @@ export class MainTableComponent<T> implements OnInit {
   @Output() searchChange = new EventEmitter<string>();
   @Output() limitChange = new EventEmitter<number>();
   @Input() totalPagesInput = 1;
-
+  meService = inject(MeService);
+  permissions: Record<PermissionKey, boolean> = {} as any;
+  @Input() permissionsRequired: PermissionKey[] = [];
   ngOnChanges() {
     this.totalPages = this.totalPagesInput;
     this.updatePages();
@@ -154,8 +171,11 @@ export class MainTableComponent<T> implements OnInit {
   limitOptions = [8, 15, 20, 50];
 
   ngOnInit(): void {
-    console.log('data', this.data);
-    console.log('columns', this.columns);
+    this.permissions = hasPermissions(
+      this.permissionsRequired,
+      this.meService.permissions
+    );
+    console.log(this.permissions);
     this.changePage(1);
   }
 

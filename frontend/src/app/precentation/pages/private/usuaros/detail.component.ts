@@ -1,6 +1,5 @@
 import { Component, inject, input, OnInit } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
-import { R_UserDTO } from '../../../../infraestructure/modules/presupuesto/types';
 import { CustomInputComponent } from '../../../shared/input/input.component';
 import { CustomButtonComponent } from '../../../shared/button/button.component';
 import { CommonModule } from '@angular/common';
@@ -9,12 +8,21 @@ import { PanelService } from '../../../../infraestructure/services/components/pa
 import { DrawerComponent } from '../../../shared/drawer/drawer.component';
 import { ConfigUserComponent } from './config.user.component';
 import { ToastService } from '../../../../infraestructure/lib/toast/toast.service';
+import { MeService } from '../../../../infraestructure/services/components/me.service';
+import { hasPermissions } from '../../../../infraestructure/utils/checkPermitions';
+import { PermissionKey } from '../../../../infraestructure/constants/permitions';
+import { P_user } from '../../../../infraestructure/constants/permitions/p_user';
 
 @Component({
   selector: 'app-usuer-detail',
   template: `
-    <app-drawer title="Configuración de cuenta de usuario ">
-      <ng-container *ngIf="editMode">
+    <app-drawer title="Configuración de cuenta de usuario " *ngIf="editMode">
+      <ng-container
+        *ngIf="
+          (editMode && canPermission[P_user.UPDATE]) ||
+          canPermission[P_user.CREATE]
+        "
+      >
         <app-config-user-component
           *ngIf="editMode"
           [D_user]="D_user()"
@@ -47,14 +55,20 @@ import { ToastService } from '../../../../infraestructure/lib/toast/toast.servic
         />
       </div>
       <section
+        *ngIf="canPermission[P_user.UPDATE] || canPermission[P_user.DELETE]"
         class="flex  gap-4 justify-end flex-wrap items-center col-span-full self-end "
       >
         <p class="font-medium  w-full text-end">Acciones</p>
-        <app-custom-button [icon]="'edit'" (click)="openEditDrawer()">
+        <app-custom-button
+          *ngIf="canPermission[P_user.UPDATE]"
+          [icon]="'edit'"
+          (click)="openEditDrawer()"
+        >
           Editar
         </app-custom-button>
 
         <app-custom-button
+          *ngIf="canPermission[P_user.DELETE]"
           [variant]="'danger'"
           [icon]="'delete'"
           (btnClick)="eliminar()"
@@ -78,12 +92,23 @@ import { ToastService } from '../../../../infraestructure/lib/toast/toast.servic
 export class DetailUserComponent implements OnInit {
   panelS = inject(PanelService);
   toastS = inject(ToastService);
+  meService = inject(MeService);
+  P_user = P_user;
   D_user = input<any>();
+  PermitionsForm = input<PermissionKey[]>([]);
+  canPermission: Record<PermissionKey, boolean> = {} as any;
   userForm!: FormGroup;
   editMode = false;
   ngOnInit() {
+    console.log(this.PermitionsForm());
+    this.canPermission = hasPermissions(
+      this.PermitionsForm(),
+      this.meService.permissions
+    );
+    this.canPermission;
+
+    console.log(this.canPermission);
     const user = this.D_user();
-    console.log(user);
     this.userForm = new FormGroup({
       ci: new FormControl({ value: user?.ci ?? '', disabled: true }),
       name: new FormControl({ value: user?.name ?? '', disabled: true }),

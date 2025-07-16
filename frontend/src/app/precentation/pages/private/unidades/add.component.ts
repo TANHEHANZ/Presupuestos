@@ -15,7 +15,7 @@ import { PanelService } from '../../../../infraestructure/services/components/pa
       </div>
     </app-container>
   `,
-  imports: [ContainerComponent, CustomButtonComponent, ModalComponent],
+  imports: [ContainerComponent, CustomButtonComponent],
 })
 export class ImportUnidadesComponent {
   modalS = inject(PanelService);

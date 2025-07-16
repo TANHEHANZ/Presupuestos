@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CustomInputComponent } from '../../../shared/input/input.component';
 import { CustomButtonComponent } from '../../../shared/button/button.component';
 import { PanelService } from '../../../../infraestructure/services/components/panel.service';
@@ -15,16 +15,23 @@ import { DrawerComponent } from '../../../shared/drawer/drawer.component';
 import { ConfigUserComponent } from './config.user.component';
 import { DTO_UserValidR } from '../../../../infraestructure/models/user/m_valid';
 import { CommonModule } from '@angular/common';
+import { P_user } from '../../../../infraestructure/constants/permitions/p_user';
+import { PermissionKey } from '../../../../infraestructure/constants/permitions';
+import { MeService } from '../../../../infraestructure/services/components/me.service';
+import { hasPermissions } from '../../../../infraestructure/utils/checkPermitions';
 
 @Component({
   template: `
-    <app-drawer title="Configuración de cuenta de usuario ">
-      <ng-container *ngIf="response">
+    <app-drawer
+      title="Configuración de cuenta de usuario "
+      *ngIf="canPermission[P_user.CREATE]"
+    >
+      <ng-container *ngIf="response && canPermission[P_user.CREATE]">
         <app-config-user-component [D_user]="response" />
       </ng-container>
     </app-drawer>
 
-    <app-container title="Agregar usuario">
+    <app-container title="Agregar usuario" *ngIf="canPermission[P_user.CREATE]">
       <form
         class="flex gap-2 justify-start items-end"
         [formGroup]="form"
@@ -59,16 +66,27 @@ import { CommonModule } from '@angular/common';
     ConfigUserComponent,
   ],
 })
-export class AddUserComponent {
+export class AddUserComponent implements OnInit {
   panelS = inject(PanelService);
   userS = inject(UserService);
   toastS = inject(ToastService);
+  meService = inject(MeService);
+  P_user = P_user;
+
   form = new FormGroup({
     ci: new FormControl<string>('', {
       nonNullable: true,
       validators: Validators.required,
     }),
   });
+  canPermission: Record<PermissionKey, boolean> = {} as any;
+
+  ngOnInit(): void {
+    this.canPermission = hasPermissions(
+      [P_user.CREATE],
+      this.meService.permissions
+    );
+  }
   response: DTO_UserValidR | undefined = undefined;
 
   newUser() {
@@ -92,9 +110,7 @@ export class AddUserComponent {
         });
         this.response = res;
         this.panelS.openDrawer();
-        this.form.setValue({
-          ci: '',
-        });
+        this.form.reset();
       },
       error: (e) => {
         const message =

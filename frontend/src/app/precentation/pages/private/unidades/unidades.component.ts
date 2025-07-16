@@ -12,6 +12,8 @@ import { ImportUnidadesComponent } from './add.component';
 import { ModalComponent } from '../../../shared/modal/modal.component';
 import { FormUnidadesComponent } from './form.unidades.component';
 import { PanelService } from '../../../../infraestructure/services/components/panel.service';
+import { P_unit } from '../../../../infraestructure/constants/permitions/p_unidades';
+import { hasPermissions } from '../../../../infraestructure/utils/checkPermitions';
 
 @Component({
   selector: 'app-unidades',
@@ -69,8 +71,10 @@ export class UnidadesComponent implements OnInit {
     total: 0,
     totalPages: 0,
   };
+  // permisos = hasPermissions([P_unit.CREATE]);
 
   ngOnInit(): void {
+    // console.log(this.permisos);
     this.fetchPageData(1);
 
     this.modalS.refresh$.subscribe(() => {
