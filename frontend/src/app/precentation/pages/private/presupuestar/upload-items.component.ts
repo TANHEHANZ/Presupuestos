@@ -7,6 +7,9 @@ import { ExcelRendererComponent } from '../../../shared/xlsx/xlsx.component';
 import { ToastService } from '../../../../infraestructure/lib/toast/toast.service';
 import { PresupuestoService } from '../../../../infraestructure/services/apis/presupuesto.service';
 import { PanelService } from '../../../../infraestructure/services/components/panel.service';
+import { AfterViewInit, ElementRef, ViewChild } from '@angular/core';
+import gsap from 'gsap';
+
 @Component({
   selector: 'app-upload-excel',
   standalone: true,
@@ -17,8 +20,10 @@ import { PanelService } from '../../../../infraestructure/services/components/pa
     ExcelRendererComponent,
   ],
   template: `
-    <div class="w-full h-auto flex flex-col gap-4">
-      <div class="rounded-xl overflow-hidden text-primary  px-4 py-2">
+    <div class="w-full h-auto flex flex-col gap-4 overflow-hidden">
+      <div
+        class="rounded-xl overflow-hidden text-violet-600 bg-violet-50  px-4 py-2"
+      >
         <p class="text-sm  mb-1 ">
           Recuerda que el archivo que subes debe estar con el siguiente
           encabezado:
@@ -52,31 +57,38 @@ import { PanelService } from '../../../../infraestructure/services/components/pa
         </div>
 
         <div
+          #container
           *ngIf="selectedFiles.length > 0"
-          class=" rounded-xl p-4 flex items-center justify-between flex-wrap w-auto border border-gray-300 mx-auto gap-4 "
+          class=" absolute bottom-8 left-1/2   bg-white -translate-x-1/2 translate-y-full rounded-2xl p-4 flex flex-col items-center justify-between flex-wrap w-auto border border-gray-300 mx-auto gap-4 "
         >
-          <img
-            src="./hojaExcel.png"
-            alt="icono de hoja excel"
-            class=" w-12 h-12 "
-          />
-          <div *ngFor="let file of selectedFiles" class="">
-            <p class="text-primary">
+          <div
+            *ngFor="let file of selectedFiles"
+            class=" flex gap-2 justify-center items-center"
+          >
+            <img
+              src="assets/excel.png"
+              alt="icono de hoja excel"
+              class=" w-10 h-10 "
+            />
+            <div class="text-primary">
               {{ file.name }}
-            </p>
-            <p class="text-xs text-gray-600">
-              ({{ file.size | number }} bytes)
-            </p>
+              <p class="text-gray-400 text-xs">
+                ({{ file.size | number }} bytes)
+              </p>
+            </div>
+            <p class="text-xs text-gray-600"></p>
           </div>
-          <app-custom-button
-            [icon]="'delete'"
-            variant="olther"
-            (btnClick)="clear()"
-          ></app-custom-button>
-          <app-custom-button
-            [icon]="'eye'"
-            (btnClick)="revisar()"
-          ></app-custom-button>
+          <div class="flex justify-center gap-2 w-full">
+            <app-custom-button
+              [icon]="'delete'"
+              variant="olther"
+              (btnClick)="clear()"
+              >Eliminar</app-custom-button
+            >
+            <app-custom-button [icon]="'eye'" (btnClick)="revisar()">
+              Revisar Documento</app-custom-button
+            >
+          </div>
         </div>
       </ng-container>
 
@@ -93,7 +105,7 @@ import { PanelService } from '../../../../infraestructure/services/components/pa
           *ngIf="selectedFiles.length > 0 && isReview"
           [icon]="'return'"
           variant="secondary"
-          (btnClick)="revisar()"
+          (btnClick)="volver()"
         >
           Volver
         </app-custom-button>
@@ -112,6 +124,7 @@ export class UploadExcelComponent {
   toastS = inject(ToastService);
   modalS = inject(PanelService);
   uploadS = inject(PresupuestoService);
+
   columns = [
     { header: 'DA', minWidth: 80 },
     { header: 'UE', minWidth: 80 },
@@ -125,10 +138,29 @@ export class UploadExcelComponent {
     { header: 'Porcen.', minWidth: 80 },
   ];
 
+  @ViewChild('container') containerRef!: ElementRef;
+  private animated = false;
+
   selectedFiles: File[] = [];
   excelHeaders: string[] = [];
   excelData: any[][] = [];
   isReview = false;
+
+  ngAfterViewChecked(): void {
+    if (this.selectedFiles.length > 0 && this.containerRef && !this.animated) {
+      this.animated = true;
+      gsap.fromTo(
+        this.containerRef.nativeElement,
+        { opacity: 0, y: 100 },
+        { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }
+      );
+    }
+
+    if (this.selectedFiles.length === 0) {
+      this.animated = false;
+    }
+  }
+
   clear() {
     this.selectedFiles = [];
   }
@@ -147,11 +179,8 @@ export class UploadExcelComponent {
       const ws = wb.Sheets[wsname];
       const data: any[][] = XLSX.utils.sheet_to_json(ws, { header: 1 });
 
-      if (data.length > 0) {
-        this.excelHeaders = data[0].map((cell) => String(cell));
-      } else {
-        this.excelHeaders = [];
-      }
+      this.excelHeaders =
+        data.length > 0 ? data[0].map((cell) => String(cell)) : [];
       this.excelData = data.slice(1);
     };
 
@@ -161,32 +190,31 @@ export class UploadExcelComponent {
   revisar() {
     this.isReview = !this.isReview;
   }
+  volver() {
+    this.isReview = !this.isReview;
+    this.selectedFiles = [];
+  }
   send() {
     const fileToUpload = this.selectedFiles[0];
-    if (!fileToUpload) {
-      console.error('No hay archivo para subir');
-      return;
-    }
+    if (!fileToUpload) return;
+
     const formData = new FormData();
     formData.append('file', fileToUpload);
-    const send = this.sendForm(formData);
+    this.sendForm(formData);
   }
 
   sendForm = async (formData: any) => {
     this.uploadS.upload(formData).subscribe({
-      next: (result) => {
-        console.log('Subida exitosa:', result);
+      next: () => {
         this.toastS.addToast({
           title: 'Éxito',
           type: 'success',
           description: 'Archivo subido correctamente',
         });
-
         this.modalS.closeModal(true);
         this.selectedFiles = [];
         this.excelHeaders = [];
         this.excelData = [];
-
         this.isReview = false;
       },
       error: (e) => {
