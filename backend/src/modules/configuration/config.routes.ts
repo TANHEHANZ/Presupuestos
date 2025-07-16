@@ -14,6 +14,7 @@ c_Router.get(
 );
 
 c_Router.get("/me", meController.me);
+c_Router.get("/profile", meController.profile);
 c_Router.get("/me/valid", meController.validate_me);
 
 export default c_Router;

@@ -10,4 +10,7 @@ export class ConfigService {
   permitionsAll() {
     return this.s_http.request(API_Configuration.all);
   }
+  profile() {
+    return this.s_http.request(API_Configuration.profile);
+  }
 }

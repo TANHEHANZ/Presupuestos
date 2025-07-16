@@ -45,15 +45,11 @@ export const PRESUPUSTO_ROUTES: Routes = [
       {
         path: 'configuration',
         canActivate: [NavGuard],
-
+        loadComponent: () =>
+          import('./configurations/config.component').then(
+            (c) => c.ConfigComponent
+          ),
         children: [
-          {
-            path: '',
-            loadComponent: () =>
-              import('./configurations/config.component').then(
-                (c) => c.ConfigComponent
-              ),
-          },
           {
             path: 'perfil',
             canActivate: [NavGuard],

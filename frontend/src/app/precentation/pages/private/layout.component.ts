@@ -13,7 +13,9 @@ import { ToastComponent } from '../../../infraestructure/lib/toast/toast.compone
       <div class="bg-slate-200 h-full">
         <header
           class="flex justify-between items-center p-4 bg-white shadow h-24"
-        ></header>
+        >
+          perfil
+        </header>
         <div class=" p-8">
           <router-outlet />
         </div>
