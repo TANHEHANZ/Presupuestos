@@ -7,6 +7,10 @@ import { ModalComponent } from '../../../shared/modal/modal.component';
 import { ProgramacionMensual } from './programacion.mensual.component';
 import { CommonModule } from '@angular/common';
 import { PanelService } from '../../../../infraestructure/services/components/panel.service';
+import { hasPermissions } from '../../../../infraestructure/utils/checkPermitions';
+import { PermissionKey } from '../../../../infraestructure/constants/permitions';
+import { P_programation } from '../../../../infraestructure/constants/permitions/p_programation';
+import { MeService } from '../../../../infraestructure/services/components/me.service';
 
 @Component({
   selector: 'detail-presupuesto',
@@ -56,7 +60,10 @@ import { PanelService } from '../../../../infraestructure/services/components/pa
         [presupuestoVigente]="D_Presupuesto().presupuestoVigente"
         [totalAsignado]="D_Presupuesto().presupuestoProgramado"
       />
-      <nav class="flex justify-end ">
+      <nav
+        class="flex justify-end "
+        *ngIf="canPermission[P_programation.CREATE]"
+      >
         <app-custom-button [icon]="'calendar'" (btnClick)="onBudgets()">
           Realizar Programación
         </app-custom-button>
@@ -76,11 +83,18 @@ import { PanelService } from '../../../../infraestructure/services/components/pa
 export class DetailComponent implements OnInit {
   D_Presupuesto = input<any>();
   panelS = inject(PanelService);
-
+  meService = inject(MeService);
   visible: boolean = false;
   userForm!: FormGroup;
   programacionMensual = [];
+  canPermission: Record<PermissionKey, boolean> = {} as any;
+  P_programation = P_programation;
+
   ngOnInit(): void {
+    this.canPermission = hasPermissions(
+      [P_programation.CREATE],
+      this.meService.permissions
+    );
     console.log('D_Presupuesto', this.D_Presupuesto());
 
     const data = this.D_Presupuesto();

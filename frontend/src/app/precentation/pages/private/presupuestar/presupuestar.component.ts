@@ -12,11 +12,16 @@ import { DTO_presupuestoUnidadesItem } from '../../../../infraestructure/models/
 import { ToastService } from '../../../../infraestructure/lib/toast/toast.service';
 import { DTO_FilterPresupuestoUnidad } from '../../../../infraestructure/models/presupuestos/unidad/m_filters';
 import { CalendarComponent } from './calendar.component';
+import { P_preUnidad } from '../../../../infraestructure/constants/permitions/p_preUnidad';
+import { hasPermissions } from '../../../../infraestructure/utils/checkPermitions';
+import { PermissionKey } from '../../../../infraestructure/constants/permitions';
+import { MeService } from '../../../../infraestructure/services/components/me.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'presupuestos-component',
   template: ` <app-modal title="Subir excel ">
-      <app-upload-excel />
+      <app-upload-excel *ngIf="canPermission[P_preUnidad.UPLODAD]" />
     </app-modal>
     <app-wrapper
       title="Presupuesto por unidad ejecutora"
@@ -25,8 +30,11 @@ import { CalendarComponent } from './calendar.component';
         finally: 'unidad ejecutora'
       }"
     >
-      <app-calendar-component />
-      <app-container title="Subir presupuesto por unidad">
+      <app-calendar-component *ngIf="canPermission[P_preUnidad.UPLODAD]" />
+      <app-container
+        title="Subir presupuesto por unidad"
+        *ngIf="canPermission[P_preUnidad.UPLODAD]"
+      >
         <div class="self-start flex ">
           <app-custom-button [icon]="'add'" (btnClick)="openDrawe()">
             Subir excel
@@ -48,6 +56,7 @@ import { CalendarComponent } from './calendar.component';
           data: []
         }"
         [currentLimit]="filter.limit"
+        [permissionsRequired]="[permisos.table]"
         (limitChange)="onLimitChange($event)"
         [fetchPageData]="fetchPageData"
         [totalPagesInput]="filter.totalPages"
@@ -66,25 +75,38 @@ import { CalendarComponent } from './calendar.component';
     CustomButtonComponent,
     UploadExcelComponent,
     CalendarComponent,
+    CommonModule,
   ],
 })
 export class PresupuestarComponent implements OnInit {
   drawerS = inject(PanelService);
   toastS = inject(ToastService);
+  meService = inject(MeService);
+
   presupuestoUniS = inject(PresupuestoService);
   dataPresupuesto: DTO_presupuestoUnidadesItem = [];
+  P_preUnidad = P_preUnidad;
 
+  permisos = {
+    table: P_preUnidad.LIST,
+    form: [P_preUnidad.UPLODAD],
+  };
   filter: DTO_FilterPresupuestoUnidad = {
     page: 1,
     limit: 8,
     total: 0,
     totalPages: 0,
   };
+  canPermission: Record<PermissionKey, boolean> = {} as any;
 
   openDrawe() {
     this.drawerS.openModal();
   }
   ngOnInit(): void {
+    this.canPermission = hasPermissions(
+      this.permisos.form,
+      this.meService.permissions
+    );
     this.loadPresupuestos(1);
     this.drawerS.refresh$.subscribe(() => {
       this.loadPresupuestos(1);

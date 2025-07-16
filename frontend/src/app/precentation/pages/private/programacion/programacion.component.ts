@@ -7,6 +7,7 @@ import { DetailComponent } from './detail.component';
 import { ProgramationService } from '../../../../infraestructure/services/apis/programation.service';
 import { DTO_ProgramationRData } from '../../../../infraestructure/models/programation/m_programation';
 import { PanelService } from '../../../../infraestructure/services/components/panel.service';
+import { P_programation } from '../../../../infraestructure/constants/permitions/p_programation';
 
 @Component({
   selector: 'programacion-compoenent',
@@ -38,6 +39,7 @@ import { PanelService } from '../../../../infraestructure/services/components/pa
         (searchChange)="searchChange($event)"
         [rowExpandTemplate]="expand"
         [totalPagesInput]="filter.totalPages"
+        [permissionsRequired]="[P_programation.LIST]"
       ></app-main-table>
       <ng-template #expand let-row>
         <detail-presupuesto [D_Presupuesto]="row" />
@@ -51,6 +53,8 @@ export class ProgramacionComponent implements OnInit {
   toastS = inject(ToastService);
   data: DTO_ProgramationRData = [];
   modalS = inject(PanelService);
+  P_programation = P_programation;
+
   filter: DTO_Filter = {
     page: 1,
     limit: 8,
