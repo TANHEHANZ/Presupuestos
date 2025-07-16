@@ -8,6 +8,8 @@ import { ConsultasService } from '../../../../infraestructure/services/apis/cons
 import { firstValueFrom } from 'rxjs';
 import { DTO_consultaQuery } from '../../../../infraestructure/models/consultas/m_query';
 import { DTO_consultasRItems } from '../../../../infraestructure/models/consultas/m_consultas';
+import { MeService } from '../../../../infraestructure/services/components/me.service';
+import { P_consultas } from '../../../../infraestructure/constants/permitions/p_consultas';
 
 @Component({
   selector: 'app-consultas',
@@ -16,7 +18,10 @@ import { DTO_consultasRItems } from '../../../../infraestructure/models/consulta
       title="Consultas"
       [path]="{ initial: 'Modulos', finally: 'Consultas' }"
     >
-      <app-form-consultas (filtrar)="handleFiltrar($event)" />
+      <app-form-consultas
+        (filtrar)="handleFiltrar($event)"
+        [PermitionsForm]="permisos"
+      />
       <app-main-table
         [columns]="columns"
         [data]="data"
@@ -26,6 +31,7 @@ import { DTO_consultasRItems } from '../../../../infraestructure/models/consulta
         [totalPagesInput]="totalPages"
         (limitChange)="onLimitChange($event)"
         [totalPagesInput]="totalPages"
+        [permissionsRequired]="permisos"
       />
     </app-wrapper>
   `,
@@ -39,7 +45,7 @@ import { DTO_consultasRItems } from '../../../../infraestructure/models/consulta
 })
 export class ConsultasComponent {
   private consultaS = inject(ConsultasService);
-
+  meS = inject(MeService);
   columns: TableColumn<any>[] = [
     { header: 'Mes', accessor: 'mes' },
     { header: 'DA', accessor: 'da' },
@@ -54,6 +60,7 @@ export class ConsultasComponent {
     { header: 'Descripción de Gasto', accessor: 'descrpcionObjetoGasto' },
     { header: 'Unidad Ejecutora', accessor: 'unidadEjecutora' },
   ];
+  permisos = [P_consultas.CONSULTAR];
 
   data: DTO_consultasRItems[] = [];
   filters: DTO_consultaQuery | null = null;

@@ -6,6 +6,11 @@ import { CustomButtonComponent } from '../../../shared/button/button.component';
 import { PanelService } from '../../../../infraestructure/services/components/panel.service';
 import { ToastService } from '../../../../infraestructure/lib/toast/toast.service';
 import { UnidadesService } from '../../../../infraestructure/services/apis/unidades.service';
+import { PermissionKey } from '../../../../infraestructure/constants/permitions';
+import { hasPermissions } from '../../../../infraestructure/utils/checkPermitions';
+import { MeService } from '../../../../infraestructure/services/components/me.service';
+import { P_unit } from '../../../../infraestructure/constants/permitions/p_unidades';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-unidades-detail',
@@ -24,12 +29,16 @@ import { UnidadesService } from '../../../../infraestructure/services/apis/unida
       />
       <div class="col-span-full flex justify-end gap-2 ">
         <app-custom-button
+          *ngIf="canPermission[P_unit.DELETE]"
           [variant]="'olther'"
           [icon]="'delete'"
           (btnClick)="deleteUnidad()"
           >Eliminar</app-custom-button
         >
-        <app-custom-button icon="edit" (btnClick)="editarUnidades()"
+        <app-custom-button
+          *ngIf="canPermission[P_unit.UPDATE]"
+          icon="edit"
+          (btnClick)="editarUnidades()"
           >Editar
         </app-custom-button>
       </div>
@@ -40,16 +49,26 @@ import { UnidadesService } from '../../../../infraestructure/services/apis/unida
     CustomInputComponent,
     CustomSelectComponent,
     CustomButtonComponent,
+    CommonModule,
   ],
 })
 export class DetailUnidadesComponent implements OnInit {
   Form!: FormGroup;
   D_Unidades = input<any>();
+  meService = inject(MeService);
   modalS = inject(PanelService);
   toastS = inject(ToastService);
   unidadesS = inject(UnidadesService);
   estadoOptions: { label: string; value: string }[] = [];
+  PermitionsForm = input<PermissionKey[]>([]);
+  canPermission: Record<PermissionKey, boolean> = {} as any;
+  P_unit = P_unit;
   ngOnInit(): void {
+    this.canPermission = hasPermissions(
+      this.PermitionsForm(),
+      this.meService.permissions
+    );
+    console.log(this.canPermission);
     const unidades = this.D_Unidades();
     this.estadoOptions = [{ label: unidades.estado, value: unidades.estado }];
 

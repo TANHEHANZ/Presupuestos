@@ -46,9 +46,13 @@ import { hasPermissions } from '../../../../infraestructure/utils/checkPermition
         [fetchPageData]="fetchPageData"
         (searchChange)="searchChange($event)"
         [totalPagesInput]="filter.totalPages"
+        [permissionsRequired]="[permisos.table]"
       ></app-main-table>
       <ng-template #expandTemplate let-row>
-        <app-unidades-detail [D_Unidades]="row" />
+        <app-unidades-detail
+          [D_Unidades]="row"
+          [PermitionsForm]="permisos.form"
+        />
       </ng-template>
     </app-wrapper>
   `,
@@ -71,8 +75,11 @@ export class UnidadesComponent implements OnInit {
     total: 0,
     totalPages: 0,
   };
-  // permisos = hasPermissions([P_unit.CREATE]);
 
+  permisos = {
+    table: P_unit.LIST,
+    form: [P_unit.CREATE, P_unit.UPDATE, P_unit.DELETE],
+  };
   ngOnInit(): void {
     // console.log(this.permisos);
     this.fetchPageData(1);

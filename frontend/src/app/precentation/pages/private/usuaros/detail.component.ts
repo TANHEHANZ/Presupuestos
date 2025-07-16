@@ -105,7 +105,6 @@ export class DetailUserComponent implements OnInit {
       this.PermitionsForm(),
       this.meService.permissions
     );
-    this.canPermission;
 
     console.log(this.canPermission);
     const user = this.D_user();

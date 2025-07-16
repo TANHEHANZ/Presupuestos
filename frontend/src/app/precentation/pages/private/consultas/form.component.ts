@@ -1,4 +1,11 @@
-import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { ContainerComponent } from '../../../shared/container/container.component';
 import { CustomInputComponent } from '../../../shared/input/input.component';
 import { CustomSelectComponent } from '../../../shared/select/select.component';
@@ -10,11 +17,19 @@ import { CommonModule } from '@angular/common';
 import { ConsultasService } from '../../../../infraestructure/services/apis/consultas.service';
 import { DTO_consultaQuery } from '../../../../infraestructure/models/consultas/m_query';
 import { ToastService } from '../../../../infraestructure/lib/toast/toast.service';
+import { PermissionKey } from '../../../../infraestructure/constants/permitions';
+import { hasPermissions } from '../../../../infraestructure/utils/checkPermitions';
+import { MeService } from '../../../../infraestructure/services/components/me.service';
+import { P_consultas } from '../../../../infraestructure/constants/permitions/p_consultas';
 
 @Component({
   selector: 'app-form-consultas',
   template: `
-    <app-container [title]="'Formulario de consultas'" class="">
+    <app-container
+      [title]="'Formulario de consultas'"
+      *ngIf="canPermission[P_consultas.CONSULTAR]"
+      class=""
+    >
       <form class="grid grid-cols-5 gap-4 " [formGroup]="form">
         <section class="col-span-4  grid grid-cols-6 gap-4 ">
           <app-custom-select
@@ -142,6 +157,7 @@ import { ToastService } from '../../../../infraestructure/lib/toast/toast.servic
         </section>
         <div class="col-span-full flex justify-end items-center  gap-4 mt-6">
           <app-custom-button
+            *ngIf="canPermission[P_consultas.CONSULTAR]"
             variant="secondary"
             icon="clearFilter"
             (btnClick)="clearFormFilter()"
@@ -183,8 +199,12 @@ import { ToastService } from '../../../../infraestructure/lib/toast/toast.servic
 export class FormConsultas implements OnInit {
   consultaS = inject(ConsultasService);
   toastS = inject(ToastService);
-  @Output() filtrar = new EventEmitter<any>();
+  meService = inject(MeService);
 
+  @Output() filtrar = new EventEmitter<any>();
+  PermitionsForm = input<PermissionKey[]>([]);
+  canPermission: Record<PermissionKey, boolean> = {} as any;
+  P_consultas = P_consultas;
   form = new FormGroup({
     tipoGasto: new FormControl(''),
     da: new FormControl(''),
@@ -204,6 +224,10 @@ export class FormConsultas implements OnInit {
   });
   ngOnInit(): void {
     this.getDA();
+    this.canPermission = hasPermissions(
+      this.PermitionsForm(),
+      this.meService.permissions
+    );
   }
   optionsDA: { label: string; value: string }[] = [];
   getDA() {
