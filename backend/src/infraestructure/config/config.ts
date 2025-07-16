@@ -6,6 +6,7 @@ const config = {
   token_access: process.env.KEY_ACCESS_TOKEN || "",
   token_refresh: process.env.KEY_REFRESH_TOKEN || "",
   token_secret_key: process.env.TOKEN_SECRET_KEY!,
+  token_Me: process.env.TOKEN_ME!,
 };
 
 export default config;

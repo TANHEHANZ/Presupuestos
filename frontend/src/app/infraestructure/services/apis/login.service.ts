@@ -11,4 +11,7 @@ export class LoginService {
   login(credentials: DTO_lnLogin) {
     return this.s_http.request(API_Login.start, credentials);
   }
+  me() {
+    return this.s_http.request(API_Login.me);
+  }
 }

@@ -1,0 +1,4 @@
+export enum P_dashboard {
+  VIEW_DASHBOARD = "VIEW:DASHBOARD",
+  EXPORT_REPORT = "EXPORT_REPORT:DASHBOARD",
+}

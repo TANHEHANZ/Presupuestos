@@ -1,15 +1,14 @@
 import { Request, Response, NextFunction } from "express";
 import { prismaC } from "../config/prisma.client";
 import { API } from "../config/response";
-
-export const checkPermission = (requiredPermission: string) => {
+export const checkPermission = (requiredPermissions: string | string[]) => {
   return async (
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> => {
     const userId = req.user?.id;
-    console.log(userId);
+
     if (!userId) {
       API.unauthorized(res, "No estás autorizado");
       return;
@@ -20,13 +19,18 @@ export const checkPermission = (requiredPermission: string) => {
         where: { id: userId },
         select: { permisos: true },
       });
-      console.log("permiso user", user);
+
       const userPermissions = user?.permisos ?? [];
 
-      if (
-        !userPermissions.includes("ALL") &&
-        !userPermissions.includes(requiredPermission)
-      ) {
+      const requiredArray = Array.isArray(requiredPermissions)
+        ? requiredPermissions
+        : [requiredPermissions];
+
+      const hasRequiredPermission =
+        userPermissions.includes("ALL") ||
+        requiredArray.some((perm) => userPermissions.includes(perm));
+
+      if (!hasRequiredPermission) {
         API.unauthorized(res, "No tienes permiso para esta acción");
         return;
       }

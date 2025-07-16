@@ -18,6 +18,7 @@ import { LoginService } from '../../../../infraestructure/services/apis/login.se
 import { CustomInputComponent } from '../../../shared/input/input.component';
 import { ToastService } from '../../../../infraestructure/lib/toast/toast.service';
 import { ToastComponent } from '../../../../infraestructure/lib/toast/toast.component';
+import { MeService } from '../../../../infraestructure/services/components/me.service';
 gsap.registerPlugin(TextPlugin);
 @Component({
   selector: 'app-login',
@@ -94,6 +95,7 @@ export class LoginComponent implements OnInit {
   @ViewChild('bloque') bloque!: ElementRef;
   @ViewChild('loginForm') loginForm!: ElementRef;
   router = inject(Router);
+  meS = inject(MeService);
   LoginS = inject(LoginService);
   toastS = inject(ToastService);
   form = new FormGroup({
@@ -106,7 +108,6 @@ export class LoginComponent implements OnInit {
       validators: Validators.required,
     }),
   });
-
   ngOnInit(): void {
     gsap.fromTo(
       '.bloque',
@@ -127,6 +128,7 @@ export class LoginComponent implements OnInit {
   onLogin(event: Event) {
     const formValue = this.form.getRawValue();
     event.preventDefault();
+
     if (this.form.invalid) {
       this.toastS.addToast({
         id: 'invalid-form',
@@ -138,15 +140,9 @@ export class LoginComponent implements OnInit {
     }
 
     this.LoginS.login(formValue).subscribe({
-      next: (response) => {
-        console.log(response);
-        const tl = gsap.timeline({
-          onComplete: () => {
-            setTimeout(() => {
-              this.router.navigate(['/dashboard/presupuestos']);
-            }, 500);
-          },
-        });
+      next: () => {
+        const tl = gsap.timeline();
+
         tl.to(this.loginForm.nativeElement, {
           opacity: 0,
           duration: 0.5,
@@ -183,12 +179,41 @@ export class LoginComponent implements OnInit {
           ease: 'power2.inOut',
           display: 'flex',
         });
-        tl.to(this.bloque.nativeElement, {
-          translateY: -3000,
-          ease: 'power2.inOut',
-          duration: 0.5,
-          delay: 2,
-          display: 'none',
+
+        tl.call(() => {
+          this.LoginS.me().subscribe({
+            next: (meResponse) => {
+              this.meS.setToken(meResponse);
+
+              gsap.to(this.bloque.nativeElement, {
+                translateY: -3000,
+                ease: 'power2.inOut',
+                duration: 0.5,
+                delay: 2,
+                display: 'none',
+                onComplete: () => {
+                  const firstPath = this.meS.navigation[0]?.items[0]?.path;
+
+                  if (firstPath) {
+                    this.router.navigate([firstPath]);
+                  } else {
+                    this.toastS.addToast({
+                      title: 'No tienes acceso a ningún módulo',
+                      type: 'error',
+                    });
+                    this.meS.clearSession();
+                    this.router.navigate(['/']);
+                  }
+                },
+              });
+            },
+            error: () => {
+              this.toastS.addToast({
+                title: 'Ocurrió un error al obtener los datos del usuario',
+                type: 'error',
+              });
+            },
+          });
         });
       },
       error: (err) => {
