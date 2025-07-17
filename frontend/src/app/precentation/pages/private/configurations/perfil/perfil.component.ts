@@ -10,6 +10,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { ToastService } from '../../../../../infraestructure/lib/toast/toast.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-profile',
@@ -37,14 +38,14 @@ import { ToastService } from '../../../../../infraestructure/lib/toast/toast.ser
           label="Descripcion"
           formControlName="descripcion"
         ></app-custom-input>
-        @if(!changePassword){
-        <div class="col-span-full flex justify-end ">
+        <div class="col-span-full flex justify-end " *ngIf="!changePassword">
           <app-custom-button (btnClick)="togglePasswordForm()">
             Cambiar contraseña
           </app-custom-button>
         </div>
-        } @if(changePassword){
-        <form
+
+        <div
+          *ngIf="changePassword"
           class="col-span-full grid grid-cols-2 gap-4 justify-center items-center bg-primary/5 rounded-xl p-8"
         >
           <p
@@ -79,12 +80,12 @@ import { ToastService } from '../../../../../infraestructure/lib/toast/toast.ser
               Cambiar contraseña
             </app-custom-button>
           </div>
-        </form>
-        }
+        </div>
       </form>
     </div>
   `,
   imports: [
+    CommonModule,
     CustomInputComponent,
     CustomButtonComponent,
     IconComponent,
@@ -123,6 +124,7 @@ export class PerfilComponent implements OnInit {
     });
   }
   changePassword: boolean = false;
+  confirmChange: boolean = false;
 
   togglePasswordForm() {
     this.changePassword = !this.changePassword;
@@ -152,25 +154,50 @@ export class PerfilComponent implements OnInit {
       return;
     }
 
-    this.profileS.changePassword(currentPassword, newPassword).subscribe({
-      next: () => {
-        this.toastS.addToast({
-          title: 'Contraseña cambiada',
-          type: 'success',
-          description: 'Tu contraseña fue actualizada correctamente',
-        });
-        this.togglePasswordForm();
-        this.form.get('currentPassword')?.reset();
-        this.form.get('newPassword')?.reset();
-        this.changePassword = false;
+    this.toastS.addToast({
+      title: 'Cambio de contraseña',
+      type: 'warning',
+      description: '¿Estás seguro que quieres cambiar la contraseña?',
+      id: 'change-password',
+      duration: 0,
+      action: {
+        label: 'Sí, cambiar',
+        callback: () => {
+          this.profileS
+            .changePassword({
+              password: currentPassword,
+              newPassword,
+              confirmChange: true,
+            })
+            .subscribe({
+              next: (value) => {
+                console.log(value);
+                this.toastS.addToast({
+                  title: 'Contraseña cambiada',
+                  type: 'success',
+                  description: 'contraseña cambiada con exitó',
+                });
+                this.togglePasswordForm();
+                this.form.get('currentPassword')?.reset();
+                this.form.get('newPassword')?.reset();
+                this.changePassword = false;
+              },
+              error: (e) => {
+                console.log(e);
+                this.toastS.addToast({
+                  title: 'Error',
+                  type: 'error',
+                  description:
+                    e.error.errors.message || 'Error al cambiar la contraseña',
+                });
+                console.log(e);
+              },
+            });
+        },
       },
-      error: (e) => {
-        this.toastS.addToast({
-          title: 'Error',
-          type: 'error',
-          description: 'No se pudo cambiar la contraseña',
-        });
-        console.log(e);
+      cancelAction: {
+        label: 'Cancelar',
+        callback: () => console.log('Cambio de contraseña cancelado'),
       },
     });
   }
