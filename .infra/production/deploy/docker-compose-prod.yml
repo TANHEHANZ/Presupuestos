@@ -1,0 +1,33 @@
+name: presupuesto
+services:
+  frontend:
+    container_name: presupuesto
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8040:80"
+    networks:
+      - presupuesto-net
+
+  backend:
+    container_name: presupuestoapi
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8041:3210"
+    restart: always
+    command: >
+      sh -c "npx prisma generate && npx prisma db push && node dist/app.js"
+    networks:
+      - presupuesto-net
+
+networks:
+  presupuesto-net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.80.40.0/24
