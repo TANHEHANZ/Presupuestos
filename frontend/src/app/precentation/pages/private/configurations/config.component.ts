@@ -15,7 +15,7 @@ import { SubNavComponent } from '../../../shared/nav/sub.nav.component';
       <section class="min-h-[73dvh] bg-white rounded-xl overflow-hidden">
         <app-sub-nav
           [links]="[
-            { path: 'perfil', icon: 'user', label: 'Perfil' },
+            { path: '', icon: 'user', label: 'Perfil' },
             { path: 'history', icon: 'history', label: 'Historial' }
           ]"
         />

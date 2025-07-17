@@ -4,17 +4,6 @@ import { IconComponent, IconName } from '../icons/icon.component';
 import { CommonModule } from '@angular/common';
 import gsap from 'gsap';
 import { MeService } from '../../../infraestructure/services/components/me.service';
-import { Subscription } from 'rxjs';
-interface NavItem {
-  label: string;
-  icon: IconName;
-  path: string;
-}
-
-interface NavGroup {
-  title: string;
-  items: NavItem[];
-}
 
 @Component({
   selector: 'app-nav',

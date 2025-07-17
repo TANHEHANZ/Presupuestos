@@ -51,7 +51,7 @@ export const PRESUPUSTO_ROUTES: Routes = [
           ),
         children: [
           {
-            path: 'perfil',
+            path: '',
             canActivate: [NavGuard],
 
             loadComponent: () =>
