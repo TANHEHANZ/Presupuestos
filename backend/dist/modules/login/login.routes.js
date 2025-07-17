@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const ln_controller_1 = require("./controller/ln_controller");
+const validate_1 = require("../../infraestructure/helpers/validate");
+const credentials_1 = require("./validations/credentials");
+const ln_Routes = (0, express_1.Router)();
+ln_Routes.route("/").post((0, validate_1.validate)(credentials_1.Credentials, "body"), ln_controller_1.lnController.login);
+ln_Routes.post("/refresh", ln_controller_1.lnController.refresh);
+ln_Routes.post("/logout", ln_controller_1.lnController.logout);
+exports.default = ln_Routes;

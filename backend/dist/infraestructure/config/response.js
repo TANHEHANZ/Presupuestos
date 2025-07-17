@@ -14,8 +14,13 @@ exports.API = {
         };
         if (data)
             response.data = data;
-        if (errors)
-            response.errors = errors;
+        if (errors) {
+            response.errors = {
+                message: errors.message || "Error desconocido",
+                name: errors.name,
+                ...(process.env.NODE_ENV === "development" && { stack: errors.stack }),
+            };
+        }
         return res.status(status).json(response);
     },
     success: (res, message, data) => exports.API.createResponse(res, http_1.HTTP_STATUS.OK, message, data),
@@ -27,7 +32,7 @@ exports.API = {
     notFound: (res, message = "Not Found") => exports.API.createResponse(res, http_1.HTTP_STATUS.NOT_FOUND, message),
     conflict: (res, message, errors) => exports.API.createResponse(res, http_1.HTTP_STATUS.CONFLICT, message, undefined, errors),
     serverError: (res, message = "Error en el servidor contactate con hancito :)", errors) => {
-        return exports.API.createResponse(res, http_1.HTTP_STATUS.INTERNAL_SERVER, errors, undefined, process.env.NODE_ENV === "development" ? errors : undefined);
+        return exports.API.createResponse(res, http_1.HTTP_STATUS.INTERNAL_SERVER, message, undefined, process.env.NODE_ENV === "development" ? errors : undefined);
     },
     custom: (res, status, message, data, errors) => exports.API.createResponse(res, status, message, data, errors),
 };

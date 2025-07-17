@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn src/app.ts",
-    "build": "tsc",
+    "build": "tsc && tsc-alias",
     "start": "node dist/app.js",
     "db:seed": "npx prisma db seed",
     "test": "jest",
@@ -54,7 +54,7 @@
     "supertest": "^7.1.0",
     "ts-jest": "^29.3.0",
     "ts-node-dev": "^2.0.0",
-    "tsc-alias": "^1.8.11",
+    "tsc-alias": "^1.8.16",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.2"
   }

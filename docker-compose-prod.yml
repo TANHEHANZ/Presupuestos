@@ -1,0 +1,43 @@
+name: firmagamcdev
+services:
+  frontend:
+    container_name: firmagamcdev
+    build:
+      context: ./frontend
+      dockerfile: dockerfile
+    restart: always
+    ports:
+      - "8040:80"
+    networks:
+      - firmagamcdev-net
+
+  backend:
+    container_name: firmagamcapidev
+    build:
+      context: ./back
+      dockerfile: dockerfile
+    ports:
+      - "8041:3000"
+    restart: always
+    command: >
+      sh -c "npx prisma generate && npx prisma db push && node dist/index.js"
+    networks:
+      - firmagamcdev-net
+
+networks:
+  firmagamcdev-net:
+    driver: bridge
+    ipam:
+    driver: default
+    config:
+    - subnet: 172.80.40.0/24
+
+# todo: manejo de nombres en los contenedores 
+# todo: manejo de nombre firmagamc-dev  
+# todo: manejo de puerto 
+# todo: como manejar con todo extencion 
+# todo : estandarizar variables 
+# configurar red  subnet docker comoser 
+
+
+# 8040 frontend , 8041 backend 
