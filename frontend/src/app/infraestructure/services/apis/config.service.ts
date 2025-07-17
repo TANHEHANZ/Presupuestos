@@ -13,4 +13,7 @@ export class ConfigService {
   profile() {
     return this.s_http.request(API_Configuration.profile);
   }
+  changePassword(currentPassword: string, newPassword: string) {
+    return this.s_http.request(API_Configuration.profile);
+  }
 }

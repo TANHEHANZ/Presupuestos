@@ -11,6 +11,8 @@ import {
   ControlValueAccessor,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { IconComponent } from '../icons/icon.component';
+import { CustomButtonComponent } from '../button/button.component';
 
 @Component({
   selector: 'app-custom-input',
@@ -26,29 +28,37 @@ import {
         }"
         >{{ label }}</label
       >
-      <input
-        #inputRef
-        [id]="id"
-        [type]="type"
-        [placeholder]="placeholder"
-        [autocomplete]="autocomplete"
-        class="border   rounded-xl px-3 py-4 focus:outline-none focus:ring-2  focus:ring-primary transition w-full h-full"
-        [ngClass]="{
-          'border-red-500': isInvalid,
-          'bg-white border-olther  border-dashed opacity-70 cursor-not-allowed':
-            disabled,
-          'border-primary': !disabled
-        }"
-        [value]="value"
-        (input)="onInput($event)"
-        (blur)="onTouched()"
-        [disabled]="disabled"
-      />
+      <div class=" flex gap-2">
+        <input
+          #inputRef
+          [id]="id"
+          [type]="inputType"
+          [placeholder]="placeholder"
+          [autocomplete]="autocomplete"
+          class="border rounded-xl px-3 py-4 focus:outline-none focus:ring-2 focus:ring-primary transition w-full h-full"
+          [ngClass]="{
+            'border-red-500': isInvalid,
+            'bg-white border-olther border-dashed opacity-70 cursor-not-allowed':
+              disabled,
+            'border-primary': !disabled
+          }"
+          [value]="value"
+          (input)="onInput($event)"
+          (blur)="onTouched()"
+          [disabled]="disabled"
+        />
+        <app-custom-button
+          *ngIf="type === 'password'"
+          [icon]="showPassword ? 'eye' : 'eye'"
+          variant="secondary"
+          (btnClick)="toggleShowPassword()"
+        ></app-custom-button>
+      </div>
       <ng-content></ng-content>
     </div>
   `,
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, CustomButtonComponent],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -68,10 +78,19 @@ export class CustomInputComponent implements ControlValueAccessor {
   @Input() disabled: boolean = false;
   @ViewChild('inputRef') inputRef!: ElementRef<HTMLInputElement>;
   isInvalid = false;
-
+  showPassword = false;
   onChange = (value: any) => {};
   onTouched = () => {};
-
+  get inputType(): string {
+    return this.type === 'password'
+      ? this.showPassword
+        ? 'text'
+        : 'password'
+      : this.type;
+  }
+  toggleShowPassword() {
+    this.showPassword = !this.showPassword;
+  }
   writeValue(value: any): void {
     this.value = value ?? '';
   }
