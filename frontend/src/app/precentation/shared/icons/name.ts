@@ -39,6 +39,7 @@ import {
   faTriangleExclamation,
   faWarning,
   faFilterCircleXmark,
+  faClockRotateLeft,
 } from '@fortawesome/free-solid-svg-icons';
 
 export const ICONS = {
@@ -79,6 +80,7 @@ export const ICONS = {
   alert: faTriangleExclamation,
   warning: faWarning,
   clearFilter: faFilterCircleXmark,
+  history: faClockRotateLeft,
 } as const;
 
 import { z } from 'zod';

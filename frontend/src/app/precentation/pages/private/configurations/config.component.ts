@@ -12,14 +12,14 @@ import { SubNavComponent } from '../../../shared/nav/sub.nav.component';
       title="Configuración"
       [path]="{ initial: 'Modulos', finally: 'configuracion' }"
     >
-      <section class="min-h-[73dvh] bg-white">
+      <section class="min-h-[73dvh] bg-white rounded-xl overflow-hidden">
         <app-sub-nav
           [links]="[
             { path: 'perfil', icon: 'user', label: 'Perfil' },
-            { path: 'seguridad', icon: 'warning', label: 'Seguridad' }
+            { path: 'history', icon: 'history', label: 'Historial' }
           ]"
         />
-        <section class="h-full p-2">
+        <section class="h-full p-2 ">
           <router-outlet />
         </section>
       </section>

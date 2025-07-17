@@ -59,6 +59,15 @@ export const PRESUPUSTO_ROUTES: Routes = [
                 (c) => c.PerfilComponent
               ),
           },
+          {
+            path: 'history',
+            canActivate: [NavGuard],
+
+            loadComponent: () =>
+              import('./configurations/history/history.component').then(
+                (c) => c.HistoryComponent
+              ),
+          },
         ],
       },
 
