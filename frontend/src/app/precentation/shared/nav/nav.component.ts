@@ -4,17 +4,6 @@ import { IconComponent, IconName } from '../icons/icon.component';
 import { CommonModule } from '@angular/common';
 import gsap from 'gsap';
 import { MeService } from '../../../infraestructure/services/components/me.service';
-import { Subscription } from 'rxjs';
-interface NavItem {
-  label: string;
-  icon: IconName;
-  path: string;
-}
-
-interface NavGroup {
-  title: string;
-  items: NavItem[];
-}
 
 @Component({
   selector: 'app-nav',
@@ -66,15 +55,14 @@ export class NavComponent {
       '.nav-anim-item',
       {
         opacity: 0,
-        translateY: 200,
+        translateX: -30,
       },
       {
         opacity: 1,
-        translateY: 0,
+        translateX: 0,
         stagger: 0.25,
         display: 'flex',
         ease: 'slow(0.7,0.7,false)',
-        y: -500,
       }
     );
   }

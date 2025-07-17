@@ -76,4 +76,36 @@ export const meService = {
       return false;
     }
   },
+  profile: async (idUser: string): Promise<any> => {
+    try {
+      const user = await prismaC.user.findUnique({
+        where: {
+          id: idUser,
+        },
+        select: {
+          ci: true,
+          name: true,
+          rol: true,
+          estado: true,
+          unidadEjecutora: {
+            select: {
+              secretaria: true,
+              descripcion: true,
+            },
+          },
+        },
+      });
+      if (!user) {
+        throw new Error("No se pudo obtener el perfil del usuario");
+      }
+
+      return user;
+    } catch (e: unknown) {
+      const errorMessage =
+        e instanceof Error
+          ? e.message
+          : "Error desconocido al obtener el perfil";
+      throw new Error(`Error en 'profile': ${errorMessage}`);
+    }
+  },
 };

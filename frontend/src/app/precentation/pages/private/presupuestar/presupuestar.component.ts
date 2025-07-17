@@ -36,7 +36,7 @@ import { CommonModule } from '@angular/common';
         *ngIf="canPermission[P_preUnidad.UPLODAD]"
       >
         <div class="self-start flex ">
-          <app-custom-button [icon]="'add'" (btnClick)="openDrawe()">
+          <app-custom-button [icon]="'add'" (btnClick)="openModal()">
             Subir excel
           </app-custom-button>
         </div>
@@ -61,15 +61,10 @@ import { CommonModule } from '@angular/common';
         [fetchPageData]="fetchPageData"
         [totalPagesInput]="filter.totalPages"
       />
-
-      <ng-template #expandTemplate let-row>
-        <app-presupuestar-detail />
-      </ng-template>
     </app-wrapper>`,
   imports: [
     WrapperComponent,
     MainTableComponent,
-    PresupuestarDetailComponent,
     ModalComponent,
     ContainerComponent,
     CustomButtonComponent,
@@ -99,7 +94,7 @@ export class PresupuestarComponent implements OnInit {
   };
   canPermission: Record<PermissionKey, boolean> = {} as any;
 
-  openDrawe() {
+  openModal() {
     this.drawerS.openModal();
   }
   ngOnInit(): void {

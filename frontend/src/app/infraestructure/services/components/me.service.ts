@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
 import { Observable } from 'rxjs';
 import { environment } from '../../config/environment';
+import { LoginService } from '../apis/login.service';
 
 interface NavItem {
   label: string;
@@ -32,7 +33,7 @@ export class MeService {
   private tokenKey = '_u';
   private decodedToken?: DecodedToken;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private loginService: LoginService) {
     this.loadToken();
   }
 
@@ -93,5 +94,10 @@ export class MeService {
   public clearSession() {
     sessionStorage.removeItem(this.tokenKey);
     this.decodedToken = undefined;
+  }
+  cerrarSesion() {
+    this.loginService.logaut().subscribe(() => {
+      this.clearSession();
+    });
   }
 }

@@ -9,6 +9,11 @@ export const API_Login = {
     query: LoginChema,
     isPaginated: false,
   },
+  logout: {
+    path: 'POST v1/api/login/logout',
+    response: AnyResponse,
+    isPaginated: false,
+  },
   refresh: {
     path: 'POST v1/api/login/refresh',
     response: AnyResponse,
