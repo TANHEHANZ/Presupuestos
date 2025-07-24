@@ -3,8 +3,8 @@ services:
   frontend:
     container_name: presupuestodev
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: ./
+      dockerfile: Dockerfile-frontend
     restart: always
     ports:
       - "8040:80"
@@ -14,8 +14,8 @@ services:
   backend:
     container_name: presupuestoapidev
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: ./
+      dockerfile: Dockerfile-backend
     ports:
       - "8041:3210"
     restart: always
