@@ -49,4 +49,26 @@ export const lnController = {
       API.unauthorized(res, (err as Error).message);
     }
   },
+
+  logout: async (req: Request, res: Response): Promise<void> => {
+    try {
+      res.clearCookie("accessToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        path: "/",
+      });
+
+      res.clearCookie("refreshToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        path: "/",
+      });
+
+      API.success(res, "Sesión cerrada correctamente");
+    } catch (err) {
+      API.serverError(res, "Error al cerrar sesión");
+    }
+  },
 };

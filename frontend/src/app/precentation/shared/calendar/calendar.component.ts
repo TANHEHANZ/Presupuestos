@@ -1,7 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ContainerComponent } from '../container/container.component';
-import { IconComponent } from '../icons/icon.component';
 import { FormsModule } from '@angular/forms';
 
 @Component({

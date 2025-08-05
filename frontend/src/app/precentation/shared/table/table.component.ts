@@ -72,6 +72,24 @@ export interface TableColumn<T> {
               </td>
             </tr>
           </ng-container>
+
+          <tr *ngIf="data.length === 0">
+            <td
+              [attr.colspan]="columns.length"
+              class="h-[40dvh] text-center text-gray-500 p-0"
+            >
+              <div
+                class="flex justify-start items-center flex-col h-[40dvh] w-full"
+              >
+                <img
+                  src="assets/lampara.png"
+                  alt="lampara de no datos"
+                  class="h-48"
+                />
+                <p class="text-xl">No hay datos para mostrar</p>
+              </div>
+            </td>
+          </tr>
         </tbody>
       </table>
     </section>

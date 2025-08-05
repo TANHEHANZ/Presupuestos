@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const p_controller_1 = require("./controller/p_controller");
+const p_permisos_1 = require("../../infraestructure/constants/permitions/p_permisos");
+const permission_checker_1 = require("../../infraestructure/middleware/permission-checker");
+const me_controller_1 = require("./controller/me_controller");
+const p_user_1 = require("../../infraestructure/constants/permitions/p_user");
+const c_Router = (0, express_1.Router)();
+c_Router.get("/permition", (0, permission_checker_1.checkPermission)([p_permisos_1.P_config.ALL_PERMITION, p_user_1.P_user.CREATE]), p_controller_1.PController.get);
+c_Router.get("/me", me_controller_1.meController.me);
+c_Router.get("/profile", me_controller_1.meController.profile);
+c_Router.get("/me/valid", me_controller_1.meController.validate_me);
+exports.default = c_Router;

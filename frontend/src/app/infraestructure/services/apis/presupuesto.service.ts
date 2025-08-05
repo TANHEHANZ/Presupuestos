@@ -14,4 +14,7 @@ export class PresupuestoService {
   upload(file: DTO_presupuestoUniUpload) {
     return this.s_http.request(API_PresupuestoUni.upload, file);
   }
+  calendar() {
+    return this.s_http.request(API_PresupuestoUni.calendar);
+  }
 }

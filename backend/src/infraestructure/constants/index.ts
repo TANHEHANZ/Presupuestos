@@ -18,7 +18,7 @@ export const PERMISSION: Permition[] = [
     group: "Presupuesto Unidad ejecutora",
     color: "#10dbd1",
     icon: "coins",
-    permissions: PERMITION_KEYS.unidades,
+    permissions: PERMITION_KEYS.presupuestoUni,
   },
 
   {
@@ -26,5 +26,23 @@ export const PERMISSION: Permition[] = [
     color: "#6366f1",
     icon: "download",
     permissions: PERMITION_KEYS.reportes,
+  },
+  {
+    group: "Consultas",
+    color: "#FF9F3B",
+    icon: "search",
+    permissions: PERMITION_KEYS.consultas,
+  },
+  {
+    group: "Programacion",
+    color: "#753AB7",
+    icon: "calendar",
+    permissions: PERMITION_KEYS.programation,
+  },
+  {
+    group: "dashboard",
+    color: "#653FA9",
+    icon: "chart",
+    permissions: PERMITION_KEYS.dashboard,
   },
 ];

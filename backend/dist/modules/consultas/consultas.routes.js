@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const C_DA_controller_1 = require("./controllers/C_DA.controller");
+const filter_controller_1 = require("./controllers/filter.controller");
+const permission_checker_1 = require("../../infraestructure/middleware/permission-checker");
+const p_consultas_1 = require("../../infraestructure/constants/permitions/p_consultas");
+const consultas_Routes = (0, express_1.Router)();
+consultas_Routes.get("/DA", (0, permission_checker_1.checkPermission)(p_consultas_1.P_consultas.CONSULTAR), C_DA_controller_1.DAController);
+consultas_Routes.get("/", (0, permission_checker_1.checkPermission)(p_consultas_1.P_consultas.CONSULTAR), filter_controller_1.FilterController);
+exports.default = consultas_Routes;

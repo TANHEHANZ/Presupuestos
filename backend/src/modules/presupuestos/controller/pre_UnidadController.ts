@@ -6,13 +6,23 @@ export const PreUnidadController = {
   get: async (req: Request, res: Response): Promise<void> => {
     try {
       const { ue, descripcionUe } = req.query;
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 8;
 
       const list = await PreUnidadService.list({
         ue: ue as string | undefined,
         descripcionUe: descripcionUe as string | undefined,
+        page,
+        limit,
       });
 
-      API.success(res, "Presupuesto por unidad traida exitosamente", list);
+      API.paginated(res, "Presupuesto por unidad traida exitosamente", {
+        items: list.data,
+        total: list.totalItems,
+        page: list.currentPage,
+        limit: limit,
+        totalPages: list.totalPages,
+      });
     } catch (error) {
       console.error("Error en list:", error);
       API.serverError(

@@ -3,20 +3,33 @@ import { prismaC } from "@/infraestructure/config/prisma.client";
 interface FiltersProps {
   ue?: string;
   descripcionUe?: string;
+  page?: number;
+  limit?: number;
 }
 
 export const PreUnidadService = {
-  list: async ({ ue, descripcionUe }: FiltersProps): Promise<any> => {
+  list: async ({
+    ue,
+    descripcionUe,
+    page = 1,
+    limit = 10,
+  }: FiltersProps): Promise<{
+    data: any[];
+    totalItems: number;
+    totalPages: number;
+    currentPage: number;
+  }> => {
     const whereClauses = [];
     const params: any[] = [];
+    let paramIndex = 1;
 
     if (ue) {
-      whereClauses.push(`ue."ue" = $${params.length + 1}`);
+      whereClauses.push(`ue."ue" = $${paramIndex++}`);
       params.push(ue);
     }
 
     if (descripcionUe) {
-      whereClauses.push(`ue."descripcion" ILIKE $${params.length + 1}`);
+      whereClauses.push(`ue."descripcion" ILIKE $${paramIndex++}`);
       params.push(`%${descripcionUe}%`);
     }
 
@@ -24,7 +37,27 @@ export const PreUnidadService = {
       ? `WHERE ${whereClauses.join(" AND ")}`
       : "";
 
-    const result = await prismaC.$queryRawUnsafe(
+    const countResult = await prismaC.$queryRawUnsafe<{ count: number }[]>(
+      `
+      SELECT COUNT(*)::int AS count
+      FROM (
+        SELECT ue."ue"
+        FROM "UnidadEjecutora" ue
+        LEFT JOIN "Presupuesto" p ON ue."id" = p."unidadId" AND p."estado" = 'ACTIVO'
+        LEFT JOIN "Programacion" pg ON pg."codigoObjetoGasto" = p."codigoObjetoGasto" AND pg."estado" = 'ACTIVO'
+        ${whereSQL}
+        GROUP BY ue."ue", ue."descripcion"
+      ) AS sub
+      `,
+      ...params
+    );
+
+    const totalItems = countResult[0]?.count ?? 0;
+    const totalPages = Math.ceil(totalItems / limit);
+    const offset = (page - 1) * limit;
+
+    // 👉 Consulta paginada
+    const data = (await prismaC.$queryRawUnsafe(
       `
       SELECT
         ue."ue" AS "ue",
@@ -39,11 +72,18 @@ export const PreUnidadService = {
       ${whereSQL}
       GROUP BY ue."ue", ue."descripcion"
       ORDER BY ue."ue"
+      LIMIT ${limit}
+      OFFSET ${offset}
       `,
       ...params
-    );
+    )) as any;
 
-    return result;
+    return {
+      data,
+      totalItems,
+      totalPages,
+      currentPage: page,
+    };
   },
 
   listUEgrup: async ({ ue, descripcionUe }: FiltersProps): Promise<any> => {

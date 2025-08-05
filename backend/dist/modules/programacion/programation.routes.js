@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const prog_controller_1 = require("./controller/prog_controller");
+const validate_1 = require("../../infraestructure/helpers/validate");
+const v_prog_1 = require("./validators/v_prog");
+const permission_checker_1 = require("../../infraestructure/middleware/permission-checker");
+const p_programation_1 = require("../../infraestructure/constants/permitions/p_programation");
+const prog_Router = (0, express_1.Router)();
+prog_Router.post("/", (0, validate_1.validate)(v_prog_1.ParamsSchema), (0, permission_checker_1.checkPermission)(p_programation_1.P_programation.CREATE), prog_controller_1.Prog_controller.create);
+prog_Router.get("/", (0, permission_checker_1.checkPermission)(p_programation_1.P_programation.LIST), prog_controller_1.Prog_controller.list);
+exports.default = prog_Router;

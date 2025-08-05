@@ -16,9 +16,33 @@ exports.PERMISSION = [
         permissions: permitions_1.PERMITION_KEYS.unidades,
     },
     {
+        group: "Presupuesto Unidad ejecutora",
+        color: "#10dbd1",
+        icon: "coins",
+        permissions: permitions_1.PERMITION_KEYS.presupuestoUni,
+    },
+    {
         group: "Reportes",
         color: "#6366f1",
         icon: "download",
         permissions: permitions_1.PERMITION_KEYS.reportes,
+    },
+    {
+        group: "Consultas",
+        color: "#FF9F3B",
+        icon: "search",
+        permissions: permitions_1.PERMITION_KEYS.consultas,
+    },
+    {
+        group: "Programacion",
+        color: "#753AB7",
+        icon: "calendar",
+        permissions: permitions_1.PERMITION_KEYS.programation,
+    },
+    {
+        group: "dashboard",
+        color: "#653FA9",
+        icon: "chart",
+        permissions: permitions_1.PERMITION_KEYS.dashboard,
     },
 ];

@@ -1,0 +1,4 @@
+export enum P_consultas {
+  CONSULTAR = "FORM:COLSULTAR",
+  EXPORT_CONSULTA = "EXPORT:CONSULTAR",
+}

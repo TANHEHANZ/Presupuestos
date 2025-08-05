@@ -1,6 +1,7 @@
 import { paginate } from "@/infraestructure/config/paginate";
 import { prismaC } from "@/infraestructure/config/prisma.client";
 import { Presupuesto, UnidadEjecutora } from "@prisma/client";
+import { DTO_Pre_CalendarRespoonse } from "../validations/v_calendar";
 
 interface FiltersProps {
   page: string;
@@ -76,6 +77,55 @@ export const ProyectService = {
       totalPages: result.totalPages,
       currentPage: result.currentPage,
       totalItems: result.totalItems,
+    };
+  },
+
+  dataCalendar: async (): Promise<DTO_Pre_CalendarRespoonse> => {
+    const months = [
+      "enero",
+      "febrero",
+      "marzo",
+      "abril",
+      "mayo",
+      "junio",
+      "julio",
+      "agosto",
+      "septiembre",
+      "octubre",
+      "noviembre",
+      "diciembre",
+    ];
+    const programaciones = await prismaC.programacion.findMany({
+      where: { estado: "ACTIVO" },
+      select: { mes: true, value: true },
+    });
+    const monthValues: Record<string, number> = {};
+    for (const item of programaciones) {
+      const mes = item.mes.toLowerCase();
+      if (!monthValues[mes]) monthValues[mes] = 0;
+      monthValues[mes] += item.value;
+    }
+
+    const meses = months.map((mes) => ({
+      mes,
+      value: monthValues[mes] ? monthValues[mes].toFixed(2) : "0.00",
+    }));
+
+    const TotalAsignado = Object.values(monthValues).reduce(
+      (sum, val) => sum + val,
+      0
+    );
+
+    const currentDate = new Date();
+    const mesActual = months[currentDate.getMonth()];
+
+    const asigado = TotalAsignado > 0;
+
+    return {
+      meses,
+      mesActual,
+      asigado,
+      TotalAsignado,
     };
   },
 };

@@ -6,7 +6,7 @@ export const ProyectController = {
   list: async (req: Request, res: Response): Promise<void> => {
     try {
       const page = parseInt(req.query.page as string) || 1;
-      const limit = parseInt(req.query.limit as string) || 10;
+      const limit = parseInt(req.query.limit as string) || 8;
 
       const descripcion = req.query.descripcion?.toString();
       const org = req.query.org?.toString();
@@ -31,6 +31,18 @@ export const ProyectController = {
       });
     } catch (error) {
       API.serverError(res, "Error al listar Proyectos", error);
+    }
+  },
+  calendar: async (req: Request, res: Response): Promise<void> => {
+    try {
+      const calendar = await ProyectService.dataCalendar();
+
+      API.success(res, "Calendario obtenido exitosamente", calendar);
+    } catch (error) {
+      API.serverError(
+        res,
+        error instanceof Error ? error.message : "Error desconocido"
+      );
     }
   },
 };

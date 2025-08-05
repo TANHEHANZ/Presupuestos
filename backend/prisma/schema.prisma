@@ -45,13 +45,22 @@ model User {
 }
 
 model U_navigation {
-  id        String   @id @default(cuid())
-  nombre    String
-  path      String?
-  icon      String?
-  estado    U_estado @default(ACTIVO)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String      @id @default(cuid())
+  nombre        String
+  path          String?
+  icon          String?
+  estado        U_estado    @default(ACTIVO)
+  requiredPerms String[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  group         U_groupNav? @relation(fields: [groupId], references: [id])
+  groupId       String?
+}
+
+model U_groupNav {
+  id          String         @id @default(cuid())
+  title       String
+  navegations U_navigation[]
 }
 
 model UnidadEjecutora {
